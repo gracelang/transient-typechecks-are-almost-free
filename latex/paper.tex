@@ -2,7 +2,6 @@
 
 \usepackage{booktabs} % For formal tables
 
-
 % Copyright
 %\setcopyright{none}
 %\setcopyright{acmcopyright}
@@ -30,6 +29,10 @@
 
 %\acmBadgeL[http://ctuning.org/ae/ppopp2016.html]{ae-logo}
 %\acmBadgeR[http://ctuning.org/ae/ppopp2016.html]{ae-logo}
+
+
+% Extras
+\newcommand\rrnote[1]{\textcolor{blue}{#1}}
 
 
 \begin{document}
@@ -109,6 +112,10 @@ ACM SIG Proceedings.
 \maketitle
 
 \input{../modules/01_intro}
+\input{../modules/02_background}
+\input{../modules/03_method}
+\input{../modules/04_results}
+\input{../modules/05_conclusion}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
