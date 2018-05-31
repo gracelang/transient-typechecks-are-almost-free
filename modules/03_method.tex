@@ -1,2 +1,30 @@
 \section{Method}
 \label{sec:method}
+
+We implement Grace's gradual-structural type system as an extension to the core of Moth. The extension involves a mechanism to extract structural types declared in the program, a mechanism to extract structural types from both primitives and objects defined in the program, and a mechanism to efficiently manage the types and the knowledge of which types subtype other types. We describe each of these three components in this section (the implementation of the checking algorithm is described in Subsection \ref{ssec:managing-types}). Decisions made for optimization are presented last in Subsection \ref{ssec:optimization-details}). 
+
+\subsection{Extracting Structure}
+\label{ssec:optimization-details}
+
+All values in Grace, even primitives, are expressed as objects. Each object has an inherit structure: the structure of an object is defined by the names of its methods and the typing information attached to a methods parameters are return value. Where the typing information is omitted, we associate a special ``Unknown'' type that passes any type check.
+
+Our implementation uses the notion of \emph{fragments}. A fragment is a piece of a structural type. A fragment encapsulates an ordered set of symbols and an ordered set of types.
+
+\begin{equation}
+f = \{   \{ s_1, s_2, \cdots, s_n \}   \{ t_1, t_2, \cdots, t_n \}  \}
+\end{equation}
+
+The symbols together correspond to a method name (Grace's methods feature multiple parts) and the types correspond to the arguments of the method along with its return type. The list of symbols is always known statically; however, the list of types may be incomplete (when annotations for the types are omitted).
+
+\subsection{Subtyping Relationships}
+\label{ssec:subtyping-relationships}
+
+For a type $a$ to be a subtype of $b$, each fragment in $b$ must be successfully matched by a fragment in $a$. Finally, for one fragment to match another, (1) each symbol in the fragment must be equal to the corresponding symbol from the other fragment corresponding and (2) each type in the fragment must be a subtype of the corresponding type from the other fragment. 
+
+To avoid the potential for the matching system to repeat recursively, we introduce a table that caches the sub-typing relations. Both the rows and columns of the table correspond to types. Each cell contains one of three possible values: false, true, or unknown. 
+
+Whenever we encounter an unknown relations, we immediately evaluate the sub-typing as described above and update the corresponding cell in the table.
+
+\subsection{Optimization Details}
+\label{ssec:optimization-details}
+
