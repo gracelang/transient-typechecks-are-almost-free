@@ -1,11 +1,41 @@
 \section{Background}
 \label{sec:background}
 
-\subsection{Gradual-Typing Today}
+\begin{outline}
 
-Takikawa et al. \cite{Takikawa2016} ask whether sound gradual typing is dead, and Richards et al. \cite{Richards2017} say no, provided one has support from the VM.
+\1 Dynamic Typing
+    \2 seminal 
+        \3 boyland FtfJP paper on ``Boyland checks''
+        \3 thorn, sophia's early paper on gradual typing.
 
-\cite{Greenman2017} introduces a tag-soundness system.
+    \2 what is gradual typing
+    \2 Takikawa et al. \cite{Takikawa2016} ask whether sound gradual typing is dead
+    \2 \cite{Muehlboeck2017} say no
+        \3 nominal object-oriented language
+    \2 \cite{Richards2017} say no
+        \3 support for TypeScript on Higgs VM
+    \2 \cite{Greenman2017} say no
+        \3 tag "soundness" on a tag-soundness system.
+    \2 \cite{Kuhlenschmidt2018} say no
+        \3 AOT compilation with ``Grift''
+    \2 We move toward a supporting gradual-structural types for Grace
+
+\1 Newspeak and Grace
+    \2 similarities
+    \2 differences
+
+\1 SOMns, Truffle, and Graal
+    \2 self optimizing VM
+    \2 \cite{Wurthinger2013}
+
+\1 Moth
+    \2 Grace AST to SOM AST
+    \2 adaptions required for support
+    \2 \cite{Roberts2017}
+
+
+\end{outline}
+
 
 \subsection{Self-Optimizing Virtual Machines}
 
