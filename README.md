@@ -5,4 +5,4 @@ A manuscript on how we provide support for Grace's gradual-structural type syste
 
 ## Building the document
 
-Run `./compile` from the root directory of this project.
+Run `./compile.sh` from the root directory of this project.
