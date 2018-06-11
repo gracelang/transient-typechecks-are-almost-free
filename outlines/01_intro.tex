@@ -1,12 +1,11 @@
-\section{Introduction}
-\label{sec:introduction}
-
 \begin{outline}
 
 \1 Problem Statement
+    \2 Despite 
     \2 gradual typing still not alive
     \2 recent work (\cite{Richards2017,Greenman2017} moving in right direction
-    \2 we move toward alive gradual typing with support for Grace's gradual-structural type system
+    \2 we move toward support for Grace's gradual-structural type system
+    \2 scope is as far as simple \emph{responds-to} dynamic checks 
 
 \1 Approach
     \2 Moth
@@ -14,7 +13,7 @@
         \3 add support for type checking
     \2 add knowledge of types into AST
         \3 arguments are typed
-        \3 invokables are typed (return)
+        \3 invokable are typed (return)
     \2 fold type checking into method invocation
         \3 dispatch guards check arguments for expected value
         \3 somehow check return value before popping frame?
@@ -31,15 +30,21 @@
     \2 slower start up
     \2 need access to the VM
     
-
 \1 Evaluation
-    \2 benchmarks (Language Game), fully typed versus fully untyped
+    \2 benchmarks (SOMns)
+    \2 benchmarks (Language Game)
 
 \1 Contribution
     \2 implementation of dynamic checks in Moth for Grace on SOMns
     \2 performance showing only little slowdown
-    \2 Empirical evidence that gradual-structural typing is not dead
+
+\1 Context and scope
+    \2 won't address gradually typing
+    \2 not full structural system
+    \2 soundness up to blame
+    \2 evidence that we can use VM to reduce overhead
+    \2 using the existing as a research vehicle
+        \3 move toward an efficient gradual-structural system for Grace
+        \3 properly challenge whether sound gradual typing is dead
 
 \end{outline}
-
-

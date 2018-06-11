@@ -1,16 +1,3 @@
-\section{Method}
-\label{sec:method}
-
-\begin{outline}
-
-\1 Overview
-\1 Extension to core of moth
-\1 Sub-typing Relationships
-\1 Optimization Details
-
-\end{outline}
-
-
 We implement Grace's gradual-structural type system as an extension to the core of Moth. The extension involves a mechanism to extract structural types declared in the program, a mechanism to extract structural types from both primitives and objects defined in the program, and a mechanism to efficiently manage the types and the knowledge of which types subtype other types. We describe each of these three components in this section (the implementation of the checking algorithm is described in Subsection \ref{ssec:managing-types}). Decisions made for optimization are presented last in Subsection \ref{ssec:optimization-details}). 
 
 \subsection{Extracting Structure}
