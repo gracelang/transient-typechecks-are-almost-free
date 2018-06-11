@@ -109,12 +109,27 @@
 
 \maketitle
 
+\cite{Richards2017}
 
-\input{modules/01_intro}
-\input{modules/02_background}
-\input{modules/03_method}
-\input{modules/04_results}
-\input{modules/05_conclusion}
+\ifincludeintro
+    \input{modules/01_intro}
+\fi
+
+\ifincludebackground
+    \input{modules/02_background}
+\fi
+
+\ifincludemethod
+    \input{modules/03_method}
+\fi
+
+\ifincluderesults
+    \input{modules/04_results}
+\fi
+
+\ifincludeconclusion
+    \input{modules/05_conclusion}
+\fi
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
