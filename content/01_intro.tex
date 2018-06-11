@@ -1,1 +1,9 @@
-Hello
+Despite optional typing becoming increasingly popular in the industry, the systems that offer support for optional typing are not yet fully \emph{alive}. The languages are of course well defined and supported but, in particular, the advantages of the optional typing are out-weighted by their performance costs. 
+
+Recently, researchers have explored the potential for type checking to be performed together with execution; rather than as an a stand-alone system that occurs separately at run time. For example, Richards et al. extend the Higgs VM to perform TypeScritp's structural checks based on information gathered during method execution. 
+
+Tying the type checking system into existing VM behaviour can offer faster performance, while also being simple to implement. In particular a compiler can fold the type checking system into the VM's invocation logic and, once compiled, both the number of type checks and their complexity has been reduced. Furthermore, the VM usually has cheap reflective access and therefore the logic of the checking system is simpler to implement than we done on the level of the guest language.
+
+In this paper, we present a \emph{responds as expected} type-checking system for the Grace programming language. Through Section \ref{sec:method} we will describe how we extending SOMns to support Grace and provide support for the simple type checks and, later in Section \ref{sec:results}, we present two suites of benchmarks that demonstrate our system can offer these checks with little overhead in terms of execution time.
+
+While we having only taken the first step in rousing Grace's system, our implementation and the results presented are a promising step toward supporting Grace's gradual-structural type system and, ultimately, refuting the notion that gradually typed languages are dead.
