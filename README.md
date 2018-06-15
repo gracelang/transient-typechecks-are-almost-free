@@ -2,6 +2,9 @@
 
 A manuscript on how we provide support for Grace's gradual-structural type system without destroying performance.
 
+- See the latest [benchmark results here](http://richardroberts.co.nz/moth) (it takes a little while to load).
+- See the [work-in-progress](https://github.com/richard-roberts/AGTFG/tree/wip) branch for the latest updates.
+
 ## Details
 
 This project using LaTeX to generate the paper. To compile the project, simply run `./compile.sh` from the root directory of this project.
