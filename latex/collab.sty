@@ -9,7 +9,7 @@
 
 \RequirePackage{ifthen}
 \RequirePackage[normalem]{ulem} % for \sout
-\RequirePackage[svgnames]{xcolor}
+\RequirePackage{xcolor}
 \RequirePackage{amssymb}
 \RequirePackage{xspace}
 
@@ -87,7 +87,9 @@
 }{}
 \@ifundefined{note}{%
 \newenvironment{note}{\obeyspaces\obeylines\tt\frenchspacing\@vobeyspaces}{}%
-}{}
+}{%
+\newenvironment{cnote}{\obeyspaces\obeylines\tt\frenchspacing\@vobeyspaces}{}%
+}
 \makeatother
 
 
