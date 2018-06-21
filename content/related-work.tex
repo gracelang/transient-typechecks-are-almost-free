@@ -1,0 +1,32 @@
+%!TEX root = ../latex/paper.tex
+
+\section{Related Work}
+
+\paragraph{VM already knew that}
+
+\begin{cnote}
+- based on Higgs JavaScript VM
+- SafeTypeScript
+  - system of object contracts
+  - checked lazily where possible
+  - optimized by recording the object contracts as part of the shape
+  - this technique is essentially identical to ours
+    - our type information is encoded in the shape, too
+    - however, we check conformance eagerly
+      - this is as part of having semantics for Grace that provide immediate
+        feedback on correctness
+    - from a performance perspective, their approach could have an even higher
+      cost: increased degree of polymorphism (ours is not increased,
+      because we do not use shape trees.
+      each class has a single shape, shared by all instances
+      the type is based on the specified members, which are statically known)
+
+- Higgs
+  - no inlining, escape analysis, tuned GC, etc.
+  - any optimizations across basic blocks (beside type propagation)
+
+\end{cnote}
+
+
+\paragraph{On the Cost of Type-Tag Soundness}
+\paragraph{Pycket}
