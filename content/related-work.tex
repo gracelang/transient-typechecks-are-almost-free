@@ -9,6 +9,14 @@
 - SafeTypeScript
   - system of object contracts
   - checked lazily where possible
+    i.e., when accessing an object (reading, writing fields, method invocations are preceded by field read)
+    for a function object, which may have contracts, before it is invoked
+  - as described in sec. XX, we only check the availability of methods/fields
+    in a type
+    - this has also consequences on checking higher-order functions
+      - we only check whether they take the expected number of arguments,
+        which is part of their type, but don't check types of their arguments
+        (same for normal methods)
   - optimized by recording the object contracts as part of the shape
   - this technique is essentially identical to ours
     - our type information is encoded in the shape, too
