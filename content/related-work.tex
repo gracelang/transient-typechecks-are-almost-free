@@ -51,3 +51,18 @@
 \end{cnote}
 
 \paragraph{Pycket}
+\begin{cnote}
+- argument about acceptable performance made indirectly
+  using the "CDF-based slowdown plots"
+  - allows choice of arbitrary threshold of what is acceptable overhead
+    - Pycket always better than Racket
+    - not as applicable in our case, because we don't do module-based typing
+  - use Typed Racket's approach to gradual type checking
+  - optimize it by using object shapes, as we do
+    however, because of their more sophisticated semantics,
+    the optimization does only remove part of the overhead
+    specifically, they optimize the number of objects that need to be traversed
+    to perform checks based on their contracts
+    however, they can not reduce it to a simple pointer comparison as in our
+    case, though they get the benefit of more precise checks
+\end{cnote}
