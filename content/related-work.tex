@@ -37,4 +37,17 @@
 
 
 \paragraph{On the Cost of Type-Tag Soundness}
+\begin{cnote}
+- based on Reticulated Python
+  - Python 3-based implementation (interpretation, no compilation)
+- soundness notion and supported semantics very similar to ours
+- evaluate the performance in detail
+ - generate different variants to see how the number of type checks correlate
+   with performance
+ - we could possibly do the same, but expect similar results and instead
+   focused on identifying more precisely which types of type annotations
+   might relate to performance issues
+   - thus, we only tested N configurations per benchmark\sm{N should be a macro}
+\end{cnote}
+
 \paragraph{Pycket}
