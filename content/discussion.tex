@@ -1,0 +1,15 @@
+%!TEX root = ../latex/paper.tex
+
+\section{Discussion}
+
+\begin{cnote}
+- pathological case
+  var a = obj
+  while (...) \{
+    a = a.next
+  \}
+  in this case, we introduce a new type check that does not coincide with any
+  existing checks (shape check on method dispatch, etc)
+  consequently, we see overhead that can be up to XX\% (cf. sec. XX).
+\end{cnote}
+
