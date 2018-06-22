@@ -1,10 +1,47 @@
 %!TEX root = ../latex/paper.tex
 
-\subsection{Self-Optimizing Virtual Machines}
+\subsection{Stronger Typing for Dynamically Typed Languages}
 
-While not everyone has time to create their own fully-fledged virtual, recent efforts such as PyPy \rrnote{CITE Tratt} or Truffle and Graal \cite{Wurthinger2013} are brining the power of VMs to researchers and hobbyists.
+\begin{cnote}
+- the dynamic typing discussion as in the outline
+\end{cnote}
 
-As shown by Marr et al. \cite{Marr2016}, the peak performance of benchmarks is comparable to monolithic VM's like V8 and Crystal. 
+\subsection{The Grace Programming Language}
+
+
+
+\subsection{Moth: Grace on Graal and Truffle}
+
+Implementing dynamic languages as state-of-the-art virtual machines
+can require enormous engineering efforts.
+Meta-compilation approaches\citep{Marr:2015:MTPE}
+such as RPython\citep{Bolz:2009:TMP,Bolz:2013:IMT}
+and GraalVM\citep{Wurthinger2013,Wurthinger:2017:PPE}
+reduce the necessary work dramatically,
+because they allow language implementers to leverage existing VMs
+and their support for just-in-time compilation and garbage collection.
+
+To leverage this infrastructure, we developed an interpreter for Grace,
+called Moth, by adapting
+\citeurl{\SOMns.}{SOMns: A Newspeak for Concurrency Research}{Stefan Marr}{}{https://github.com/smarr/SOMns/}
+\SOMns is a Newspeak implementation\citep{Bracha:10:NS} on top of the Truffle framework and the Graal just-in-time compiler,
+which are part of the GraalVM project.
+Since Newspeak and Grace are related languages,
+\SOMns provided a good foundation for a new Grace implementation.
+And allowed us to gain performance on the level of V8,
+Google's JavaScript implementation
+(cf. \cref{sec:baseline-perf} and \citet{Marr2016}).
+\SOMns was changed to parse Grace code
+and use the slightly adapted Truffle tree nodes to realize the Grace semantics.
+Moth is mostly compliant to the specification.
+One exception is that it still supports the \texttt{nil} value of Newspeak.
+\sm{add code macro}
+
+\sm{we could say many more things here, not sure we need to though, depends a bit on what we need/rely on in late text}
+
+% While not everyone has time to create their own fully-fledged virtual, recent efforts such as PyPy \rrnote{CITE Tratt} or Truffle and Graal \cite{Wurthinger2013} are brining the power of VMs to researchers and hobbyists.
+
+% As shown by Marr et al. \cite{Marr2016}, the peak performance of benchmarks is comparable to monolithic VM's like V8 and Crystal.
 
 \subsection{Gradual Typing}
 
