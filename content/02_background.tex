@@ -27,15 +27,15 @@ called Moth, by adapting
 \SOMns is a Newspeak implementation\citep{Bracha:10:NS} on top of the Truffle framework and the Graal just-in-time compiler,
 which are part of the GraalVM project.
 Since Newspeak and Grace are related languages,
-\SOMns provided a good foundation for a new Grace implementation.
-And allowed us to gain performance on the level of V8,
+\SOMns provides a good foundation for a new Grace implementation.
+It allowed us to reach the performance of V8,
 Google's JavaScript implementation
 (cf. \cref{sec:baseline-perf} and \citet{Marr2016}).
-\SOMns was changed to parse Grace code
-and use the slightly adapted Truffle tree nodes to realize the Grace semantics.
-Moth is mostly compliant to the specification.
-One exception is that it still supports the \texttt{nil} value of Newspeak.
-\sm{add code macro}
+\SOMns was changed to parse Grace code.
+\SOMns' self-optimizing abstract-syntax-tree nodes were only slightly adapted to conform to Grace's semantics.
+As a result, Moth is \ugh{mostly compliant}\sm{do we need to make this more concrete, James?} to the specification.
+One exception is that it still supports the \code{nil} value of Newspeak.
+
 
 \sm{we could say many more things here, not sure we need to though, depends a bit on what we need/rely on in late text}
 
