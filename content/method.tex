@@ -1,66 +1,81 @@
 %!TEX root = ../latex/paper.tex
+%\section{Simple Dynamic Type Checking}
+\section{A Dynamic Type-Checking System}
+\label{sec:method}
 
+
+\sm{all this belongs into background, no?}
 % Breifly recap Grace's type system
 As described in \cref{ssec:grace},
-Grace's type system is gradual. 
+Grace's type system is \ugh{gradual}\smQ{didnt James ask to avoid the term?}. 
 Having the type system be gradual means that types are optional,
 allowing the developer to write the program first and add typing information later. 
 Grace's type system is also structural, 
 which means that typing relationships are evaluated
-in terms of how objects behave rather than how they are named. 
+in terms of how objects \ugh{behave} rather than how they are named.\sm{there is some implicit comparison here (to what is compared?) and it is unclear to me that this is correct}
 
-% motivation for our system
+% The full system
+\sm{this is a terrible motivation. It says, we are lazy!
+also, it is unclear to me that this is really significantly more work}
 Unfortunately, providing support for Grace's full system entails a significant amount of work.
-An algorithm for the full system would need to extract the type from a given object and then check that
-the extracted type is a subtype of expected type (provided by the source code of the program). step through
-each signature of the expected type and confirm that the object can respond to corresponding method, 
-then check that each of parameters in the signature
-(one for each parameters and one for the return type)
-match that of the expected method.
+An algorithm for the full system would need to 
+first extract the type from a given object 
+and then check that the extracted type is a subtype of expected type 
+-- the expected type is expressed through an  annotation in the source program
+(see \cref{code:grace-annotation}).
+The check itself involves evaluating
+whether the object implements each of the methods declared by expected type.
+In turn, this evaluation involves determining that the object can respond to the given method and;
+furthermore, that both the expected method and the object's method have the same parameter and return types.
+The notion of gradual typing complicates the issue,
+since some of the typing information is unknown when the program is parsed. 
+When faced with an unknown case,
+the algorithm must allow that part to pass for free
+and record this as an assumption that may be invalidated later.
 
-\begin{itemize}
-\item 
-\item examines that the structure 
- and types, and resolve the recursive
+\sm{what's the goal of this paper?
+What's the goal of using such a type system for grace?
+I think this is what we need to recap here as a first point.
+It is along the lines of what is above, but should not be that}
+
+\section{Our System}
 
 
-Our system provides support for running simple ``responds-to'' checks.
-The checks are performed on argument values before a method is invoked,
-on the return value after a method finishes, and also
-whenever a variables is read from or written
-(checking a variable's value when read or the evaluated expression when written).
-
-In this section we describe
-how we represent types in the VM,
-the notion of a ``responds-to'' check,
-when the checks are performed, 
-and conclude with detail about our implementation in Moth.
-
-Grace's employs a structural type system,
-which means that sub-typing is evaluated on the structure of objects
-rather than their names;
-most notably,
-the consequence of structural typing is that objects who share the same interface
-are considered to be the same type.
-Since Grace treats methods and fields uniformly (see \cref{overview:grace}), 
-we need only consider the public interface of an object for type-checking.
-
-For our dynamic system,
+% describe differences with our system
+While providing support for Grace's type system is entirely possible,
+previous work has given evidence that significant performance costs are involved in doing so.
+We instead provide support for a very \ugh{``responds-to''}\sm{Smalltalk terminology, needs to be avoided} type checking system.
+For our system,
 we treat a type as nothing more than a collection of method names
 (illustrated by \cref{code:example-type-object}).
 We evaluate whether an object conforms to a type
 by checking that it can respond to each of the named methods.
-Moth has access to the class of any object and
-so it is simple to evaluate whether an object conforms to a type by
-asking the class if it can respond to each of the method
-(see \cref{code:subtyping}.
-If an object cannot respond to one of the named methods,
-we throw a language level type error
-(which may be caught later in the program).
-Otherwise we conclude the type check as successful.
+Since Moth has access to the class of any object this check 
+can be supported by a simple enumeration
+(see the pseudo-code in \cref{code:enumeration-for-type-check}).
 
-\subsection{An Efficient Implementation.}
+% advatanges to our system
+The advantages of our system is that it is light-weight and fast. 
+Our type system can be implemented with relatively few changes to the VM and,
+since it avoids the potential for recursive loops during type checking,
+much of the overhead of our implementation can be folded into compilation (see \cref{ssec:evaluation}).
+While not as expressive as Grace's type system, our implementation enables
+the programmer to verify whether values respond to the interfaces that they expect. 
+In particular,
+our simple checks can be used on the arguments passed into a method,
+on the value return from a method, and also
+on any assignment to or read form a variable.
 
+\sm{perhaps it would be useful to have an example here
+and perhaps it could be mentioned on what kind of system this is based.
+and why this design is useful}
+
+
+\subsection{Implementation}
+
+\sm{what's the context here?}
+
+% obtaining type objects
 To obtain the type objects,
 we extract the list of method names from each literal defined by the program.
 Since any two objects with the same interface are considered to be of the same type,
@@ -68,22 +83,32 @@ we create one type object for each unique interface.
 This means we can assign the same instance of type check to multiple type literals
 and run time objects;
 ultimately reduce the number of type checks that need to be performed.
+Once we have obtained the typing information from the source program,
+we attach type check nodes to the program AST.
 
-We also record the sub-typing relations between all instances of types collected by the VM.
-We use matrix a three-value truth matrix for this record that 
-lists each type object along its row and column (see \cref{fig:sub-typing-matrix}).
+% caching type checks
+We also cache each type check during the execution of the program.
+We use matrix a three-value truth matrix for the record, 
+which lists each type object along its row and column (see \cref{fig:sub-typing-matrix}).
 We initialize the matrix with true along its trace (each type is a subtype of itself) and 
 with the leave the other cells uninitialised.
 Whenever a dynamic type check runs we first obtain the type of the object from the VM, 
 its expected type from the AST,
 and then index the record using these types.
-
 If the corresponding cell is uninitialized
 we run the type check and store the result to the table.
-When then throw the typing error if the check failed
-or otherwise continue with the program execution 
-Otherwise, when the corresponding cell already has been assigned a value,
+Whenever a check fails we immediately throw a typing error, or otherwise
+continue with the program execution 
+When the corresponding cell already has been assigned a value,
 we simply skip the type check and through a type error (when the cell is false)
 or continue with execution (when the cell is true).
-Using this process we can lazily evaluate each relationship only once.
+Using the cache, we can delay each check until it is needed and 
+also evaluate the check between each pair of types only once.
 
+
+\subsection{Optimization}
+
+Truffle, introduced in \cref{ssec:moth}, provides a simple mechanism for us to optimize type checks.
+In particular,
+we can specialize how our type checks are performed by creating compiling the type-checking code
+differently depending on what value is seen at run time.
