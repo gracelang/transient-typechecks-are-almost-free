@@ -1,0 +1,19 @@
+\begin{lstlisting}[label={code:cars}, caption={A program that defines methods for managing a database of vehicles.}]
+class Car {
+    var owner
+    method changeOwner(_) is required
+}
+
+class newPersonalCar (model) {
+    method changeOwner(person: { name }) {
+        owner := person
+    }
+
+}
+
+class newGovernmentCar (model) {
+    method changeOwner(department: { code }) {
+        owner := department
+    }
+}
+\end{lstlisting}

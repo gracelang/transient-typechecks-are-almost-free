@@ -1,0 +1,22 @@
+\begin{lstlisting}[label={code:type-literal}, caption={A \emph{type literal} written in Grace}]
+type Foo = interface {
+    bar
+} 
+\end{lstlisting}
+
+\begin{lstlisting}[label={code:type-annotation-variable}, caption={A \emph{variable declaration} annotated with a name referring to an expected type}]
+var foo: Foo := ...
+\end{lstlisting}
+
+\begin{lstlisting}[label={code:type-annotation-method}, caption={A \emph{method declaration}, with its parameter and return value annotated by a name}]
+method baz(value: Foo) -> Boolean { ... }
+\end{lstlisting}
+
+
+\begin{lstlisting}[label={code:type-annotation-literal}, caption={A \emph{method declaration}, with its parameter type annotated by a type literal}]
+method baz(value: { bar }) -> Boolean { ... }
+\end{lstlisting}
+
+
+
+

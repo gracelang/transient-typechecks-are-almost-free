@@ -1,114 +1,172 @@
 %!TEX root = ../latex/paper.tex
-%\section{Simple Dynamic Type Checking}
+
 \section{A Dynamic Type-Checking System}
 \label{sec:method}
 
+% \1 motivation
+%     \2 has to be fast
+%     \2 has to be simple to implement
+% \1 high performance implementation
+% \1 AST based
 
-\sm{all this belongs into background, no?}
-% Breifly recap Grace's type system
-As described in \cref{ssec:grace},
-Grace's type system is \ugh{gradual}\smQ{didnt James ask to avoid the term?}. 
-Having the type system be gradual means that types are optional,
-allowing the developer to write the program first and add typing information later. 
-Grace's type system is also structural, 
-which means that typing relationships are evaluated
-in terms of how objects \ugh{behave} rather than how they are named.\sm{there is some implicit comparison here (to what is compared?) and it is unclear to me that this is correct}
+Our motivation, as outlined in \cref{sec:introduction}, is to provide developers with
+a type system that verifies a program's execution conforms to its documentation. 
+Our type system should also be light-weight; 
+adding marginal overhead in terms of execution time and
+involve little work to implement.
 
-% The full system
-\sm{this is a terrible motivation. It says, we are lazy!
-also, it is unclear to me that this is really significantly more work}
-Unfortunately, providing support for Grace's full system entails a significant amount of work.
-An algorithm for the full system would need to 
-first extract the type from a given object 
-and then check that the extracted type is a subtype of expected type 
--- the expected type is expressed through an  annotation in the source program
-(see \cref{code:grace-annotation}).
-The check itself involves evaluating
-whether the object implements each of the methods declared by expected type.
-In turn, this evaluation involves determining that the object can respond to the given method and;
-furthermore, that both the expected method and the object's method have the same parameter and return types.
-The notion of gradual typing complicates the issue,
-since some of the typing information is unknown when the program is parsed. 
-When faced with an unknown case,
-the algorithm must allow that part to pass for free
-and record this as an assumption that may be invalidated later.
-
-\sm{what's the goal of this paper?
-What's the goal of using such a type system for grace?
-I think this is what we need to recap here as a first point.
-It is along the lines of what is above, but should not be that}
-
-\section{Our System}
+Here we describe the how we have added support for our type system to Moth --
+an AST-interpreter for the Grace programming language offering fast peak performance,
+described further in \cref{sec:background}. 
 
 
-% describe differences with our system
-While providing support for Grace's type system is entirely possible,
-previous work has given evidence that significant performance costs are involved in doing so.
-We instead provide support for a very \ugh{``responds-to''}\sm{Smalltalk terminology, needs to be avoided} type checking system.
-For our system,
-we treat a type as nothing more than a collection of method names
-(illustrated by \cref{code:example-type-object}).
-We evaluate whether an object conforms to a type
-by checking that it can respond to each of the named methods.
-Since Moth has access to the class of any object this check 
-can be supported by a simple enumeration
-(see the pseudo-code in \cref{code:enumeration-for-type-check}).
 
-% advatanges to our system
-The advantages of our system is that it is light-weight and fast. 
-Our type system can be implemented with relatively few changes to the VM and,
-since it avoids the potential for recursive loops during type checking,
-much of the overhead of our implementation can be folded into compilation (see \cref{ssec:evaluation}).
-While not as expressive as Grace's type system, our implementation enables
-the programmer to verify whether values respond to the interfaces that they expect. 
-In particular,
-our simple checks can be used on the arguments passed into a method,
-on the value return from a method, and also
-on any assignment to or read form a variable.
 
-\sm{perhaps it would be useful to have an example here
-and perhaps it could be mentioned on what kind of system this is based.
-and why this design is useful}
+% \1 types defined as list of members
+%     \2 example of what that means
+% \1 annotations attached to methods (args and return), fields, and variable declarations
+% \1 we consider object is type when obj can has each member collected by type
+%     \2 examples of what's supported
+
+
+\subsection{Design}
+
+\input{../content/example-annotations}
+
+Since Grace is a structurally typed, 
+the relationship between a value and a type is evaluated in terms of structure rather than nomination.
+\rrtodo{the next sentence needs improvement}.
+Furthermore Grace is a message-based language,
+meaning that the set of messages an object can respond to defines its structure.
+The programmer can first attach names to types using an interface syntax as illustrated by \cref{code:type-literal}
+and then attached annotate variable (\cref{code:type-annotation-variable})
+and method declarations (\cref{code:type-annotation-method})
+with those types. 
+The interface syntax can also be used directly as an annotation (\ref{code:type-annotation-literal}).
+
+To favour simplicity,
+we design our system to treat types as no more than the list of methods that an object should respond to.
+Consequently, our design consider an object to 
+conform to a type when it can respond to each of that types members and
+also considers one type a subtype of another 
+when its set of members form a subset of the other's members.
+
+Our system supports type checking whenever an argument can be placed in Grace: 
+on arguments, values returned from methods, and on variables.
+Arguments are checked before the body of a method is executed,
+return values after the execution of a method, and
+variables constitute a check whenever they are read from or assigned to.
+
+As a first example, 
+consider the declaration of the \textsc{Timer} type declared in \cref{code:stopwatch}. 
+By specifying that the ``stopwatch'' method should return a ``Timer'', 
+the programmer can be sure that, void of any type errors during execution,
+that the resulting object will respond to the ``elapsed'' message.
+
+\input{../content/example-stopwatch}
+
+A more interesting example is presented by \cref{code:cars}. 
+When no errors result from execution the programmer can be sure that a car, 
+regardless of which method it was made from, 
+will respond to the ``owner'' and ``changeOwner(\_)'' messages.
+However, there is no guarantee that the value assigned to the owner field responds to
+either the ``name'' (used for people) or ``code'' (used for departments). 
+
+\input{../content/example-cars}
+
+While our design is simplistic in that examines only the methods to which an object can respond,
+rather than the full typing information of the program,
+our system is sufficient to verify that a program's execution conforms to its documentation
+and allows the programmer flexibility (the program need not be fully compliant).
+Furthermore, as we will continue to describe through \cref{sec:implementation, sec:optimization}, 
+our system leads to an easy-to-implement and fast-to-execute implementation.
+
+
+% \1 multiple types can share an instance
+% \1 get from type literals
+% \1 add type check nodes to AST
+% \1 at run time
+%     \2 get type from object layout 
+%     \2 get expected type from AST
+%     \2 run check
 
 
 \subsection{Implementation}
+\label{sec:implementation}
 
-\sm{what's the context here?}
+We have implemented our type system as an extension to Moth.
+As we described in \cref{ssec:moth},
+Moth is an AST-based.
+Our system first processes all type literals declared in a program and records these as
+unique entries into a global record.
+When recorded, if a type of the same structure already exists we return the existing instance
+rather than creating a new one.
+When creating the AST for a program, 
+we process any type annotations present on method and variable declarations and
+recall the corresponding types from the global record. 
+Any annotations using the literal syntax constituent adding a new type to the record.
+Later, during runtime, we can extract the type of an object from it's factory 
+(a mechanism provided by Moth to instantiate objects).
+The factory maintains the definitions of the object found during parsing and
+we enumerate through this record to obtain a list of names that correspond
+to which methods the object can respond too.
+We then consult the global record to retrieve an instance of a type object,
+which can either create a new object or provide an instance already created.
+Finally, we iterate through the list of members defined by the expected type 
+(recalled from the AST) and verify that the objects can respond to each one.
+We through an error as soon as an object fails to conform to its expected type, 
+and otherwise execution continues unaffected. 
 
-% obtaining type objects
-To obtain the type objects,
-we extract the list of method names from each literal defined by the program.
-Since any two objects with the same interface are considered to be of the same type,
-we create one type object for each unique interface. 
-This means we can assign the same instance of type check to multiple type literals
-and run time objects;
-ultimately reduce the number of type checks that need to be performed.
-Once we have obtained the typing information from the source program,
-we attach type check nodes to the program AST.
+An example of the implementation is provided by \cref{code:typecheck}.
 
-% caching type checks
-We also cache each type check during the execution of the program.
-We use matrix a three-value truth matrix for the record, 
-which lists each type object along its row and column (see \cref{fig:sub-typing-matrix}).
-We initialize the matrix with true along its trace (each type is a subtype of itself) and 
-with the leave the other cells uninitialised.
-Whenever a dynamic type check runs we first obtain the type of the object from the VM, 
-its expected type from the AST,
-and then index the record using these types.
-If the corresponding cell is uninitialized
-we run the type check and store the result to the table.
-Whenever a check fails we immediately throw a typing error, or otherwise
-continue with the program execution 
-When the corresponding cell already has been assigned a value,
-we simply skip the type check and through a type error (when the cell is false)
-or continue with execution (when the cell is true).
-Using the cache, we can delay each check until it is needed and 
-also evaluate the check between each pair of types only once.
+\input{../content/example-typecheck}
 
+
+
+
+% \1 matrix caching type relationships
+%     \2 reducing number of checks
+%     \2 example of matrix 
+
+%  \1 specializations depending on values seen at run time
+%     \2 null, literals, ...
+%     \2 example of type check node w specializations
+
+% \2 compilation at method level
+% \2 after inlining, constant prorogation and folding, compilation unit has fewer instructions.
 
 \subsection{Optimization}
+\label{sec:optimization}
 
-Truffle, introduced in \cref{ssec:moth}, provides a simple mechanism for us to optimize type checks.
-In particular,
-we can specialize how our type checks are performed by creating compiling the type-checking code
-differently depending on what value is seen at run time.
+From a high level perspective, 
+our system is homogeneous with the tag-based system introduced by \citet{Greenman2017}.
+The similarity is in this sense that the type of an object is expressed as a reference
+to an object in the global record, which
+effectively tags each run time object.
+
+We provide two important levels of optimizations for our implementation: 
+first, we maintain a three-value matrix that records all known subtyping relationships. 
+Whenever we perform a type check we first examine the matrix to see if the relationship, 
+between the type of an object and the expected type, has been computed before.
+If already known, the previous result is returned 
+or otherwise the relationship is evaluated and the matrix is updated.
+This optimization alone significantly reduces the overhead of our system 
+by eagerly computed each relationship only once whenever it is first required. 
+\rrtodo{How can I better word next sentence?}
+Since objects can share an instance of type,
+an check evaluated in one location can eliminate the cost in other locations.
+
+\smtodo{Check the following paragraph}
+Finally, recall from \cref{ssec:moth} that
+Moth's code is compiled using the Graal, 
+which performs
+constant sub-expression elimination,
+method and block inlining,
+aggressively propagate and fold constants, and
+perform dead code elimination.
+Once compiled, much of the computations for type checking
+is be folded into method dispatch
+(for parameter and return value checks)
+and variable reads and assignments.
+As we demonstrate later in \cref{sec:evaluation}, 
+the overhead of our system is negligible during peak performance.

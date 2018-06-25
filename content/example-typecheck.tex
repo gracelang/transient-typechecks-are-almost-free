@@ -1,0 +1,47 @@
+\begin{lstlisting}[label={code:typecheck},caption={An overview of our implementation of types and the global record.}]
+class Type:
+
+    _members
+    _known
+    
+    def create(members):
+        _members = members
+
+    def has_exact_members(members):
+        return members == _members
+
+    def equals(other):
+        return has_exact_members(other._members)
+
+    def has_member(required_member, type):
+        for member in type.members():
+            if member.equals(required_member):
+                return true
+        return false
+
+    def is_subtype(other):
+        if matrix[self, other] != None:
+            return matrix[self, other]
+
+        for member in _members():
+            if not other.has_member(member):
+                matrix[self, other] = false
+                return false
+
+        matrix[self, other] = true
+        return true
+
+class Record:    
+    
+    _types = []
+
+    def create(methods):
+        members = [m.name for m in methods]
+        for type in _types:
+            if type.has_exact_members(members):
+                return type
+
+        new_type = Type.create(members)
+        _types.add(new_type)
+        return new_type
+\end{lstlisting}
