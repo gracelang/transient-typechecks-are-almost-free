@@ -1,5 +1,29 @@
 %!TEX root = ../latex/paper.tex
 
+% Breifly recap Grace's type system
+As described in \cref{ssec:grace},
+Grace's type system is gradual. 
+Having the type system be gradual means that types are optional,
+allowing the developer to write the program first and add typing information later. 
+Grace's type system is also structural, 
+which means that typing relationships are evaluated
+in terms of how objects behave rather than how they are named. 
+
+% motivation for our system
+Unfortunately, providing support for Grace's full system entails a significant amount of work.
+An algorithm for the full system would need to extract the type from a given object and then check that
+the extracted type is a subtype of expected type (provided by the source code of the program). step through
+each signature of the expected type and confirm that the object can respond to corresponding method, 
+then check that each of parameters in the signature
+(one for each parameters and one for the return type)
+match that of the expected method.
+
+\begin{itemize}
+\item 
+\item examines that the structure 
+ and types, and resolve the recursive
+
+
 Our system provides support for running simple ``responds-to'' checks.
 The checks are performed on argument values before a method is invoked,
 on the return value after a method finishes, and also
