@@ -3,24 +3,24 @@
 \section{Related Work}
 \label{sec:related-work}
 
-Although syntaxen for type annotations in dynamic langauges go back at
+Although syntaxen for type annotations in dynamic languages go back at
 least as far as Lisp \cite{cltl2}, the first attempts at adding a
-cohenent static type system to a dynamically typed langauge involved
+coherent static type system to a dynamically typed language involved
 Smalltalk \cite{RalphJohnson1986}, with the first practical system
 being Bracha's Strongtalk \cite{Strongtalk1}. Strongtalk
 (independently replicated for Ruby \cite{DiamondBackRuby}) provided a
 powerful and flexible static type system, where crucially, the system
 was \emph{optional} (also known as pluggable
 \cite{BrachaPluggable2004}. Programmers could run the static checker
-over their Smalltalk code (or not); either way the type annotaitons
+over their Smalltalk code (or not); either way the type annotations
 had no impact whatsoever of the semantics of the underlying Smalltalk
 program.
 
 Siek and Taha introduced the term ``gradual typing''
-\cite{seikTaha2006} to decribe the logical extension of this scheme: a
+\cite{seikTaha2006} to describe the logical extension of this scheme: a
 dynamic language with type annotations that could if necessary be
 checked at runtime. Siek and Taha build on earlier, complementary,
-work extending fully statically typed langauges with a ``Dynamic''
+work extending fully statically typed languages with a ``Dynamic''
 type --- \kjx{citeasnoun?}\cite{AbadiTOPLAS1991} is an important early approach
 and also surveys earlier work. Revived practical adoption of dynamic
 languages generated revived research interest, leading to the
@@ -29,10 +29,10 @@ formulation of the ``gradual guarantee''
 gradual type systems: removing type annotations should not change the
 semantics of a correct program, drawing on the Boyland's critical
 insight that, of course, such a guarantee must by its nature forbid
-codee that can depend on the presence or absence of type declarations 
+code that can depend on the presence or absence of type declarations 
 elsewhere in the program \cite{BoylandFOOLBeingMeanAboutGrace}. 
 
-Type errors in gradual (or other dynamically checked) type sysems will
+Type errors in gradual (or other dynamically checked) type systems will
 often be triggered by the type declarations, but often those
 declarations will not be at fault --- indeed in a correctly typed
 program in a sound gradually typed system,  the declarations cannot be
@@ -41,13 +41,13 @@ checker. Rather, the underlying fault must be somewhere within the
 barbarian dynamically typed code \emph{trans vallum}.  Blame tracking
 \cite{blame,blameyblame,blame} localises these faults by identifying
 the point in the program where the system makes an 
-assumption about dynamcially typed objects, so can identiy the root
-cause should the assummption fail.  Different semantics for blame
+assumption about dynamically typed objects, so can identify the root
+cause should the assumption fail.  Different semantics for blame
 detect these faults slightly differently, and impose more or less
-implementation overhead \cite{moreBLameStuff}.
+implementation overhead \cite{Vitousek2017,moreBLameStuff}.
 
 As with language designs, there seem to be two main implementation
-strategies for languages mixing dyanmic and static type checks: either
+strategies for languages mixing dynamic and static type checks: either
 adding static checks into a dynamic language implementation, or adding
 support for a ``dynamic'' type to an implementation that depends on
 static types for efficiently. Racket, for example, optimises code with
@@ -55,29 +55,71 @@ a combination of type inference and type declarations --- the Racket
 IDE ``optimiser coach'' goes as far as to suggest to programmers type
 annotations that may improve their program's performance
 \cite{ShriramOptimiserCoach}. In these implementations, values flowing
-from dynamically to staticlaly typed code must be checked at the
+from dynamically to statically typed code must be checked at the
 boundary.  Fully statically typed code needs no dynamic type checks,
 and so generally performs better than dynamically typed code. Adopting
 a gradual type system such as Typed Racket \cite{TypedRacket} allows
-programmers declare types explicitly that cna be checked statically,
-removing unncessary overhead.
+programmers declare types explicitly that can be checked statically,
+removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python
 \cite{ReticulatedPython}, Higgs \cite{VM-aready-knew-that}, and our
 work here takes the opposite approach: adding type checking into
 just-in-time compiling virtual machines that do not rely on static
 type declarations. These systems do not use information from type
-declarations to optimise excution speed, rather the necessity to
+declarations to optimise execution speed, rather the necessity to
 perform (potentially repeated) dynamic type checks tend to slow
 programs down, so here code with no type annotations generally
 performs better than statically typed code, or rather, code with many
 type annotations. In the limit, these kinds of systems may only ever
 check types dynamically and may not involve a static type checker at
-all.  Several recent langauges including HACK \cite{HACK}, Typescript
+all.  Several recent languages including HACK \cite{HACK}, Typescript
 \cite{typescript}, Dart \cite{dart}, and Grace \cite{grace} follow
 this general approach.
 
+As these systems have come to wider attention, the question of their
+implementation overheads has become more prominent.  
+Takikawa et al.\ \cite{Takikawa2016} asked `` is sound gradual typing
+dead?'' based on a systematic performance measurement on Typed Racket.
+The key here is their evaluation methodology, where they constructed a
+number of different permutations of typed and untyped code, and
+evaluated performance along the spectrum.
+Baumann et al.\ \cite{Bauman2017} replied to Takikawa's study, but
+using Pycket \cite{Pycketshortpaper}, a tracing JIT for Racket, rather
+than the standard Racket VM, although maintaining full gradually typed
+Racket semantics. Baumann are able to demonstrate most benchmarks
+with a slowdown of only a few percent.
+Muehlboeck et al.\ \cite{Muehlboeck2017} also replied to Takikawa, 
+using a similar benchmarking methodology applied to a custom language
+with features designed to make gradual types easier to optimise, 
+demonstrating speedups as more type information is added to programs. 
+Most recently, Kuhlenschmidt et al.\ \cite{Kuhlenschmidt2018} employ a
+``ahead of time'' (i.e.\ traditional, static) compiler for a custom
+language and demonstrate good performance for code where more than
+half of the program is annotated with types, and still reasonable
+performance for code with type annotations. \kjx{mealy mouthed.}
 
+
+Perhaps the closest to our approach is Greenman et al.\
+\cite{Greenman2018}
+and Richards et al.\ \cite{Richards2017}.
+Greenman et al.\ describe dynamically checking ``tag-type''
+soundness for a variant of Reticulated Python.
+As with our work, Greenman checks only the ``top-level'' type of an
+object against a declaration, although Greenman's checks are nominal
+while ours are structural. \kjx{Gap for stefan to be mean here once
+  we've got out final results}. 
+
+Richards et al.\ \cite{Richards2017} take a similar implementation
+approach to our work, demonstrating that the extant implementation of
+an existing VM contains most of the information necessary to eliminate
+much of the overhead of dynamic type checks. Unlike our work, Richards
+implement ``full'' gradual typing with blame tracking, rather than
+simple Boyland tag-type checks, and do so on top of the custom Higgs
+VM for Javascript. In contrast, our implementation of tag-type checks
+is built on top of the Truffle framework for the Graal VM, and reaches
+performance approaching that of JS, \kjx{LOTS FASTER that the other
+  guys??}.
 
 
 
