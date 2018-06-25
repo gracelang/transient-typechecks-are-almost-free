@@ -1,20 +1,49 @@
 %!TEX root = ../latex/paper.tex
 
+To evaluate our approach to dynamic type checking,
+we first establish the baseline performance of Moth
+compared to Java and JavaScript,
+and then assess the impact of the type checks themselves.
+
 \subsection{Methodology and Setup}
 
-\begin{cnote}
-- benchmark selection
- - baseline determined based on AWFY
- - dynamic type checking performance determined based on commonly used
-   benchmarks from the gradual typing papers
-   - name the benchmarks
-   - for each, indicate which paper used them
-   - we are subsetting, need to explain why
-     - the subset of benchmarks that we managed to port to Grace/Moth
-\end{cnote}
+To account for the complex warmup behavior
+of modern system\citep{Barrett:2017:VMW},
+we run each benchmark for 1000\smtodo{add macro} iterations in the same
+VM invocation.\footnote{
+For the Higgs VM, we only use NN\smtodo{add macro} iterations,
+because of it lower performance.
+This is sufficient since its compilation approach induces less variation
+and leads to more stable measurements.}
+Afterwards, we inspected the run-time plots over the iterations
+and manually determined a cutoff of NN\smtodo{add macro} iterations for warmup,
+i.e., we discard iterations with signs of compilation.
+In this work, we do not consider startup performance,
+because we want to assess the impact on dynamic type checks
+on the best possible performance.
+
+% Yuria
+%  - Ubuntu 16.04.4, Kernel 3.13
+%  - 24 hyperthreads
+%  - Intel Xeon E5-2620 v3 2.40GHz
+% Graal 0.33 Feb. 2018
+All experiments were executed on a machine running Ubuntu Linux 16.04.4,
+with Kernel 3.13.
+The machine has two Intel Xeon E5-2620 v3 2.40GHz,
+with 6 cores, each for a total of 24 hyperthreads.
+We used ReBench 0.9.1, Java 1.8.0\_171, Graal 0.33 (\code{a13b888}),
+Node.js 10.4, and Higgs from 9 May 2018 (\code{aa95240}).
+Our experimental setup is available online to enable reproductions.\footnote{
+\smtodo{add version info}
+\url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}}
+
 
 \subsection{Are we fast yet?}
 \label{sec:baseline-perf}
+
+To establish the performance of Moth,
+we compare it 
+\citep{Marr2016}
 
 \begin{cnote}
 - setting a base line with the AWFY benchmarks
@@ -31,6 +60,15 @@
 \subsection{Performance of Dynamic Type Checking}
 
 \begin{cnote}
+- benchmark selection
+ - dynamic type checking performance determined based on commonly used
+   benchmarks from the gradual typing papers
+   - name the benchmarks
+   - for each, indicate which paper used them
+   - we are subsetting, need to explain why
+     - the subset of benchmarks that we managed to port to Grace/Moth
+
+
   - which experiments?
   
   - fully types
