@@ -3,6 +3,89 @@
 \section{Related Work}
 \label{sec:related-work}
 
+Although syntaxen for type annotations in dynamic langauges go back at
+least as far as Lisp \cite{cltl2}, the first attempts at adding a
+cohenent static type system to a dynamically typed langauge involved
+Smalltalk \cite{RalphJohnson1986}, with the first practical system
+being Bracha's Strongtalk \cite{Strongtalk1}. Strongtalk
+(independently replicated for Ruby \cite{DiamondBackRuby}) provided a
+powerful and flexible static type system, where crucially, the system
+was \emph{optional} (also known as pluggable
+\cite{BrachaPluggable2004}. Programmers could run the static checker
+over their Smalltalk code (or not); either way the type annotaitons
+had no impact whatsoever of the semantics of the underlying Smalltalk
+program.
+
+Siek and Taha introduced the term ``gradual typing''
+\cite{seikTaha2006} to decribe the logical extension of this scheme: a
+dynamic language with type annotations that could if necessary be
+checked at runtime. Siek and Taha build on earlier, complementary,
+work extending fully statically typed langauges with a ``Dynamic''
+type --- \kjx{citeasnoun?}\cite{AbadiTOPLAS1991} is an important early approach
+and also surveys earlier work. Revived practical adoption of dynamic
+languages generated revived research interest, leading to the
+formulation of the ``gradual guarantee''
+\cite{gradualGuarantee,revisedGradualGuarantee} to characterise sound
+gradual type systems: removing type annotations should not change the
+semantics of a correct program, drawing on the Boyland's critical
+insight that, of course, such a guarantee must by its nature forbid
+codee that can depend on the presence or absence of type declarations 
+elsewhere in the program \cite{BoylandFOOLBeingMeanAboutGrace}. 
+
+Type errors in gradual (or other dynamically checked) type sysems will
+often be triggered by the type declarations, but often those
+declarations will not be at fault --- indeed in a correctly typed
+program in a sound gradually typed system,  the declarations cannot be
+at fault because they will have passed the static type
+checker. Rather, the underlying fault must be somewhere within the
+barbarian dynamically typed code \emph{trans vallum}.  Blame tracking
+\cite{blame,blameyblame,blame} localises these faults by identifying
+the point in the program where the system makes an 
+assumption about dynamcially typed objects, so can identiy the root
+cause should the assummption fail.  Different semantics for blame
+detect these faults slightly differently, and impose more or less
+implementation overhead \cite{moreBLameStuff}.
+
+As with language designs, there seem to be two main implementation
+strategies for languages mixing dyanmic and static type checks: either
+adding static checks into a dynamic language implementation, or adding
+support for a ``dynamic'' type to an implementation that depends on
+static types for efficiently. Racket, for example, optimises code with
+a combination of type inference and type declarations --- the Racket
+IDE ``optimiser coach'' goes as far as to suggest to programmers type
+annotations that may improve their program's performance
+\cite{ShriramOptimiserCoach}. In these implementations, values flowing
+from dynamically to staticlaly typed code must be checked at the
+boundary.  Fully statically typed code needs no dynamic type checks,
+and so generally performs better than dynamically typed code. Adopting
+a gradual type system such as Typed Racket \cite{TypedRacket} allows
+programmers declare types explicitly that cna be checked statically,
+removing unncessary overhead.
+
+On the other hand, systems such as Reticulated Python
+\cite{ReticulatedPython}, Higgs \cite{VM-aready-knew-that}, and our
+work here takes the opposite approach: adding type checking into
+just-in-time compiling virtual machines that do not rely on static
+type declarations. These systems do not use information from type
+declarations to optimise excution speed, rather the necessity to
+perform (potentially repeated) dynamic type checks tend to slow
+programs down, so here code with no type annotations generally
+performs better than statically typed code, or rather, code with many
+type annotations. In the limit, these kinds of systems may only ever
+check types dynamically and may not involve a static type checker at
+all.  Several recent langauges including HACK \cite{HACK}, Typescript
+\cite{typescript}, Dart \cite{dart}, and Grace \cite{grace} follow
+this general approach.
+
+
+
+
+
+ 
+
+
+
+
 \paragraph{VM already knew that}
 
 \begin{cnote}
