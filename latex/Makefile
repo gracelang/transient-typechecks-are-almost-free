@@ -13,6 +13,9 @@ all:
 ../generated/%.tex: ../evaluation/%.Rnw ../generated ../evaluation/scripts/*.R $(DATA_FILES)
 	../evaluation/scripts/knit.R $< $@
 
+knitr: $(KNITR_TEX)
+	echo $(KNITR_TEX)
+
 clean:
 	$(RM) acmart.cls *.log *.aux \
 	*.cfg *.glo *.idx *.toc \
