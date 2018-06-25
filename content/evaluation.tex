@@ -71,6 +71,35 @@ we compare it
 
 \subsection{Performance of Dynamic Type Checking}
 
+The performance overhead of our dynamic type checking system
+is assessed based on the Are\,We\,Fast\,Yet benchmarks
+as well as benchmarks from the gradual-typing literature.
+Our goal was to use benchmarks that are widely used and can be ported to Grace.
+To this end, we surveyed a number of papers\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2017}
+and selected the benchmarks that have been used by multiple papers.
+Some of the benchmarks overlapped with the Are We Fast Yet suite,
+or were available in different versions.
+While not always behavioral equivalent,
+we used the Are\,We\,Fast\,Yet benchmarks since we used them to
+establish the performance baseline, too.
+
+\begin{table}
+\caption{Benchmarks selected from literature.}
+\label{tab:gradual-benchmarks}
+\begin{tabular}{l l r}
+sieve of eratosthenes &
+ \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
+snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
+n queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2017} & used \cite{Marr2016} \\
+fannkuch & \cite{Vitousek2017,Greenman2017} \\
+n body & \cite{Kuhlenschmidt:2018:preprint,Vitousek2017,Greenman2017} & used \cite{Marr2016} \\
+pystone & \cite{Vitousek2017,Muehlboeck2017,Greenman2017} \\
+float & \cite{Vitousek2017,Muehlboeck2017,Greenman2017} \\
+go & \cite{Vitousek2017,Muehlboeck2017,Greenman2017} \\
+spectralnorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2017}
+\end{tabular}
+\end{table}
+
 \begin{figure}
 	\TypingOverhead{}
 	\caption{Overhead\smtodo{describe}}

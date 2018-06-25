@@ -13,12 +13,16 @@ source("scripts/paper.R", chdir=TRUE)
 
 data_1 <- select(load_data_file("benchmark-5adea5e8a0f6b60a4eaabc2e2b838ce666ab5799.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
-data_2 <- select(load_data_file("benchmark-d98bf528ae475c426b33ac4cfa07852a48054d10.data.bz2"),
+data_2 <- select(load_data_file("benchmark-3fe02efc6cb2e5f9222bd8456ebc30b005f9fb61.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_3 <- select(load_data_file("benchmark-15d82ec0f8ec0805153fcf156c939facbc7fb7dd.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+
+
 ## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
 data_1 <- filter(data_1, Iteration >= warmup_low & Iteration < warmup_high)
 
-data <- rbind(data_1, data_2)
+data <- rbind(data_1, data_2, data_3)
 
 data <- filter(data, Benchmark %in% c("DeltaBlue",
                                       "Richards",
@@ -39,13 +43,13 @@ data <- droplevels(data)
 
 # levels(droplevels(filter(data, VM == "MothTyped"))$Benchmark)
 
-moth <- data %>%
-  filter(VM == "Moth") %>%
+java <- data %>%
+  filter(VM == "Java") %>%
   group_by(Benchmark) %>%
   summarise(RuntimeMean = mean(Value))
 
 norm <- data %>%
-  left_join(moth, by = "Benchmark") %>%
+  left_join(java, by = "Benchmark") %>%
   group_by(Benchmark) %>%
   transform(RuntimeRatio = Value / RuntimeMean)
   
@@ -62,6 +66,7 @@ vm_stats <- stats %>%
   group_by(VM) %>%
   summarise(
     geomean = geometric.mean(RuntimeFactor),
+    median = median(RuntimeFactor),
     min = min(RuntimeFactor),
     max = max(RuntimeFactor))
 @
@@ -76,8 +81,10 @@ p <- p +
   geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=2), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=3), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=4), colour="#cccccc", linetype="dashed") +
   geom_boxplot(outlier.size = 0.5) +
-  coord_flip(ylim = c(0.5, 16))  # 
+  scale_y_log10(breaks = c(0.75, 1, 2, 3, 4, 10, 50)) +
+  coord_flip(ylim = c(0.5, 75))  # 
 p <- p + theme_bw() + theme_simple(font_size = 8) +
     theme(axis.text.x = element_text(angle= 90, vjust=0.5, hjust=1),
           legend.position="none",
