@@ -1,18 +1,22 @@
 %!TEX root = ../latex/paper.tex
-
-\section{Simple Dynamic Type Checking}
+%\section{Simple Dynamic Type Checking}
+\section{A Dynamic Type-Checking System}
 \label{sec:method}
 
+
+\sm{all this belongs into background, no?}
 % Breifly recap Grace's type system
 As described in \cref{ssec:grace},
-Grace's type system is gradual. 
+Grace's type system is \ugh{gradual}\smQ{didnt James ask to avoid the term?}. 
 Having the type system be gradual means that types are optional,
 allowing the developer to write the program first and add typing information later. 
 Grace's type system is also structural, 
 which means that typing relationships are evaluated
-in terms of how objects behave rather than how they are named. 
+in terms of how objects \ugh{behave} rather than how they are named.\sm{there is some implicit comparison here (to what is compared?) and it is unclear to me that this is correct}
 
 % The full system
+\sm{this is a terrible motivation. It says, we are lazy!
+also, it is unclear to me that this is really significantly more work}
 Unfortunately, providing support for Grace's full system entails a significant amount of work.
 An algorithm for the full system would need to 
 first extract the type from a given object 
@@ -29,12 +33,18 @@ When faced with an unknown case,
 the algorithm must allow that part to pass for free
 and record this as an assumption that may be invalidated later.
 
+\sm{what's the goal of this paper?
+What's the goal of using such a type system for grace?
+I think this is what we need to recap here as a first point.
+It is along the lines of what is above, but should not be that}
+
 \section{Our System}
+
 
 % describe differences with our system
 While providing support for Grace's type system is entirely possible,
 previous work has given evidence that significant performance costs are involved in doing so.
-We instead provide support for a very ``responds-to'' type checking system. 
+We instead provide support for a very \ugh{``responds-to''}\sm{Smalltalk terminology, needs to be avoided} type checking system.
 For our system,
 we treat a type as nothing more than a collection of method names
 (illustrated by \cref{code:example-type-object}).
@@ -56,7 +66,14 @@ our simple checks can be used on the arguments passed into a method,
 on the value return from a method, and also
 on any assignment to or read form a variable.
 
+\sm{perhaps it would be useful to have an example here
+and perhaps it could be mentioned on what kind of system this is based.
+and why this design is useful}
+
+
 \subsection{Implementation}
+
+\sm{what's the context here?}
 
 % obtaining type objects
 To obtain the type objects,
