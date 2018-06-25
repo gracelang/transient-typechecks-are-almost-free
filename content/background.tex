@@ -3,13 +3,17 @@
 \section{Background}
 \label{sec:background}
 
-\subsection{Stronger Typing for Dynamically Typed Languages}
+This section details our motivation and
+discussed the technical background for our implementation.
 
-\kjx{No idea why we need this subsection}
 
-\begin{cnote}
-- the dynamic typing discussion as in the outline
-\end{cnote}
+% \subsection{Stronger Typing for Dynamically Typed Languages}
+%
+% \kjx{No idea why we need this subsection}
+%
+% \begin{cnote}
+% - the dynamic typing discussion as in the outline
+% \end{cnote}
 
 \subsection{The Grace Programming Language}
 \sm{feels a little verbose, if we are short on space, I'd try to be more concise in the first paragraph}
@@ -53,8 +57,12 @@ adding type declarations to a program makes that program run slower---teaching s
 effective optimization technique.
 Furthermore, this property is shared
 by several other optionally typed languages including Groovy,
-Typescript and Dart\citep{Muehlboeck2017,find-who-says-this-and-cite-them}.
-
+TypeScript and Dart\citep{Muehlboeck2017,find-who-says-this-and-cite-them}.\sm{I am not sure that, as it is phrased, is actually true.
+TypeScript does not have types at run time, they are completely erased, Dart}
+\begin{cnote}
+Nom\citep{Muehlboeck2017}
+all the gradual systems
+\end{cnote}
 
 \subsection{Moth: Grace on Graal and Truffle}
 \label{ssec:moth}
