@@ -1,0 +1,91 @@
+%!TEX root = ../paper.tex
+
+<<knitr-settings, echo=FALSE, include=FALSE, cache=TRUE>>=
+# load libraries, the data, and prepare it
+if (Sys.getenv("RSTUDIO") == "1") { 
+  if (Sys.getenv("LOGNAME") == "smarr") {
+    setwd("/Users/smarr/Collab/Richard-Roberts/AliveTyping/evaluation") } }
+
+source("scripts/libraries.R", chdir=TRUE)
+source("scripts/paper.R", chdir=TRUE)
+
+# bench <- readRDS("acme.rds.bz2")
+
+data_1 <- select(load_data_file("benchmark-5adea5e8a0f6b60a4eaabc2e2b838ce666ab5799.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_2 <- select(load_data_file("benchmark-d98bf528ae475c426b33ac4cfa07852a48054d10.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
+data_1 <- filter(data_1, Iteration >= warmup_low & Iteration < warmup_high)
+
+data <- rbind(data_1, data_2)
+
+data <- filter(data, Benchmark %in% c("DeltaBlue",
+                                      "Richards",
+                                      "Json",
+                                      "CD",
+                                      "Havlak",
+                                      "Bounce",
+                                      "List",
+                                      "Mandelbrot",
+                                      "NBody",
+                                      "Permute",
+                                      "Queens",
+                                      "Sieve",
+                                      "Storage",
+                                      "Towers" ))
+data <- filter(data, VM != "MothTyped")
+data <- droplevels(data)
+
+# levels(droplevels(filter(data, VM == "MothTyped"))$Benchmark)
+
+moth <- data %>%
+  filter(VM == "Moth") %>%
+  group_by(Benchmark) %>%
+  summarise(RuntimeMean = mean(Value))
+
+norm <- data %>%
+  left_join(moth, by = "Benchmark") %>%
+  group_by(Benchmark) %>%
+  transform(RuntimeRatio = Value / RuntimeMean)
+  
+stats <- norm %>%
+  group_by(VM, Benchmark) %>%
+  summarise(
+    Time.ms = mean(Value),
+    sd      = sd(Value),
+    RuntimeFactor = mean(RuntimeRatio),
+    RR.sd         = sd(RuntimeRatio),
+    RR.median     = median(RuntimeRatio))
+
+vm_stats <- stats %>%
+  group_by(VM) %>%
+  summarise(
+    geomean = geometric.mean(RuntimeFactor),
+    min = min(RuntimeFactor),
+    max = max(RuntimeFactor))
+@
+
+\def\AwfyBaseline{%
+<<awfy-baseline, fig.height=1.2, fig.width=3.3>>=
+baseline <- droplevels(stats)
+
+p <- ggplot(baseline, aes(VM, RuntimeFactor))
+p <- p +
+  geom_hline(aes(yintercept=0.75), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=2), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=3), colour="#cccccc", linetype="dashed") +
+  geom_boxplot(outlier.size = 0.5) +
+  coord_flip(ylim = c(0.5, 16))  # 
+p <- p + theme_bw() + theme_simple(font_size = 8) +
+    theme(axis.text.x = element_text(angle= 90, vjust=0.5, hjust=1),
+          legend.position="none",
+          strip.placement = "outside",
+          axis.title.x = element_text(size = 8),
+          plot.margin = unit(c(0,0,0.1,0.1), "cm"))
+p <- p + ylab("Run-time factor, normalized to Moth (untyped)\n(lower is better)") # +  xlab("Cores")
+p
+@
+}%
+
