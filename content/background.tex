@@ -16,7 +16,44 @@ language we are desinging, with a focus on introductory programming
 courses, but also for more advanced study and research
 \cite{graceAbsence,seekinGraceSIGCSE}.  While Grace's syntax draws
 from the so-called ``curly bracket'' tradition of C, Java, and
-JavaScript (with a side order of Pascal) 
+JavaScript (with a side order of Pascal) the structure of the language
+is in many ways closer to Smalltalk (thus Self and Ruby): method names
+have multiple parts, blocks (lambdas) are used for control flow, and
+returns within lambdas are ``non-local'', returning to the method
+activation in which the block is instantiated \cite{bluebook}.  In
+other ways, Grace is closer to Javascript than Smalltalk: Grace
+objects can be created from object literals, rather than by
+instantiating classes \cite{Black2007-emeraldHOPL,JonesECOOP2016} and
+objects and classes can be deeply nested within each other
+\cite{betabook}.  Finally, Grace's declarations and methods' arguments
+and results can be annotated with types.  These types can be checked
+either statically or dynamically. This means the type system is
+optional or ``pluggable'' \cite{GiladPliggable2004} (removing explicit
+type annotations should not affect the semantics of a correct program
+\cite{gradualGuaratee}) and gradual (the type system includes a
+distinguished ``\lstinline+Unknown+'' type that reverts to fully
+dynamic type checking).
+
+As an educational language \cite{panel}, absolute performance of an
+implementation is less important than the performance profile --- the
+way language features affect performance.  increasing absolute
+performance by several orders of magnitude could let students run
+larger examples --- analysing billions rather than millions of data
+points, wayfinding within a city rather than a village, raytracing
+higher resolution images a little quicker.  On the other hand, issues
+with a language's performance profile could mean the students will
+``learn the wrong things''.  If e.g.\ a languages' built-in cons lists
+were faster than arrays or hash-tables, students cannot learn the
+performance benefits of more complex data structures. In the case of
+Grace, all extant implementations have the unfortunate property that
+adding type declarations to a program makes that program run slower
+--- teaching students that \emph{removing} type declarations is an
+effective optimisation technique.  Furthermore, this property is shared
+by several other optionally typed languages including Groovy,
+Typescript and Dart \cite{find-who-says-this-and-cite-them}.
+
+
+
 
 \subsection{Moth: Grace on Graal and Truffle}
 \label{ssec:moth}
