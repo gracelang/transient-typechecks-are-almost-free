@@ -10,13 +10,14 @@
 % \1 AST based
 
 Our motivation, as outlined in \cref{sec:introduction}, is to provide developers with
-a type system that verifies a program's execution conforms to its documentation. 
+a type system that verifies a program's execution \ugh{conforms to its documentation}.\sm{don't think we can phrase it like this. Also, James teaching argument is also good. might want to revisit this once motivation has stabilized}
+
 Our type system should also be light-weight; 
 adding marginal overhead in terms of execution time and
 involve little work to implement.
 
-Here we describe the how we have added support for our type system to Moth --
-an AST-interpreter for the Grace programming language offering fast peak performance,
+Here we describe how we have added support for our type system to Moth,
+an AST-interpreter for the Grace programming language offering fast peak performance,\sm{might want to make this more concrete}
 described further in \cref{sec:background}. 
 
 
@@ -31,12 +32,14 @@ described further in \cref{sec:background}.
 
 \subsection{Design}
 
+\sm{why is this another file???}
+\sm{can this be a single listing and then you just reference lines? you can label lines in lstlisting for use with cref}
 \input{../content/example-annotations}
 
-Since Grace is a structurally typed, 
+Since Grace is \ugh{structurally typed}\sm{background doesn't talk about this, perhaps we need to avoid it}, 
 the relationship between a value and a type is evaluated in terms of structure rather than nomination.
 \rrtodo{the next sentence needs improvement}.
-Furthermore Grace is a message-based language,
+Furthermore Grace is a \ugh{message-based language}\sm{didn't talk about this either},
 meaning that the set of messages an object can respond to defines its structure.
 The programmer can first attach names to types using an interface syntax as illustrated by \cref{code:type-literal}
 and then attached annotate variable (\cref{code:type-annotation-variable})
@@ -44,41 +47,46 @@ and method declarations (\cref{code:type-annotation-method})
 with those types. 
 The interface syntax can also be used directly as an annotation (\ref{code:type-annotation-literal}).
 
-To favour simplicity,
+To favor simplicity,
 we design our system to treat types as no more than the list of methods that an object should respond to.
 Consequently, our design consider an object to 
 conform to a type when it can respond to each of that types members and
 also considers one type a subtype of another 
 when its set of members form a subset of the other's members.
 
-Our system supports type checking whenever an argument can be placed in Grace: 
+\rephrase{Our system supports type checking whenever an argument can be placed in Grace}:\sm{this sounds strange} 
 on arguments, values returned from methods, and on variables.
 Arguments are checked before the body of a method is executed,
 return values after the execution of a method, and
 variables constitute a check whenever they are read from or assigned to.
 
 As a first example, 
-consider the declaration of the \textsc{Timer} type declared in \cref{code:stopwatch}. 
+consider the declaration of the \textsc{Timer}\sm{why is this sc and not \textbackslash{}code?} type declared in \cref{code:stopwatch}. 
 By specifying that the ``stopwatch'' method should return a ``Timer'', 
 the programmer can be sure that, void of any type errors during execution,
 that the resulting object will respond to the ``elapsed'' message.
 
+\sm{what is the benefit of putting things in separate files?
+this just seems to make my life harder.
+I might have understood if you'd have used lstinputlistings,
+but this way, there doesn't seem to be any benefit}
+\sm{this is a trivial but long example. do we really need to this level of detail?}
 \input{../content/example-stopwatch}
 
 A more interesting example is presented by \cref{code:cars}. 
-When no errors result from execution the programmer can be sure that a car, 
-regardless of which method it was made from, 
-will respond to the ``owner'' and ``changeOwner(\_)'' messages.
+\ugh{When no errors result from execution}\sm{what???} the programmer can be sure that a car, 
+regardless of which \ugh{method it was made from}\sm{what?}, 
+will respond to the ``owner'' and ``changeOwner(\_)'' messages.\sm{why not use the \textbackslash{}code macro for code?}
 However, there is no guarantee that the value assigned to the owner field responds to
 either the ``name'' (used for people) or ``code'' (used for departments). 
 
 \input{../content/example-cars}
 
-While our design is simplistic in that examines only the methods to which an object can respond,
+While our design is \ugh{simplistic}\sm{don't say that our design is bad!} in that it examines only the methods to which an object can respond,
 rather than the full typing information of the program,
-our system is sufficient to verify that a program's execution conforms to its documentation
+our system is sufficient to verify that a program's execution conforms to \ugh{its documentation}\sm{you never explained what this means. as it is it is way too broad}
 and allows the programmer flexibility (the program need not be fully compliant).
-Furthermore, as we will continue to describe through \cref{sec:implementation, sec:optimization}, 
+Furthermore, as we will continue to describe through \cref{sec:implementation,sec:optimization}, 
 our system leads to an easy-to-implement and fast-to-execute implementation.
 
 
