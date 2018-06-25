@@ -1,45 +1,65 @@
 %!TEX root = ../latex/paper.tex
 
-\sm{this is a deep dive.
-Do we already have the context established here?
-perhaps. but even if, the reader needs guidance about what this section is about}
-We implement Grace's gradual-structural type system as an extension to the core of Moth.
-\sm{can we just simply say that these things are going to be explained?
-With less words, and giving more guidance to the reader?}
-The extension involves a mechanism to extract structural types declared in the program, a mechanism to extract structural types from both primitives and objects defined in the program, and a mechanism to efficiently manage the types and the knowledge of which types subtype other types. \del{We describe each of these three components in this section (the implementation of the checking algorithm is described in \cref{ssec:managing-types}). Decisions made for optimization are presented last in Subsection \ref{ssec:optimization-details}).} 
+Our system provides support for running simple ``responds-to'' checks.
+The checks are performed on argument values before a method is invoked,
+on the return value after a method finishes, and also
+whenever a variables is read from or written
+(checking a variable's value when read or the evaluated expression when written).
 
-\subsection{Extracting Structure}
-\label{ssec:optimization-details}
-\sm{I don't like the title, it is implying some process.
-Why does it need to be a process?
-Also, you don't describe a process.
-You only describe what constitutes the structure, IMHO, sufficient, and possibly better}
+In this section we describe
+how we represent types in the VM,
+the notion of a ``responds-to'' check,
+when the checks are performed, 
+and conclude with detail about our implementation in Moth.
 
-All values in Grace, even \ugh{primitives}\sm{what are primitives? example?}, are \del{expressed as }objects.
-Each object has an \ugh{inherit}\sm{what?} structure:
-the structure of an object is defined by the names of its methods and the typing information attached to a methods parameters \ugh{are}\sm{and?} return value.\sm{we don't use this for defining types, we only use this for checking, no? we need to make this distinction very clear.
-Those are two different aspects that do not seem to be explained}
+Grace's employs a structural type system,
+which means that sub-typing is evaluated on the structure of objects
+rather than their names;
+most notably,
+the consequence of structural typing is that objects who share the same interface
+are considered to be the same type.
+Since Grace treats methods and fields uniformly (see \cref{overview:grace}), 
+we need only consider the public interface of an object for type-checking.
 
-Where the typing information is omitted,
-we associate a special ``Unknown'' type that passes any type check.
+For our dynamic system,
+we treat a type as nothing more than a collection of method names
+(illustrated by \cref{code:example-type-object}).
+We evaluate whether an object conforms to a type
+by checking that it can respond to each of the named methods.
+Moth has access to the class of any object and
+so it is simple to evaluate whether an object conforms to a type by
+asking the class if it can respond to each of the method
+(see \cref{code:subtyping}.
+If an object cannot respond to one of the named methods,
+we throw a language level type error
+(which may be caught later in the program).
+Otherwise we conclude the type check as successful.
 
-Our implementation uses the notion of \emph{fragments}. A fragment is a piece of a structural type. A fragment encapsulates an ordered set of symbols and an ordered set of types.\sm{the second part seems wrong. we only do symbols, no?}
+\subsection{An Efficient Implementation.}
 
-\begin{equation}
-f = \{   \{ s_1, s_2, \cdots, s_n \}   \{ t_1, t_2, \cdots, t_n \}  \}
-\end{equation}
+To obtain the type objects,
+we extract the list of method names from each literal defined by the program.
+Since any two objects with the same interface are considered to be of the same type,
+we create one type object for each unique interface. 
+This means we can assign the same instance of type check to multiple type literals
+and run time objects;
+ultimately reduce the number of type checks that need to be performed.
 
-The symbols together correspond to a method name (Grace's methods feature multiple parts) and the types correspond to the arguments of the method along with its return type. The list of symbols is always known statically; however, the list of types may be incomplete (when annotations for the types are omitted).
+We also record the sub-typing relations between all instances of types collected by the VM.
+We use matrix a three-value truth matrix for this record that 
+lists each type object along its row and column (see \cref{fig:sub-typing-matrix}).
+We initialize the matrix with true along its trace (each type is a subtype of itself) and 
+with the leave the other cells uninitialised.
+Whenever a dynamic type check runs we first obtain the type of the object from the VM, 
+its expected type from the AST,
+and then index the record using these types.
 
-\subsection{Subtyping Relationships}
-\label{ssec:subtyping-relationships}
-
-For a type $a$ to be a subtype of $b$, each fragment in $b$ must be successfully matched by a fragment in $a$. Finally, for one fragment to match another, (1) each symbol in the fragment must be equal to the corresponding symbol from the other fragment corresponding and (2) each type in the fragment must be a subtype of the corresponding type from the other fragment. 
-
-To avoid the potential for the matching system to repeat recursively, we introduce a table\sm{perhaps better matrix?} that caches the sub-typing relations. Both the rows and columns of the table correspond to types. Each cell contains one of three possible values: false, true, or unknown. 
-
-Whenever we encounter an unknown relations, we immediately evaluate the sub-typing as described above and update the corresponding cell in the table.
-
-\subsection{Optimization Details}
-\label{ssec:optimization-details}
+If the corresponding cell is uninitialized
+we run the type check and store the result to the table.
+When then throw the typing error if the check failed
+or otherwise continue with the program execution 
+Otherwise, when the corresponding cell already has been assigned a value,
+we simply skip the type check and through a type error (when the cell is false)
+or continue with execution (when the cell is true).
+Using this process we can lazily evaluate each relationship only once.
 
