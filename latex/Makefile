@@ -3,7 +3,7 @@ KNITR=$(wildcard ../evaluation/*.Rnw)
 KNITR_TEX=$(KNITR:.Rnw=.tex)
 KNITR_TEX=$(patsubst ../evaluation/%.Rnw,../generated/%.tex,$(KNITR))
 
-all: $(KNITR_TEX)
+all:
 	pdflatex acmart.ins
 	pdflatex paper
 	bibtex paper
