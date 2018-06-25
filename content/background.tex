@@ -5,6 +5,8 @@
 
 \subsection{Stronger Typing for Dynamically Typed Languages}
 
+\kjx{No idea why we need this subsection}
+
 \begin{cnote}
 - the dynamic typing discussion as in the outline
 \end{cnote}
@@ -53,8 +55,6 @@ by several other optionally typed languages including Groovy,
 Typescript and Dart \cite{find-who-says-this-and-cite-them}.
 
 
-
-
 \subsection{Moth: Grace on Graal and Truffle}
 \label{ssec:moth}
 
@@ -73,17 +73,23 @@ called Moth\citep{Roberts2017}, by adapting
 \SOMns is a Newspeak implementation\citep{Bracha:10:NS} on top of the Truffle framework and the Graal just-in-time compiler,
 which are part of the GraalVM project.
 Since Newspeak and Grace are related languages,
-\SOMns provides a good foundation for a new Grace implementation.
-It allowed us to reach the performance of V8,
+\SOMns provides a good foundation for a new Grace implementation,
+allowing us to reach the performance of V8,
 Google's JavaScript implementation
-(cf. \cref{sec:baseline-perf} and \citet{Marr2016}).
+(cf. \cref{sec:baseline-perf} and \citet{Marr2016})
+with only moderate effort.
 \SOMns was changed to parse Grace code.
 \SOMns' self-optimizing abstract-syntax-tree nodes were only slightly adapted to conform to Grace's semantics.
-As a result, Moth is \ugh{mostly compliant}\sm{do we need to make this more concrete, James?} to the specification.
-One exception is that it still supports the \code{nil} value of Newspeak.
+As a result, Moth is \ugh{mostly compliant}\sm{do we need to make this
+  more concrete, James?}\kjx{no} to the Grace specification.
 
+\ugh{One exception is that it still supports the \code{nil} value of
+  Newspeak.}\kjx{who cares}
 
 \sm{we could say many more things here, not sure we need to though, depends a bit on what we need/rely on in late text}
+\kjx{so we fix it later}
+
+\kjx{do we need to talk any more about SOMns here?}
 
 % While not everyone has time to create their own fully-fledged virtual, recent efforts such as PyPy \rrnote{CITE Tratt} or Truffle and Graal \cite{Wurthinger2013} are brining the power of VMs to researchers and hobbyists.
 
@@ -95,6 +101,7 @@ One exception is that it still supports the \code{nil} value of Newspeak.
 but my impression was that we don't want to say it is gradual, so,
 this belongs perhaps better into the related work section for discussion
 after the results}
+\kjx{don't think it does}
 
 Coined by Siek and Taha \cite{Siek2006}, later added the gradual ``guarantee'' \cite{Siek2015}.
 
@@ -126,6 +133,7 @@ Seems to detailed, seems to to be long into the beginning of the paper}
 \paragraph{Other papers}
 
 \sm{no idea what this is about}
+\kjx{me neither}
 
 \begin{itemize}
     \item \cite{Bloom2009}
