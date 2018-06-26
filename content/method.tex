@@ -59,24 +59,74 @@ as in typical gradually typed approaches.
 % Message sending
 % As we described in \cref{ssec:grace}, Grace is message-sending-based language.
 
+Our type system has the following properties:
+
+\begin{itemize}
+    \item it poses types as sets of untyped members,
+    \item it adds one further termination condition to execution, and 
+    \item is flexible in that programs need not be globally consistent to run.
+\end{itemize}
+
+Together these properties enable a flexible system
+with minimal overhead
+that developers can use to verify that programs 
+execute with values that have the capabilities 
+documented through their annotations 
+while avoiding the burden of fully typing their program. 
+
+We now introduce each of these properties in more detail
+using a running example where a student develops
+a program that records information about vehicles; 
+before continuing to outline
+our implementation (\cref{ssec:implementation})
+and its optimization (\cref{ssec:optimization}).
+
+\paragraph{Types are Sets of Members}
+
+In our system, a value implements a type when it
+can respond to each member of that type's interface.
+With this abstraction a type can express the capabilities
+of an object in terms of what messages the object can respond to 
+-- such as whether or not an particular accessors is available
+or if the object has a print method defined --
+but omits any further typing information of those messages.
+
+Being able to express a set of messages to which an object
+must respond is a useful abstraction. For example, 
+say a student has started developing a program for recording
+information about vehicles. They begin by defining an object
+intended to represent a car (\cref{ex:object}) and write a method that, 
+given the car object,
+returns the registration number (\cref{ex:method}).
+
+\begin{lstlisting}[caption={An object literal with a field named ``reg'' and assigns it to the ``car'' variable.},escapechar=|]
+def car = object {|\label{ex:object}|
+    var reg
+}
+
+method getReg(vehicle) { |\label{ex:method}|
+    return vehicle.reg
+}
+\end{lstlisting}
+
+Since the student is still developing the program, 
+they are concerned that the interface used for vehicles might change 
+and so wish to avoiding fully typing the program.
+To help the student in this case, 
+our system
 
 
-For our system we propose that a type expresses the capabilities of an object;
+ a type expresses that 
 that is, the set of messages to which an object can respond.
 
-As an example imagine a student that wishes to 
-design a method for getting the registration for different vehicles. 
+As an example imagine  
 Currently, the student only has one example to work with (see \cref{ex:object}).
 The student wishes to develop the method,
 without needing to think carefully about abstraction,
 while having some security that their program
 performs they expected.
 
-\begin{lstlisting}[label={ex:object},caption={An object literal with a field named ``reg'' and assigns it to the ``car'' variable.}]
-def car = object {
-    var reg
-}
-\end{lstlisting}
+
 
 With our system, the student can develop implement the method and 
 obtain security by adding an annotation to its parameter. 
@@ -85,9 +135,7 @@ In \cref{ex:method}, the annotation
 states the argument must respond to at least the ``reg'' message. 
 
 \begin{lstlisting}[label={ex:method},caption={A method with its argument annotated with an interface literal, stating that the value must respond to at least the ``reg'' message.}]
-method getRegistration(vehicle: interface { reg }) {
-    return vehicle.reg
-}
+
 \end{lstlisting}
 
 When executing this method at run time
@@ -106,7 +154,7 @@ Following Grace's syntax, our system processes type annotations when attached
 to both a method's parameters and return types. 
 
 \subsection{Implementation} 
-\label{sec:implementation} 
+\label{ssec:implementation} 
 
 
 We implemented our type system as an extension to Moth.
@@ -163,7 +211,7 @@ what part is relevant? what do you want me to take away from it?}
 % \2 after inlining, constant prorogation and folding, compilation unit has fewer instructions.
 
 \subsection{Optimization}
-\label{sec:optimization}
+\label{ssec:optimization}
 
 \sm{let's not say this here if we do not have to, let's say this in the RW section}
 From a high level perspective, 
