@@ -151,14 +151,14 @@ type Car = interface {|\label{ex:complex:car}|
 method newPersonalCar -> Car { |\label{ex:personal-car}|
     object {
         var owner
-        method changeOwner(person : { name }) { ... } |\label{ex:personal-car:changeOwner}|
+        method changeOwner(person : interface { name }) { ... } |\label{ex:personal-car:changeOwner}|
     }
 }
 
 method newGovernmentCar -> Car { |\label{ex:government-car}|
     object {
         var owner
-        method changeOwner(department : { code }) { ... } |\label{ex:government-car:changeOwner}|
+        method changeOwner(department : interface { code }) { ... } |\label{ex:government-car:changeOwner}|
     }
 }
 
@@ -197,20 +197,43 @@ The student may be satisfied that a particular test passes successfully, and
 is then free to address the inconsistency in later development.
 
 
-\paragraph{Termination Conditions.}
+\paragraph{Termination by Type Error.}
 
-When executing this method at run time
-our system will process the annotation,
-before the method is executed,
-and verify that the value provided for the ``vehicle'' argument 
-can respond to the ``reg'' message.
-In the case when the value does not implement the ``reg'' member,
-the system will terminate with a typing error 
-that alerts the student to an inconsistency between the
-execution of the program and its type annotations.
+When executing a program without types, there are three possible outcomes.
+Either the program (1) terminates successfully,
+(2) terminates with an exception, or 
+(3) the execution diverges (loop infinitely). Using our type system, a
+fourth outcome is possible: termination with a typing error.
 
-Following Grace's syntax, our system processes type annotations when attached
-to both a method's parameters and return types. 
+Provided that the corresponding annotations are present, 
+our system will perform a check
+on the values of arguments before invoking a method, 
+on the value returned by a method after invocation, and
+also before any assignment to and read from a variable local to
+a method or belonging to an object. 
+
+The checks are performed eagerly
+-- as soon as they are encountered during execution --
+and so the execution will terminate with a typing error 
+whenever a value fails to conform to the expected type.
+
+% Summarize the design section
+In summary, our type system enables a developer to express
+the capabilities objects throughout different components of 
+their programs.
+Our representation of types is shallow,
+in that a type expresses only the set of members (messages) an object
+should respond to while excluding any further typing information. 
+With the shallow design we can offer flexibility in the sense that
+globally inconsistent programs can still be executed and checked,
+which will fail with a typing error when as soon as an value is found
+to be inconsistent with a type annotation. 
+Overall, our system offers a mechanism to check that a program's execution
+is well-typed 
+-- rather than the program itself being well-typed.
+This both lowers overhead for the developer and, 
+helps us to avoid the overhead of tracking blame 
+as seen among previous works.
 
 \subsection{Implementation} 
 \label{ssec:implementation} 
@@ -272,12 +295,6 @@ what part is relevant? what do you want me to take away from it?}
 \subsection{Optimization}
 \label{ssec:optimization}
 
-\sm{let's not say this here if we do not have to, let's say this in the RW section}
-From a high level perspective, 
-our system is similar to the tag-based system introduced by \citet{Greenman2018}.
-The similarity is in this sense that the type of an object is expressed as a reference
-to an object in the global record, which
-effectively tags each run time object.
 \sm{what are the optimizations we do? name them}
 
 We provide two important levels of optimizations for our implementation: 
