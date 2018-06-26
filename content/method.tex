@@ -102,9 +102,17 @@ our system leads to an easy-to-implement and fast-to-execute implementation.
 \subsection{Implementation}
 \label{sec:implementation}
 
-We have implemented our type system as an extension to Moth.
+We implemented our type system as an extension to Moth.
 As we described in \cref{ssec:moth},
-Moth is an AST-based.
+Moth is an AST-based interpreter
+using the Graal just-in-time compiler\citep{Wurthinger:2017:PPE}.
+
+\sm{deep-dive, some high-level summary first before talking about 
+anything in a step-wise/procedural way?}
+\sm{what are the main components of the implementation?}
+\sm{which aspects is this section going to cover?
+What am I going to learn?}
+
 Our system first processes all type literals declared in a program and records these as
 unique entries into a global record.
 When recorded, if a type of the same structure already exists we return the existing instance
@@ -112,9 +120,12 @@ rather than creating a new one.
 When creating the AST for a program, 
 we process any type annotations present on method and variable declarations and
 recall the corresponding types from the global record. 
-Any annotations using the literal syntax constituent adding a new type to the record.
-Later, during runtime, we can extract the type of an object from it's factory 
-(a mechanism provided by Moth to instantiate objects).
+\ugh{Any annotations using the literal syntax constituent adding a new type to the record.}\sm{why does this have to be explained so procedural?
+can't we just state that each type literal is an independent type or something?
+though, what does this really mean, when do you ``unify'' types?
+Is this something that needs to be discussed here?}
+Later at run time, we can extract the type of an object from its \ugh{factory 
+(a mechanism provided by Moth to instantiate objects)}\sm{do we need to explain this? if so, we need to talk about shapes/maps/hidden classes in background, and we need to explain that this can be applied to classes, too}.
 The factory maintains the definitions of the object found during parsing and
 we enumerate through this record to obtain a list of names that correspond
 to which methods the object can respond too.
@@ -122,13 +133,14 @@ We then consult the global record to retrieve an instance of a type object,
 which can either create a new object or provide an instance already created.
 Finally, we iterate through the list of members defined by the expected type 
 (recalled from the AST) and verify that the objects can respond to each one.
-We through an error as soon as an object fails to conform to its expected type, 
-and otherwise execution continues unaffected. 
+We throw an error as soon as an object fails to conform to its expected type, 
+and otherwise execution continues unaffected.\sm{but we already said this in the design section, don't we want to say something more specific here?}
 
 An example of the implementation is provided by \cref{code:typecheck}.
 
 \input{../content/example-typecheck}
-
+\sm{what is this? needs an explanation. what is the key idea here?
+what part is relevant? what do you want me to take away from it?}
 
 
 
