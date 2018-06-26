@@ -158,24 +158,32 @@ what part is relevant? what do you want me to take away from it?}
 \subsection{Optimization}
 \label{sec:optimization}
 
+\sm{let's not say this here if we do not have to, let's say this in the RW section}
 From a high level perspective, 
-our system is homogeneous with the tag-based system introduced by \citet{Greenman2017}.
+our system is similar to the tag-based system introduced by \citet{Greenman2018}.
 The similarity is in this sense that the type of an object is expressed as a reference
 to an object in the global record, which
 effectively tags each run time object.
+\sm{what are the optimizations we do? name them}
 
 We provide two important levels of optimizations for our implementation: 
 first, we maintain a three-value matrix that records all known subtyping relationships. 
-Whenever we perform a type check we first examine the matrix to see if the relationship, 
+Whenever we perform a type check, we first examine the matrix to see if the relationship, 
 between the type of an object and the expected type, has been computed before.
 If already known, the previous result is returned 
 or otherwise the relationship is evaluated and the matrix is updated.
-This optimization alone significantly reduces the overhead of our system 
-by eagerly computed each relationship only once whenever it is first required. 
+\ugh{This optimization alone significantly reduces the overhead}\sm{unsupported claims} of our system 
+by eagerly computed each relationship only once whenever it is first required.
 \rrtodo{How can I better word next sentence?}
 Since objects can share an instance of type,
 an check evaluated in one location can eliminate the cost in other locations.
+\sm{can we ties this to the explanation in the previous section?}
+\sm{can we have an example for a matrix that corresponds to the types used in the previous section?}
 
+\sm{I want to see the type check node, the specialization.
+I would like to see an explanation on the level of truffle of how it works,
+and based on that we can explain why it works, and why we didn't need much
+changes in the interpreter to have this efficient}
 \smtodo{Check the following paragraph}
 Finally, recall from \cref{ssec:moth} that
 Moth's code is compiled using the Graal, 
