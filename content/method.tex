@@ -81,7 +81,7 @@ We details these properties
 based on a classic student exercise where a student student develops
 a program to record information about vehicles.
 
-\paragraph{Types are Sets of Members}
+\paragraph{Types are Sets of Members.}
 
 In our system, a value implements a type when it
 can respond to each member of that type's interface.
@@ -134,7 +134,7 @@ With the assurance that they will be altered when a value
 does not conform to this type,
 the student can continue developing the program.
 
-\paragraph{Flexibility}
+\paragraph{Flexibility.}
 
 The notion of our type system being shallow means 
 that members of a type are untyped.
@@ -142,38 +142,8 @@ In particular, our design ignores typing information
 to avoid the overhead incurred by needing to track assumptions for blame and
 also to offer a high level of flexibility.
 
-As a consequence of being shallow our system considers programs
-well-typed even when they are globally inconsistent.
-For example, in \cref{ex:complex}, the student has defined an type containing
-three members and assigned this to the identifier ``Car'' (\cref{ex:complex:car}).
-They also introduce two methods to create cars 
-(\cref{ex:personal-car,ex:government-car}),
-in which both methods are well-typed and indeed return objects that conform to
-the ``Car'' type.
-However, note that each version of the changeOwner method
-declares a different type for its parameter
-(\cref{personal-car:changeOwner,ex:government-car:changeOwner}).
-and, consequently, calling the 
-``processPurchase'' method \cref{ex:purchase} with
-an object created from the first method would execute as expected
-while its with an object created from the second would terminate with
-an error. 
-
-A full structural type-checking system would alert the student to 
-the inconsistency described above statically,
-perhaps displaying an error in their idea. 
-While the alert is correct in that their is an inconsistency,
-such a system is less flexible. 
-
-Our system offers a higher level of flexibility in that the student
-may still execute the program, 
-which may indeed be only partially developed and remain globally inconsistent.
-The student may be satisfied that a particular test passes successfully, and
-is then free to address the inconsistency in later development.
-
-
 \begin{lstlisting}[caption={A well-typed but globally inconsistent program.},escapechar=|,label={ex:complex}]
-type Car = interface {|ex:complex:car|}
+type Car = interface {|\label{ex:complex:car}|
     owner
     changeOwner(_)
 }
@@ -197,28 +167,37 @@ method processPurchase(car: Car, newOwner : Person) { |\label{ex:purchase}|
 }
 \end{lstlisting}
 
+As a consequence of being shallow our system considers programs
+well-typed even when they are globally inconsistent.
+For example, in \cref{ex:complex}, the student has defined an type containing
+three members and assigned this to the identifier ``Car'' (\cref{ex:complex:car}).
+They also introduce two methods to create cars 
+(\cref{ex:personal-car,ex:government-car}),
+in which both methods are well-typed and indeed return objects that conform to
+the ``Car'' type.
+However, note that each version of the changeOwner method
+declares a different type for its parameter
+(\cref{ex:personal-car:changeOwner,ex:government-car:changeOwner}).
+and, consequently, calling the 
+``processPurchase'' method \cref{ex:purchase} with
+an object created from the first method would execute as expected
+while its with an object created from the second would terminate with
+an error. 
 
- a type expresses that 
-that is, the set of messages to which an object can respond.
+A full structural type-checking system would alert the student to 
+the inconsistency described above statically,
+perhaps displaying an error in their idea. 
+While the alert is correct in that their is an inconsistency,
+such a system is less flexible. 
 
-As an example imagine  
-Currently, the student only has one example to work with (see \cref{ex:object}).
-The student wishes to develop the method,
-without needing to think carefully about abstraction,
-while having some security that their program
-performs they expected.
+Our system offers a higher level of flexibility in that the student
+may still execute the program, 
+which may indeed be only partially developed and remain globally inconsistent.
+The student may be satisfied that a particular test passes successfully, and
+is then free to address the inconsistency in later development.
 
 
-
-With our system, the student can develop implement the method and 
-obtain security by adding an annotation to its parameter. 
-In \cref{ex:method}, the annotation
--- the keyword ``interface'' followed by a list of signatures enclosed with curly-braces --
-states the argument must respond to at least the ``reg'' message. 
-
-\begin{lstlisting}[label={ex:method},caption={A method with its argument annotated with an interface literal, stating that the value must respond to at least the ``reg'' message.}]
-
-\end{lstlisting}
+\paragraph{Termination Conditions.}
 
 When executing this method at run time
 our system will process the annotation,
@@ -229,8 +208,6 @@ In the case when the value does not implement the ``reg'' member,
 the system will terminate with a typing error 
 that alerts the student to an inconsistency between the
 execution of the program and its type annotations.
-
-
 
 Following Grace's syntax, our system processes type annotations when attached
 to both a method's parameters and return types. 
