@@ -49,7 +49,7 @@ the documented types without the need to implement a full blame system
 (which leads to significant overhead in previous work).
 
 
-\subsection{Design and Implementation}
+\subsection{System Overview}
 
 % Message sending
 As we described earlier in \cref{ssec:grace}, Grace is message-sending based language.
@@ -59,7 +59,7 @@ in which case the receiver of that message can decide how to respond.
 For our system we propose that a type expresses the capabilities of an object;
 that is, the set of messages to which an object can respond.
 
-As a first example imagine a student that wishes to 
+As an example imagine a student that wishes to 
 design a method for getting the registration for different vehicles. 
 Currently, the student only has one example to work with (see \cref{ex:object}).
 The student wishes to develop the method,
@@ -78,11 +78,6 @@ obtain security by adding an annotation to its parameter.
 In \cref{ex:method}, the annotation
 -- the keyword ``interface'' followed by a list of signatures enclosed with curly-braces --
 states the argument must respond to at least the ``reg'' message. 
-When executing this method at run time
-our system will process the annotation,
-before the method is executed,
-and verify that the value provided for the ``vehicle'' argument 
-can respond to the ``reg'' message.
 
 \begin{lstlisting}[label={ex:method},caption={A method with its argument annotated with an interface literal, stating that the value must respond to at least the ``reg'' message.}]
 method getRegistration(vehicle: interface { reg }) {
@@ -90,7 +85,20 @@ method getRegistration(vehicle: interface { reg }) {
 }
 \end{lstlisting}
 
+When executing this method at run time
+our system will process the annotation,
+before the method is executed,
+and verify that the value provided for the ``vehicle'' argument 
+can respond to the ``reg'' message.
+In the case when the value does not implement the ``reg'' member,
+the system will terminate with a typing error 
+that alerts the student to an inconsistency between the
+execution of the program and its type annotations.
 
+
+
+Following Grace's syntax, our system processes type annotations when attached
+to both a method's parameters and return types. 
 
 \subsection{Implementation} 
 \label{sec:implementation} 
