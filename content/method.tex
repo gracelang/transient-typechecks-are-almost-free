@@ -9,47 +9,52 @@
 
 
 % design goals behind Grace / Moth
-As we described previously in \cref{ssec:grace}
+As described in \cref{ssec:grace},
 Grace is an educational language and its performance profile
 is important for supporting effective teaching. 
 
 % motivation = give students low-overhead method to check program
 In this section,
-we present a new type system. 
+we present a new optional and dynamically checked type system
+with a minimal impact on run-time performance.
 Following from the design goals behind Grace,
 our motivation with the new type system
-is to provide developers
--- and particularly students --
-with a low overhead and flexible system 
+is to provide developers---and particularly students---with a flexible system 
 to check the consistency of the execution of their programs
-against type annotations.
+against type annotations,
+without significant impact on run-time performance.
 
 % gradual typing drawback = slow
-Existing gradual typing systems 
-that address the goal of flexibility currently
-do yet not have the desired performance properties \cite{Takikawa2016}.
+Gradual typing systems are generally good candidates to achieve this goal.
+% Existing gradual typing systems 
+% that address the goal of flexibility currently
+Unfortunately, they do not yet have the desired performance properties\citep{Takikawa2016}\smtodo{add the other papers}.
+Specifically, they could encourage students to remove types
+to improve performance.
 
-% summary of goals
-instead, the design behind our type system is focused
-on maximizing performance and flexibility while
-preserving the ability for programmers to check the execution
-of their programs.
+% % summary of goals
+% Instead, the design behind our type system is focused
+% on maximizing performance and flexibility while
+% preserving the ability for programmers to check the execution
+% of their programs.
 
-% how we address flexible
-To address the goal of flexibility we propose a system that is optional,
-which enables the programmer to benefit from adding checks 
-to be performed at run time,
-without the burden of needing to fully type each program.
+% % how we address flexible
+% To address the goal of flexibility we propose a system that is optional,
+% which enables the programmer to benefit from adding checks
+% to be performed at run time,
+% without the burden of needing to fully type each program.
 
 % how we address min overhead (avoid blame)
-Then, to address the goal of minimal overhead, 
-we propose a ``shallow'' semantics for the checks
-that enables the executed behaviour of the program to be checked against
-the documented types without the need to implement a full blame system 
-(which leads to significant overhead in previous work).
+To achieve the consistency checking with minimal run-time overhead,
+we propose shallow structural type checks,
+% that enables the executed behavior of the program to be checked against
+% the documented types without the
+which provide useful feedback without requiring a blame mechanism
+as in typical gradually typed approaches.
+% (which leads to significant overhead in previous work).
 
 
-\subsection{System Overview}
+\subsection{A Shallow Structural Type System}
 
 % Message sending
 As we described earlier in \cref{ssec:grace}, Grace is message-sending based language.
