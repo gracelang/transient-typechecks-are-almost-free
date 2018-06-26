@@ -45,41 +45,41 @@ to improve performance.
 % without the burden of needing to fully type each program.
 
 % how we address min overhead (avoid blame)
-To achieve the consistency checking with minimal run-time overhead,
-we propose shallow structural type checks,
 % that enables the executed behavior of the program to be checked against
 % the documented types without the
-which provide useful feedback without requiring a blame mechanism
-as in typical gradually typed approaches.
 % (which leads to significant overhead in previous work).
 
 
 \subsection{A Shallow Structural Type System}
 
+To achieve the consistency checking with minimal run-time overhead,
+we propose system with shallow structural type checks,
+which provide useful feedback without requiring a blame mechanism
+as in typical gradually typed approaches.
+
 % Message sending
 % As we described in \cref{ssec:grace}, Grace is message-sending-based language.
 
-Our type system has the following properties:
+Specifically, our type system has the following properties:
 
 \begin{itemize}
-    \item it poses types as sets of untyped members,
-    \item it adds one further termination condition to execution, and 
-    \item is flexible in that programs need not be globally consistent to run.
+  \item types are a sets of untyped members,
+  \item types are optional and checked eagerly at run time,
+        which results in a flexible type system that does not require global
+        consistency and complete typing, and
+  \item violations of type annotations terminate execution.
 \end{itemize}
 
-Together these properties enable a flexible system
-with minimal overhead
-that developers can use to verify that programs 
-execute with values that have the capabilities 
-documented through their annotations 
-while avoiding the burden of fully typing their program. 
+% Together these properties enable a flexible system
+% with minimal overhead
+% that developers can use to verify that programs
+% execute with values that have the capabilities
+% documented through their annotations
+% while avoiding the burden of fully typing their program.
 
-We now introduce each of these properties in more detail
-using a running example where a student develops
-a program that records information about vehicles; 
-before continuing to outline
-our implementation (\cref{ssec:implementation})
-and its optimization (\cref{ssec:optimization}).
+We details these properties
+based on a classic student exercise where a student student develops
+a program to record information about vehicles.
 
 \paragraph{Types are Sets of Members}
 
