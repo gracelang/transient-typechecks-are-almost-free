@@ -53,7 +53,7 @@ to improve performance.
 \subsection{A Shallow Structural Type System}
 
 To achieve the consistency checking with minimal run-time overhead,
-we propose system with shallow structural type checks,
+we propose a system with shallow structural type checks,
 which provide useful feedback without requiring a blame mechanism
 as in typical gradually typed approaches.
 
@@ -77,28 +77,28 @@ Specifically, our type system has the following properties:
 % documented through their annotations
 % while avoiding the burden of fully typing their program.
 
-We details these properties
+We detail these properties
 based on a classic student exercise where a student student develops
 a program to record information about vehicles.
 
 \paragraph{Types are Sets of Members.}
 
 In our system, a value implements a type when it
-can respond to each member of that type's interface.
-With this abstraction a type can express the capabilities
-of an object in terms of what messages the object can respond to 
--- such as whether or not a particular accessor is available --
-but omits any further typing information of those messages.
+can respond to each member of the type.
+Thus, a type expresses the capabilities
+of an object in terms of the messages an object
+can respond to, for example whether a particular accessor is
+available, but omits any further typing information of those messages.
 
 Being able to express a set of messages to which an object
-must respond is a useful abstraction. For example, 
-say a student has started developing a program for recording
-information about vehicles. They begin by defining an object
-intended to represent a car (\cref{ex:object}) and write a method that, 
+must respond is useful. For example, our student can begin
+developing its vehicle application
+by defining an object
+intended to represent a car (\cref{lst:car-reg} \cref{ex:object}) and write a method that, 
 given the car object,
 returns the registration number (\cref{ex:method}).
 
-\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},escapechar=|]
+\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},label=lst:car-reg,escapechar=|]
 def car = object {|\label{ex:object}|
     var reg := "JO3553"
 }
@@ -112,8 +112,8 @@ Since the student is still developing the program,
 they may be concerned that the interface of a vehicles will change 
 and therefore want to avoid fully typing the program.
 Our system supports the student by allowing them to verify
-any value passed to the ``getReg'' function will respond
-to the ``reg'' message. 
+any value passed to the \code{getReg} function will respond
+to the \code{reg} message. 
 
 
 \begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|]
