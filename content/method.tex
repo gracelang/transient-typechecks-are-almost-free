@@ -207,7 +207,8 @@ is then free to address the inconsistency in later development.
 When executing a program without types, there are three possible outcomes.
 Either the program (1) terminates successfully,
 (2) terminates with an exception, or 
-(3) the execution diverges (loop infinitely). Using our type system, a
+(3) the execution diverges, \ie, it does not terminate.
+Using our type system, a
 fourth outcome is possible: termination with a typing error.
 
 Provided that the corresponding annotations are present, 
@@ -217,10 +218,10 @@ on the value returned by a method after invocation, and
 also before any assignment to and read from a variable local to
 a method or belonging to an object. 
 
-The checks are performed eagerly
--- as soon as they are encountered during execution --
-and so the execution will terminate with a typing error 
-whenever a value fails to conform to the expected type.
+The checks are performed eagerly%
+---as soon as they are encountered during execution---%
+and the execution terminate with a typing error 
+when a value fails to conform to the expected type.
 
 % Summarize the design section
 In summary, our type system enables a developer to express
@@ -234,8 +235,8 @@ globally inconsistent programs can still be executed and checked,
 which will fail with a typing error when as soon as an value is found
 to be inconsistent with a type annotation. 
 Overall, our system offers a mechanism to check that a program's execution
-is well-typed 
--- rather than the program itself being well-typed.
+is well-typed---%
+rather than the program itself being well-typed.
 This both lowers overhead for the developer and, 
 helps us to avoid the overhead of tracking blame 
 as seen among previous works.
