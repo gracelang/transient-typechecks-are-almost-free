@@ -126,9 +126,10 @@ We can achieve this using a type annotation
 as illustrated in \cref{ex:adding-type}. 
 In this case, 
 the annotation specifies a type with just one member
-corresponding to the ``reg'' message.
+corresponding to the \code{reg} message.
+\sm{you already said the following}
 By adding the type annotation to the program, 
-the student can now be sure the ``getReg'' method
+the student can now be sure the \code{getReg} method
 will only be invoked when its arguments can respond to this message.
 With the assurance that they will be altered when a value 
 does not conform to this type,
@@ -138,7 +139,7 @@ the student can continue developing the program.
 
 The notion of our type system being shallow means 
 that members of a type are untyped.
-In particular, our design ignores typing information
+In particular, our design \ugh{ignores typing information}\sm{don't say ignore, just say that our types do not have types for parameters and return types of members}
 to avoid the overhead incurred by needing to track assumptions for blame and
 also to offer a high level of flexibility.
 
@@ -167,29 +168,33 @@ method processPurchase(car: Car, newOwner : Person) { |\label{ex:purchase}|
 }
 \end{lstlisting}
 
-As a consequence of being shallow our system considers programs
-well-typed even when they are globally inconsistent.
-For example, in \cref{ex:complex}, the student has defined an type containing
-three members and assigned this to the identifier ``Car'' (\cref{ex:complex:car}).
+As a consequence of being shallow our system \ugh{considers programs
+well-typed}\sm{no, don't say this. we do not have a notion of well typed programs. We only have a notion of well typed executions. You perhaps want to say this} even when they are globally inconsistent.
+For example, in \cref{ex:complex}, the student has defined a type containing
+three members and assigned this to the identifier \code{Car} (\cref{ex:complex:car}).
 They also introduce two methods to create cars 
 (\cref{ex:personal-car,ex:government-car}),
 in which both methods are well-typed and indeed return objects that conform to
-the ``Car'' type.
-However, note that each version of the changeOwner method
+the \code{Car} type.
+However, note that each version of the \code{changeOwner} method
 declares a different type for its parameter
 (\cref{ex:personal-car:changeOwner,ex:government-car:changeOwner}).
 and, consequently, calling the 
-``processPurchase'' method \cref{ex:purchase} with
+\code{processPurchase} method \cref{ex:purchase} with
 an object created from the first method would execute as expected
 while its with an object created from the second would terminate with
 an error. 
 
+\sm{don't say anything about stuff we don't do. this is not really necessary,
+and I don't think this is necessarily correct, depending on specific type systems}
 A full structural type-checking system would alert the student to 
 the inconsistency described above statically,
 perhaps displaying an error in their idea. 
 While the alert is correct in that their is an inconsistency,
 such a system is less flexible. 
 
+\sm{I would just say: possible inconsistency between elements can be approached
+step wise, when necessary as the sophistication and completeness of the program improves}
 Our system offers a higher level of flexibility in that the student
 may still execute the program, 
 which may indeed be only partially developed and remain globally inconsistent.
