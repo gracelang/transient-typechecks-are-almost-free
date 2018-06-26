@@ -87,8 +87,7 @@ In our system, a value implements a type when it
 can respond to each member of that type's interface.
 With this abstraction a type can express the capabilities
 of an object in terms of what messages the object can respond to 
--- such as whether or not an particular accessors is available
-or if the object has a print method defined --
+-- such as whether or not a particular accessor is available --
 but omits any further typing information of those messages.
 
 Being able to express a set of messages to which an object
@@ -99,21 +98,74 @@ intended to represent a car (\cref{ex:object}) and write a method that,
 given the car object,
 returns the registration number (\cref{ex:method}).
 
-\begin{lstlisting}[caption={An object literal with a field named ``reg'' and assigns it to the ``car'' variable.},escapechar=|]
+\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},escapechar=|]
 def car = object {|\label{ex:object}|
-    var reg
+    var reg := "JO3553"
 }
 
-method getReg(vehicle) { |\label{ex:method}|
+method getReg(vehicle) {|\label{ex:method}|
     return vehicle.reg
 }
 \end{lstlisting}
 
 Since the student is still developing the program, 
-they are concerned that the interface used for vehicles might change 
-and so wish to avoiding fully typing the program.
-To help the student in this case, 
-our system
+they may be concerned that the interface of a vehicles will change 
+and therefore want to avoid fully typing the program.
+Our system supports the student by allowing them to verify
+any value passed to the ``getReg'' function will respond
+to the ``reg'' message. 
+
+
+\begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|]
+method getReg(vehicle: interface { req }) { |\label{ex:adding-type}|
+    return vehicle.reg
+}
+\end{lstlisting}
+
+We can achieve this using a type annotation 
+as illustrated in \cref{ex:adding-type}. 
+In this case, 
+the annotation specifies a type with just one member
+corresponding to the ``reg'' message.
+By adding the type annotation to the program, 
+the student can now be sure the ``getReg'' method
+will only be invoked when its arguments can respond to this message.
+With the assurance that they will be altered when a value 
+does not conform to this type,
+the student can continue developing the program.
+
+\paragraph{Members Are Untyped}
+
+The notion of our type system being shallow means 
+that members of a type are untyped.
+In particular, our design ignores typing information
+to avoid the overhead incurred by needing to track assumptions for blame.
+As a consequence of members being untyped, globally inconsistent considered to be well-typed by our system
+
+
+\begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|]
+type Car = interface {
+    reg
+    owner
+    changeOwner(_)
+}
+
+method newPersonalCar -> Car { |\label{ex:personal-car}|
+    object {
+        var reg
+        var owner
+        method changeOwner(person : { name }) { ... }
+    }
+}
+
+method newGovernmentCar -> Car { |\label{ex:government-car}|
+    object {
+        var reg
+        var owner
+        method changeOwner(department : { code }) { ... }
+    }
+}
+\end{lstlisting}
 
 
  a type expresses that 
