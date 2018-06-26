@@ -244,8 +244,24 @@ as seen among previous works.
 \subsection{Implementation} 
 \label{ssec:implementation} 
 
+% starting from AST interpreter we need checks here, here, and here
 
-We implemented our type system as an extension to Moth.
+% first add knowledge of all types, can be recalled
+% new type check node
+%     child on other nodes (method has n children, var read and write have one)
+
+% semantics for type check
+
+
+We implemented our type system as an extension to an existing Grace interpreter,
+by first extracting typing information and propagating it into the program's AST
+and then. We then 
+
+\begin{itemize}
+\item introduce a new AST node to perform type checking,
+\item attached the type checking nodes onto method and variables,
+\item and add a data structure to 
+\end{itemize}
 As we described in \cref{ssec:moth},
 Moth is an AST-based interpreter
 using the Graal just-in-time compiler\citep{Wurthinger:2017:PPE}.
@@ -300,6 +316,11 @@ what part is relevant? what do you want me to take away from it?}
 
 \subsection{Optimization}
 \label{ssec:optimization}
+
+% type unification
+% matrix
+% specialization
+% graal stuff
 
 \sm{what are the optimizations we do? name them}
 
