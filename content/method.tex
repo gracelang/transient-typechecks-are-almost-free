@@ -134,36 +134,66 @@ With the assurance that they will be altered when a value
 does not conform to this type,
 the student can continue developing the program.
 
-\paragraph{Members Are Untyped}
+\paragraph{Flexibility}
 
 The notion of our type system being shallow means 
 that members of a type are untyped.
 In particular, our design ignores typing information
-to avoid the overhead incurred by needing to track assumptions for blame.
-As a consequence of members being untyped, globally inconsistent considered to be well-typed by our system
+to avoid the overhead incurred by needing to track assumptions for blame and
+also to offer a high level of flexibility.
+
+As a consequence of being shallow our system considers programs
+well-typed even when they are globally inconsistent.
+For example, in \cref{ex:complex}, the student has defined an type containing
+three members and assigned this to the identifier ``Car'' (\cref{ex:complex:car}).
+They also introduce two methods to create cars 
+(\cref{ex:personal-car,ex:government-car}),
+in which both methods are well-typed and indeed return objects that conform to
+the ``Car'' type.
+However, note that each version of the changeOwner method
+declares a different type for its parameter
+(\cref{personal-car:changeOwner,ex:government-car:changeOwner}).
+and, consequently, calling the 
+``processPurchase'' method \cref{ex:purchase} with
+an object created from the first method would execute as expected
+while its with an object created from the second would terminate with
+an error. 
+
+A full structural type-checking system would alert the student to 
+the inconsistency described above statically,
+perhaps displaying an error in their idea. 
+While the alert is correct in that their is an inconsistency,
+such a system is less flexible. 
+
+Our system offers a higher level of flexibility in that the student
+may still execute the program, 
+which may indeed be only partially developed and remain globally inconsistent.
+The student may be satisfied that a particular test passes successfully, and
+is then free to address the inconsistency in later development.
 
 
-\begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|]
-type Car = interface {
-    reg
+\begin{lstlisting}[caption={A well-typed but globally inconsistent program.},escapechar=|,label={ex:complex}]
+type Car = interface {|ex:complex:car|}
     owner
     changeOwner(_)
 }
 
 method newPersonalCar -> Car { |\label{ex:personal-car}|
     object {
-        var reg
         var owner
-        method changeOwner(person : { name }) { ... }
+        method changeOwner(person : { name }) { ... } |\label{ex:personal-car:changeOwner}|
     }
 }
 
 method newGovernmentCar -> Car { |\label{ex:government-car}|
     object {
-        var reg
         var owner
-        method changeOwner(department : { code }) { ... }
+        method changeOwner(department : { code }) { ... } |\label{ex:government-car:changeOwner}|
     }
+}
+
+method processPurchase(car: Car, newOwner : Person) { |\label{ex:purchase}|
+    car.changeOwner(newOwner)
 }
 \end{lstlisting}
 
