@@ -37,7 +37,8 @@ Unfortunately, these approach have limitations.
 With approaches such as 
 \citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June 2018}{https://www.typescriptlang.org/}
 types are erased before the execution,
-which limits their benefits to the elements that could be statically analyzed.
+which limits their benefits to the elements that could be statically analyzed
+\rrnote{I don't understand, do you mean benefits to elements that could dynamically analyzed?}.
 With gradual systems and their support for blame,
 we gain support for detailed information
 about the violation of type annotations.
@@ -58,6 +59,7 @@ we want to have the option to teach students about types.
 With an approach to optional typing,
 they can get feedback on whether their types are consistent
 with the execution semantics of their programs.
+\rrtodo{how about consistent with an execution of their program?}
 However, we do not want students to remove types,
 because they discover that they induce a run-time overhead.
 Furthermore, we are currently maintaining more than three different implementations
@@ -74,7 +76,8 @@ These types are checked eagerly at run time.
 Thus, program elements with type annotations check
 that values assigned to them conform to the give type,
 and produce a type error otherwise.
-We evaluate this approach based on Moth,
+\rrtodo{``evaluate this approach on Moth'' feels wrong}
+We evaluate this approach on Moth,
 a Grace implementation on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
 Inspired by \citet{Richards2017,Bauman2017},
