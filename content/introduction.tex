@@ -25,7 +25,6 @@ to becoming highly efficient by using just-in-time compilation.
 % - allow partial typing
 % - are either removed, or have run-time overhead
 
-
 With these performance gains,
 dynamic languages are used to build larger and larger systems,
 which leads to typing approaches being adopted
@@ -37,7 +36,7 @@ Unfortunately, these approach have limitations.
 With approaches such as 
 \citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June 2018}{https://www.typescriptlang.org/}
 types are erased before the execution,
-which is beneficial only to static analysis.
+which limits the benefit of types to the statically typed parts.
 With gradual systems and their support for blame,
 we gain support for detailed information
 about the violation of type annotations.
