@@ -2,10 +2,12 @@
 
 Languages with optional dynamic types, like
 Groovy, Dart, and Typescript,
-are becoming increasingly popular in practical development and education. Unfortunately,
+are becoming increasingly popular in practical development and education.
+Unfortunately,
 current implementations of gradual languages tend to
-perform worse than either purely static or purely dynamically typed languages. Removing type tests make programs in these languages run faster. 
-We add a new shallow-structural type system, 
+perform worse than either purely static or purely dynamically typed languages.
+Removing type tests make programs in these languages run faster. 
+We add shallow-structural type checking, 
 to an existing interpreter Grace, 
 that enables developers to check 
 that executions of their program are well-typed.
@@ -13,7 +15,7 @@ Grace is designed primarily for education and, consequently,
 the performance profile of its execution is important
 to enable both teachers and students to explore different concepts.
 Following from Grace's design goals,
-our focus is to provide a flexible type system
+our focus is to provide flexible checking
 with minimal overhead to execution.
 We achieve flexibility through our shallow-structural design and,
 for our implementation, 
