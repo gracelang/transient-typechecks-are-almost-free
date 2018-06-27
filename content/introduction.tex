@@ -3,28 +3,97 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Despite optional typing becoming increasingly popular in the industry, the systems that offer support for optional typing are not yet fully \emph{alive}. The languages are of course well defined and supported but, in particular, the advantages of the optional typing are out-weighted by their performance costs. 
+% Despite optional typing becoming increasingly popular in the industry, the systems that offer support for optional typing are not yet fully \emph{alive}. The languages are of course well defined and supported but, in particular, the advantages of the optional typing are out-weighted by their performance costs.
+%
+% Recently, researchers have explored the potential for type checking to be performed together with execution; rather than as an a stand-alone system that occurs separately at run time. For example, Richards et al. extend the Higgs VM to perform TypeScript's structural checks based on information gathered during method execution.
+%
+% Tying the type checking system into existing VM behavior can offer faster performance, while also being simple to implement. In particular a compiler can fold the type checking system into the VM's invocation logic and, once compiled, both the number of type checks and their complexity has been reduced. Furthermore, the VM usually has cheap reflective access and therefore the logic of the checking system is simpler to implement than we done on the level of the guest language.
 
-Recently, researchers have explored the potential for type checking to be performed together with execution; rather than as an a stand-alone system that occurs separately at run time. For example, Richards et al. extend the Higgs VM to perform TypeScript's structural checks based on information gathered during method execution. 
+% Context
+% - dynamic languges are important
+% - much work on performance
+Dynamic languages take a prominent place in the software industry.
+Over the last decades, much work in academia and industry
+went into making them more efficient\citep{Self,Bolz2013,Bolz:2013:IMT,Wurthinger:2017:PPE,Daloze2016,Clifford:2015:MM,Degenbaev:2016:ITG},
+which lead JavaScript from being naively interpreted
+to becoming highly efficient by using just-in-time compilation.
 
-Tying the type checking system into existing VM behavior can offer faster performance, while also being simple to implement. In particular a compiler can fold the type checking system into the VM's invocation logic and, once compiled, both the number of type checks and their complexity has been reduced. Furthermore, the VM usually has cheap reflective access and therefore the logic of the checking system is simpler to implement than we done on the level of the guest language.
+% Types
+% - useful for programmer productivity on large systems
+% - document a program's structures
+% - optional + gradual
+% - allow partial typing
+% - are either removed, or have run-time overhead
 
-In this paper, we present a \emph{responds as expected} type-checking system for the Grace programming language. Through \cref{sec:method} we will describe how we extending \SOMns to support Grace and provide support for the simple type checks and, later in \cref{sec:evaluation}, we present two suites of benchmarks that demonstrate our system can offer these checks with little overhead in terms of execution time.
 
-While we having only taken the first step in rousing Grace's system, our implementation and the results presented are a promising step toward supporting Grace's gradual-structural type system and, ultimately, refuting the notion that gradually typed languages are dead.
+With these performance gains,
+dynamic languages are used to build larger and larger systems,
+which leads to typing approaches being adopted
+to support programmer productivity and document a program's structures.
+Two important approaches are optional\citep{Bracha:04:PT}
+and gradual typing\citep{Siek2006,Siek2015}.
+These are applied to dynamic languages to reap the benefits of typing.
+Unfortunately, these approach have limitations.
+With approaches such as 
+\citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June 2018}{https://www.typescriptlang.org/}
+types are erased before the execution,
+which limits their benefits to the elements that could be statically analyzed.
+With gradual systems and their support for blame,
+we gain support for detailed information
+about the violation of type annotations.
+Unfortunately, it currently comes with a non-negligible run-time overhead\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
 
-\sm{pick up on James argument about teaching here:
-we don't want people to remove types for performance}
-\sm{other points discussed:
-we do want to make sure that the executed parts of a program are self-consistent, so, we need to check the type annotations}
-\sm{needs to be implementable without much changes, because there are multiple Grace
-implementations, and maintaining them is huge effort}
+% our context
+% - dynamic language
+% - a language for teaching
+% - types, execution semantics, consistency
+% - no impact on performance
 
-in context of highly optimize run time system
+With the \citeurl{Grace language,}{The Grace Programming Language}{}{}{http://gracelang.org/}
+we are working on dynamic language in the tradition of
+Smalltalk\citep{Smalltalk80}, Self\citep{Self}, and JavaScript
+that is meant for the use in education.
+While it is a dynamic language,
+we want to have the option to teach students about types.
+With an approach to optional typing,
+they can get feedback on whether their types are consistent
+with the execution semantics of their programs.
+However, we do not want students to remove types,
+because they discover that they induce a run-time overhead.
+Furthermore, are currently maintaining more than three different implementations
+for various educational settings,
+which means a typing approach for Grace ideally requires only small changes
+to keep these implementations as consistent as possible.
+
+Based on these constraints,
+we propose a shallow approach to dynamic type checking
+for an optional type system.
+Shallow means here that types are defined based on their members' names
+but do not consider any type information on the members themselves.
+These types are checked eagerly at run time.
+Thus, program elements with type annotations check
+that values assigned to them conform to the give type,
+and produce a type error otherwise.
+We evaluate this approach based on Moth,
+a Grace implementation on top of Truffle
+and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
+Inspired by \citet{Richards2017,Bauman2017},
+our implementation approach conflates type information
+with the information about the dynamic object structure,
+\ie, maps\citep{Self} or object shapes\citep{woss2014object}.
+
+% In this paper, we present a \emph{responds as expected} type-checking system for the Grace programming language. Through \cref{sec:method} we will describe how we extending \SOMns to support Grace and provide support for the simple type checks and, later in \cref{sec:evaluation}, we present two suites of benchmarks that demonstrate our system can offer these checks with little overhead in terms of execution time.
+
+% While we having only taken the first step in rousing Grace's system, our implementation and the results presented are a promising step toward supporting Grace's gradual-structural type system and, ultimately, refuting the notion that gradually typed languages are dead.
+
+The contributions of this paper are:
 
 \begin{itemize}
-\item helps developer be more productive
-\item check executed parts of program are consistent with its annotations
-\item small number of changes to implement
-\item small overhead
+\item shallow dynamic type checking with minimal overhead
+      in a dynamic language implementation
+      with performance comparable to V8 JavaScript
+\item an implementation approach that requires
+      only small changes to existing AST interpreters
+\item an evaluation based on classic benchmarks
+      and benchmarks from the literature on gradual typing
 \end{itemize}
