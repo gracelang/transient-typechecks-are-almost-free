@@ -1,24 +1,51 @@
+@string{splashoopslacompanion = {{SPLASH/OOPSLA} Companion}}
+
 @inproceedings{Siek2006,
   title={Gradual typing for functional languages},
   author={Siek, Jeremy G and Taha, Walid},
+  booktitle={Scheme and Functional Programming Workshop},
   year={2006}
 }
 
-@article{Bloom2009,
+@inproceedings{DBRuby09,
+	Author = {M. Furr and J.-H. An and J. Foster and M.J. Hicks},
+	Booktitle = {Symposium on Applied Computation},
+	Pages = {1859--1866},
+	Title = {Static type inference for {Ruby}},
+	Year = {2009}}
+
+
+@inproceedings{Siek2007,
+  author    = {Jeremy G. Siek and
+               Walid Taha},
+  title     = {Gradual Typing for Objects},
+  booktitle = {{ECOOP} 2007 - Object-Oriented Programming, 21st European Conference,
+               Berlin, Germany, July 30 - August 3, 2007, Proceedings},
+  pages     = {2--27},
+  year      = {2007},
+  Xcrossref  = {DBLP:conf/ecoop/2007},
+  Xurl       = {https://doi.org/10.1007/978-3-540-73589-2_2},
+  Xdoi       = {10.1007/978-3-540-73589-2_2},
+  timestamp = {Fri, 02 Jun 2017 13:01:07 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/ecoop/SiekT07},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Bloom2009,
  author = {Bloom, Bard and Field, John and Nystrom, Nathaniel and \"{O}stlund, Johan and Richards, Gregor and Strni\v{s}a, Rok and Vitek, Jan and Wrigstad, Tobias},
  title = {Thorn: Robust, Concurrent, Extensible Scripting on the JVM},
- journal = {SIGPLAN Not.},
- issue_date = {October 2009},
- volume = {44},
- number = {10},
- month = oct,
+ booktitle = {Proceedings of the ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages {(POPL)}},
+ Xissue_date = {October 2009},
+ Xvolume = {44},
+ Xnumber = {10},
+ Xmonth = oct,
  year = {2009},
- issn = {0362-1340},
+ Xissn = {0362-1340},
  pages = {117--136},
  numpages = {20},
- doi = {10.1145/1639949.1640098},
- acmid = {1640098},
- publisher = {ACM},
+ Xdoi = {10.1145/1639949.1640098},
+ Xacmid = {1640098},
+ Xpublisher = {ACM},
  keywords = {actors, pattern matching, scripting},
 } 
 
@@ -32,18 +59,15 @@
  location = {Indianapolis, Indiana, USA},
  pages = {187--204},
  numpages = {18},
- doi = {10.1145/2509578.2509581},
+ Xdoi = {10.1145/2509578.2509581},
  acmid = {2509581},
  publisher = {ACM},
  keywords = {dynamic languages, java, javascript, language implementation, optimization, virtual machine},
 }
 
-@article{Boyland2014,
-  title={The problem of structural type tests in a gradual-typed language},
-  author={Boyland, John Tang}
-} 
+ 
 
-@inproceedings{Siek2015,
+@inproceedings{XXXSiek2015,
  author =  {Jeremy G. Siek and Michael M. Vitousek and Matteo Cimini and John Tang Boyland},
  title = {{Refined Criteria for Gradual Typing}},
  booktitle = {1st Summit on Advances in Programming Languages (SNAPL 2015)},
@@ -55,9 +79,9 @@
  volume =  {32},
  editor =  {Thomas Ball and Rastislav Bodik and Shriram Krishnamurthi and Benjamin S. Lerner and Greg Morrisett},
  publisher = {Schloss Dagstuhl--Leibniz-Zentrum fuer Informatik},
- URL =   {http://drops.dagstuhl.de/opus/volltexte/2015/5031},
+ XURL =   {http://drops.dagstuhl.de/opus/volltexte/2015/5031},
  URN =   {urn:nbn:de:0030-drops-50312},
- doi =   {10.4230/LIPIcs.SNAPL.2015.274},
+ Xdoi =   {10.4230/LIPIcs.SNAPL.2015.274},
  annote =  {Keywords: gradual typing, type systems, semantics, dynamic languages}
 }
 
@@ -73,7 +97,7 @@
  issn = {0362-1340},
  pages = {1--12},
  numpages = {12},
- doi = {10.1145/3093334.2989226},
+ Xdoi = {10.1145/3093334.2989226},
  acmid = {2989226},
  publisher = {ACM},
  keywords = {optional types, static analysis, type systems},
@@ -89,7 +113,7 @@
  isbn = {978-1-4503-4445-6},
  pages = {120--131},
  numpages = {12},
- doi = {10.1145/3093334.2989232},
+ Xdoi = {10.1145/3093334.2989232},
  series = {DLS'16},
  publisher = {ACM},
  keywords = {Benchmarking, Languages, Virtual Machines},
@@ -107,7 +131,7 @@
  issn = {0362-1340},
  pages = {13--24},
  numpages = {12},
- doi = {10.1145/3093334.2989227},
+ Xdoi = {10.1145/3093334.2989227},
  acmid = {2989227},
  publisher = {ACM},
  keywords = {gradual typing, language design, type systems},
@@ -123,7 +147,7 @@
  location = {Edinburgh, United Kingdom},
  pages = {90--103},
  numpages = {14},
- doi = {10.1145/2967973.2968597},
+ Xdoi = {10.1145/2967973.2968597},
  acmid = {2968597},
  publisher = {ACM},
  keywords = {abstract interpretation, assertions, horn clauses, logic programming, run-time checking, verification},
@@ -132,7 +156,7 @@
 @inproceedings{Takikawa2016,
   author = {Takikawa, Asumu and Feltey, Daniel and Greenman, Ben and New, Max S. and Vitek, Jan and Felleisen, Matthias},
   booktitle = {Proceedings of the 43rd Annual ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
-  doi = {10.1145/2837614.2837630},
+  Xdoi = {10.1145/2837614.2837630},
   isbn = {978-1-4503-3549-2},
   location = {St. Petersburg, FL, USA},
   numpages = {13},
@@ -156,7 +180,7 @@
  pages = {54:1--54:24},
  articleno = {54},
  numpages = {24},
- doi = {10.1145/3133878},
+ Xdoi = {10.1145/3133878},
  acmid = {3133878},
  publisher = {ACM},
  keywords = {Gradual Typing, Just-in-Time compilation, Performance Evaluation},
@@ -175,7 +199,7 @@
  pages = {41:1--41:28},
  articleno = {41},
  numpages = {28},
- doi = {10.1145/3110285},
+ Xdoi = {10.1145/3110285},
  acmid = {3110285},
  publisher = {ACM},
  keywords = {Gradual typing, intersection types, negation types, set-theoretic types, union types},
@@ -191,7 +215,7 @@
  location = {Los Angeles, CA, USA},
  pages = {30--39},
  numpages = {10},
- doi = {10.1145/3162066},
+ Xdoi = {10.1145/3162066},
  acmid = {3162066},
  publisher = {ACM},
  keywords = {D-deliverable, Migratory typing, Performance evaluation, Tag soundness, Type granularity},
@@ -210,7 +234,7 @@
  pages = {56:1--56:30},
  articleno = {56},
  numpages = {30},
- doi = {10.1145/3133880},
+ Xdoi = {10.1145/3133880},
  acmid = {3133880},
  publisher = {ACM},
  keywords = {Gradual Typing, Immediate Accountability, Nominal, Transparency},
@@ -229,7 +253,7 @@
  pages = {55:1--55:27},
  articleno = {55},
  numpages = {27},
- doi = {10.1145/3133879},
+ Xdoi = {10.1145/3133879},
  acmid = {3133879},
  publisher = {ACM},
  keywords = {Gradual typing, run-time type checking},
@@ -247,7 +271,7 @@
 @inproceedings{Vitousek2017,
   author = {Vitousek, Michael M. and Swords, Cameron and Siek, Jeremy G.},
   booktitle = {Proceedings of the 44th ACM SIGPLAN Symposium on Principles of Programming Languages},
-  doi = {10.1145/3009837.3009849},
+  Xdoi = {10.1145/3009837.3009849},
   isbn = {978-1-4503-4660-3},
   location = {Paris, France},
   numpages = {13},
@@ -266,7 +290,7 @@
   journal   = {CoRR},
   volume    = {abs/1802.06375},
   year      = {2018},
-  url       = {http://arxiv.org/abs/1802.06375},
+  Xurl       = {http://arxiv.org/abs/1802.06375},
   archivePrefix = {arXiv},
   eprint    = {1802.06375}
 }
@@ -274,9 +298,9 @@
 
 @inproceedings{Marr:2015:MTPE,
   acceptancerate = {0.25},
-  author = {Marr, Stefan and Ducasse, Stéphane},
+  author = {Marr, Stefan and Ducasse, St{\'e}phane},
   booktitle = {Proceedings of the 2015 ACM International Conference on Object Oriented Programming Systems Languages \& Applications},
-  doi = {10.1145/2814270.2814275},
+  Xdoi = {10.1145/2814270.2814275},
   isbn = {978-1-4503-2585-1},
   month = {October},
   numpages = {19},
@@ -289,7 +313,7 @@
 
 @article{Bolz:2013:IMT,
   author = {Bolz, Carl Friedrich and Tratt, Laurence},
-  doi = {10.1016/j.scico.2013.02.001},
+  Xdoi = {10.1016/j.scico.2013.02.001},
   issn = {0167-6423},
   journal = {Science of Computer Programming},
   title = {{The Impact of Meta-Tracing on VM Design and Implementation}},
@@ -300,7 +324,7 @@
   author = {Bolz, Carl Friedrich and Cuni, Antonio and Fijalkowski, Maciej and Rigo, Armin},
   booktitle = {Proceedings of the 4th Workshop on the Implementation, Compilation, Optimization of Object-Oriented Languages and Programming Systems},
   description = {Tracing the meta-level},
-  doi = {10.1145/1565824.1565827},
+  Xdoi = {10.1145/1565824.1565827},
   isbn = {978-1-60558-541-3},
   keywords = {JIT MetaTracing PyPy Python RPython compiler},
   location = {Genova, Italy},
@@ -315,7 +339,7 @@
 @inproceedings{Wurthinger:2017:PPE,
   author = {W\"{u}rthinger, Thomas and Wimmer, Christian and Humer, Christian and W\"{o}\ss, Andreas and Stadler, Lukas and Seaton, Chris and Duboscq, Gilles and Simon, Doug and Grimmer, Matthias},
   booktitle = {Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation},
-  doi = {10.1145/3062341.3062381},
+  Xdoi = {10.1145/3062341.3062381},
   isbn = {978-1-4503-4988-8},
   keywords = {Compilation Graal JustInTime Optimization PLDI PartialEvaluation Truffle},
   location = {Barcelona, Spain},
@@ -328,13 +352,13 @@
 }
 
 @incollection{Bracha:10:NS,
-  author = {Bracha, Gilad and von der Ahé, Peter and Bykov, Vassili and Kashai, Yaron and Maddox, William and Miranda, Eliot},
-  booktitle = {ECOOP 2010 – Object-Oriented Programming},
-  doi = {10.1007/978-3-642-14107-2_20},
-  isbn = {978-3-642-14106-5},
+  author = {Bracha, Gilad and von der Ah{/'e}, Peter and Bykov, Vassili and Kashai, Yaron and Maddox, William and Miranda, Eliot},
+  booktitle = {European Conference on Object-Oriented Programming {(ECOOP)}},
+  Xdoi = {10.1007/978-3-642-14107-2_20},
+  Xisbn = {978-3-642-14106-5},
   keywords = {Classes Lookup Modules Newspeak Structuring},
   pages = {405-428},
-  publisher = {Springer},
+  Xpublisher = {Springer},
   series = {Lecture Notes in Computer Science},
   title = {{Modules as Objects in Newspeak}},
   volume = 6183,
@@ -344,7 +368,7 @@
 @article{Barrett:2017:VMW,
   articleno = {52},
   author = {Barrett, Edd and Bolz-Tereick, Carl Friedrich and Killick, Rebecca and Mount, Sarah and Tratt, Laurence},
-  doi = {10.1145/3133876},
+  Xdoi = {10.1145/3133876},
   issn = {2475-1421},
   issue_date = {October 2017},
   journal = {Proc. ACM Program. Lang.},
@@ -363,7 +387,7 @@
 @inproceedings{Self,
   author = {Chambers, Craig and Ungar, David and Lee, Elgin},
   booktitle = {Proceedings on Object-Oriented Programming Systems, Languages and Applications},
-  doi = {10.1145/74878.74884},
+  Xdoi = {10.1145/74878.74884},
   isbn = {0-89791-333-7},
   issn = {0362-1340},
   month = {October},
@@ -377,7 +401,7 @@
 @inproceedings{Bolz2013,
   author = {Bolz, Carl Friedrich and Diekmann, Lukas and Tratt, Laurence},
   booktitle = {{Proceedings of the 2013 ACM SIGPLAN International Conference on Object Oriented Programming Systems Languages \& Applications}},
-  doi = {10.1145/2509136.2509531},
+  Xdoi = {10.1145/2509136.2509531},
   isbn = {978-1-4503-2374-1},
   keywords = {Arrays Collections Lists Optimization Pattern Performance Strategy VM},
   location = {Indianapolis, Indiana, USA},
@@ -390,10 +414,10 @@
 }
 
 @inproceedings{Daloze2016,
-  author = {Daloze, Benoit and Marr, Stefan and Bonetta, Daniele and Mössenböck, Hanspeter},
+  author = {Daloze, Benoit and Marr, Stefan and Bonetta, Daniele and M{\"o}ssenb{\"o}ck, Hanspeter},
   booktitle = {Proceedings of the 2016 ACM International Conference on Object Oriented Programming Systems Languages \& Applications},
-  doi = {10.1145/2983990.2984001},
-  isbn = {978-1-4503-4444-9},
+  Xdoi = {10.1145/2983990.2984001},
+  Xisbn = {978-1-4503-4444-9},
   numpages = {18},
   pages = {642--659},
   publisher = {ACM},
@@ -405,7 +429,7 @@
 @inproceedings{Clifford:2015:MM,
   author = {Clifford, Daniel and Payer, Hannes and Stanton, Michael and Titzer, Ben L.},
   booktitle = {Proceedings of the 2015 International Symposium on Memory Management},
-  doi = {10.1145/2754169.2754181},
+  Xdoi = {10.1145/2754169.2754181},
   isbn = {978-1-4503-3589-8},
   keywords = {Collection Dynamic JavaScript Management Memory Optimization V8},
   location = {Portland, OR, USA},
@@ -420,7 +444,7 @@
 @inproceedings{Degenbaev:2016:ITG,
   author = {Degenbaev, Ulan and Eisinger, Jochen and Ernst, Manfred and McIlroy, Ross and Payer, Hannes},
   booktitle = {Proceedings of the 37th ACM SIGPLAN Conference on Programming Language Design and Implementation},
-  doi = {10.1145/2908080.2908106},
+  Xdoi = {10.1145/2908080.2908106},
   isbn = {978-1-4503-4261-2},
   numpages = {14},
   pages = {570--583},
@@ -430,7 +454,7 @@
   year = 2016
 }
 
-@inproceedings{Bracha:04:PT,
+@inproceedings{XXBracha:04:PT,
   author = {Bracha, Gilad},
   booktitle = {Workshop on Revival of Dynamic Languages},
   keywords = {Optional TypeSystems},
@@ -438,11 +462,11 @@
   pages = 6,
   series = {OOPSLA'04},
   title = {{Pluggable Type Systems}},
-  url = {http://bracha.org/pluggableTypesPosition.pdf},
+  Xurl = {http://bracha.org/pluggableTypesPosition.pdf},
   year = 2004
 }
 
-@book{Smalltalk80,
+@book{XSmalltalk80,
   address = {Boston, MA, USA},
   asin = {0201113716},
   author = {Goldberg, Adele and Robson, David},
@@ -454,9 +478,9 @@
 }
 
 @inproceedings{woss2014object,
-  author = {Wöß, Andreas and Wirth, Christian and Bonetta, Daniele and Seaton, Chris and Humer, Christian and Mössenböck, Hanspeter},
+  author = {W\"{o}\ss, Andreas and Wirth, Christian and Bonetta, Daniele and Seaton, Chris and Humer, Christian and M\"{o}ssenb\"{o}ck, Hanspeter},
   booktitle = {Proceedings of the 2014 International Conference on Principles and Practices of Programming on the Java Platform: Virtual Machines, Languages, and Tools},
-  doi = {10.1145/2647508.2647517},
+  Xdoi = {10.1145/2647508.2647517},
   isbn = {978-1-4503-2926-2},
   location = {Cracow, Poland},
   numpages = {12},
@@ -465,4 +489,377 @@
   series = {PPPJ'14},
   title = {{An Object Storage Model for the Truffle Language Implementation Framework}},
   year = 2014
+}
+
+
+
+@inproceedings{graceOnward12,
+	Address = {New York, NY},
+	Author = {Andrew P. Black and Kim B. Bruce and Michael Homer and James Noble},
+	Booktitle = {Onward! '12: Proceedings 12th SIGPLAN Symp. on New Ideas in Programming and Reflections on Software},
+	Date-Added = {2012-07-19 21:09:15 +0000},
+	Date-Modified = {2013-01-09 23:48:17 +0000},
+	Keywords = {accidental},
+	Pages = {85--98},
+	Publisher = {ACM},
+	Title = {{Grace}: the absence of (inessential) difficulty},
+	Url = {http://doi.acm.org/10.1145/2384592.2384601},
+	Year = {2012},
+	Bdsk-Url-1 = {http://doi.acm.org/10.1145/2384592.2384601}}
+
+@inproceedings{graceSigcse13,
+	Author = {Kim Bruce and Andrew Black and Michael Homer and James Noble and Amy Ruskin and Richard Yannow},
+	Booktitle = {Proceedings 44th SIGCSE Technical Symposium on Computer Science Education},
+	Date-Added = {2013-01-09 19:44:59 +0000},
+	Date-Modified = {2015-04-14 06:10:44 +0000},
+	XDoi = {http://dx.doi.org/10.1145/2445196.2445240},
+	Pages = {129--134},
+	Publisher = {ACM},
+	Title = {Seeking {Grace}: a new object-oriented language for novices},
+	Year = {2013},
+	Bdsk-Url-1 = {http://dx.doi.org/10.1145/2445196.2445240}}
+
+@book{bluebook,
+	Author = {Adele Goldberg and David Robson},
+	Publisher = {Addison-Wesley},
+	Title = {Smalltalk-80: The Language and its Implementation},
+	Year = 1983}
+
+
+@inproceedings{Black2007-emeraldHOPL,
+  author    = {Andrew P. Black and
+               Norman C. Hutchinson and
+               Eric Jul and
+               Henry M. Levy},
+  title     = {The development of the Emerald programming language},
+  booktitle = {Proceedings of the Third {ACM} {SIGPLAN} History of Programming Languages
+               Conference (HOPL-III), San Diego, California, USA, 9-10 June 2007},
+  pages     = {1--51},
+  year      = {2007},
+  Xcrossref  = {DBLP:conf/hopl/2007},
+  Xurl       = {http://doi.acm.org/10.1145/1238844.1238855},
+  Xdoi       = {10.1145/1238844.1238855},
+  timestamp = {Fri, 02 Jun 2017 20:47:04 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/hopl/BlackHJL07},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+
+@inproceedings{JonesECOOP2016,
+  author =	{Timothy Jones and Michael Homer and James Noble and Kim Bruce},
+  title =	{Object Inheritance Without Classes},
+  booktitle =	{30th European Conference on Object-Oriented Programming (ECOOP 2016)},
+  pages =	{13:1--13:26},
+  Xseries =	{Leibniz International Proceedings in Informatics (LIPIcs)},
+  XISBN =	{978-3-95977-014-9},
+  XISSN =	{1868-8969},
+  year =	{2016},
+  volume =	{56},
+  Xeditor =	{Shriram Krishnamurthi and Benjamin S. Lerner},
+  Xpublisher =	{Schloss Dagstuhl--Leibniz-Zentrum fuer Informatik},
+  Xaddress =	{Dagstuhl, Germany},
+  XURL =		{http://drops.dagstuhl.de/opus/volltexte/2016/6107},
+  XURN =		{urn:nbn:de:0030-drops-61077},
+  Xdoi =		{http://dx.doi.org/10.4230/LIPIcs.ECOOP.2016.13},
+  Xannote =	{Keywords: Inheritance, Objects, Classes, Operational semantics}
+}
+
+
+@book{betabook,
+	Author = {Lehrmann Madsen, Ole and Birger M{\o}ller-Pedersen and Kristen Nygaard},
+	Publisher = {Addison-Wesley},
+	Title = {Object-Oriented Programming in the {BETA} Programming Language},
+	Year = {1993}}
+
+@misc{GiladPluggable2004,
+	Author = {Gilad Bracha},
+	Howpublished = {{OOPSLA} workshop on revival of dynamic languages},
+	Title = {{Pluggable Type Systems}},
+	Year = {2004}}
+
+@inproceedings{Siek2015,
+  author    = {Jeremy G. Siek and
+               Michael M. Vitousek and
+               Matteo Cimini and
+               John Tang Boyland},
+  title     = {Refined Criteria for Gradual Typing},
+  booktitle = {1st Summit on Advances in Programming Languages, {SNAPL} 2015, May
+               3-6, 2015, Asilomar, California, {USA}},
+  pages     = {274--293},
+  year      = {2015},
+  Xcrossref  = {DBLP:conf/snapl/2015},
+  Xurl       = {https://doi.org/10.4230/LIPIcs.SNAPL.2015.274},
+  Xdoi       = {10.4230/LIPIcs.SNAPL.2015.274},
+  timestamp = {Thu, 15 Jun 2017 21:44:15 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/snapl/SiekVCB15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{panel,
+	Author = {Andrew P. Black and Kim B. Bruce and James Noble},
+	Booktitle = splashoopslacompanion,
+	Title = {Panel: designing the next educational programming language},
+	Xcrossref = {DBLP:conf/oopsla/2010c},
+	Xpages = {201-204},
+	Year = {2010}}
+
+@book{cltl2,
+	Author = {G.L. Steele},
+	Publisher = {{Digital Press}},
+	Title = {Common Lisp the Language},
+	Year = 1990}
+
+@inproceedings{RalphJohnson1986,
+  author    = {Ralph E. Johnson},
+  title     = {Type-Checking Smalltalk},
+  booktitle = {Conference on Object-Oriented Programming Systems, Languages, and
+               Applications (OOPSLA'86), Portland, Oregon, USA, Proceedings.},
+  pages     = {315--321},
+  year      = {1986},
+  Xcrossref  = {DBLP:conf/oopsla/1986},
+  Xurl       = {http://doi.acm.org/10.1145/28697.28728},
+  Xdoi       = {10.1145/28697.28728},
+  timestamp = {Tue, 19 Jun 2018 08:17:41 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/oopsla/Johnson86},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{strongtalk,
+	Author = {Gilad Bracha and David Griswold},
+	Booktitle = {{OOPSLA}},
+	XPublisher = {{ACM} {P}ress},
+	Title = {Stongtalk: Typechecking {S}malltalk in a Production Environment},
+	Year = 1993}
+
+@article{AbadiTOPLAS1991,
+  author    = {Mart{\'{\i}}n Abadi and
+               Luca Cardelli and
+               Benjamin C. Pierce and
+               Gordon D. Plotkin},
+  title     = {Dynamic Typing in a Statically Typed Language},
+  journal   = {{ACM} Trans. Program. Lang. Syst.},
+  volume    = {13},
+  number    = {2},
+  pages     = {237--268},
+  year      = {1991},
+  Xurl       = {http://doi.acm.org/10.1145/103135.103138},
+  Xdoi       = {10.1145/103135.103138},
+  timestamp = {Sun, 23 Sep 2012 17:30:34 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/toplas/AbadiCPP91},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+
+@inproceedings{Boyland2014,
+	XAddress = {New York, NY, USA},
+	Author = {John Tang Boyland},
+	Booktitle = {{FOOL}},
+	XPublisher = {{ACM}},
+	Title = {The Problem of Structural Type Tests in a Gradual-Typed Language},
+	Year = {2014}}
+
+
+@InProceedings{blame2009,
+author="Wadler, Philip and Findler, Robert Bruce",
+Xeditor="Castagna, Giuseppe",
+title="Well-Typed Programs Can't Be Blamed",
+booktitle="European Symposium on Programming Languages and Systems (ESOP)",
+year="2009",
+Xpublisher="Springer Berlin Heidelberg",
+Xaddress="Berlin, Heidelberg",
+pages="1--16",
+Xabstract="We introduce the blame calculus, which adds the notion of blame from Findler and Felleisen's contracts to a system similar to Siek and Taha's gradual types and Flanagan's hybrid types. We characterise where positive and negative blame can arise by decomposing the usual notion of subtype into positive and negative subtypes, and show that these recombine to yield naive subtypes. Naive subtypes previously appeared in type systems that are unsound, but we believe this is the first time naive subtypes play a role in establishing type soundness.",
+Xisbn="978-3-642-00590-9"
+}
+
+
+@inproceedings{blameForAll2011,
+  author    = {Amal Ahmed and
+               Robert Bruce Findler and
+               Jeremy G. Siek and
+               Philip Wadler},
+  title     = {Blame for all},
+  booktitle = {Proceedings of the 38th {ACM} {SIGPLAN-SIGACT} Symposium on Principles
+               of Programming Languages, {POPL} 2011, Austin, TX, USA, January 26-28,
+               2011},
+  pages     = {201--214},
+  year      = {2011},
+  Xcrossref  = {DBLP:conf/popl/2011},
+  Xurl       = {http://doi.acm.org/10.1145/1926385.1926409},
+  Xdoi       = {10.1145/1926385.1926409},
+  timestamp = {Thu, 15 Jun 2017 21:39:12 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/popl/AhmedFSW11},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{blameThreesomes2010,
+  author    = {Jeremy G. Siek and
+               Philip Wadler},
+  title     = {Threesomes, with and without blame},
+  booktitle = {Proceedings of the 37th {ACM} {SIGPLAN-SIGACT} Symposium on Principles
+               of Programming Languages, {POPL} 2010, Madrid, Spain, January 17-23,
+               2010},
+  pages     = {365--376},
+  year      = {2010},
+  Xcrossref  = {DBLP:conf/popl/2010},
+  Xurl       = {http://doi.acm.org/10.1145/1706299.1706342},
+  Xdoi       = {10.1145/1706299.1706342},
+  timestamp = {Thu, 15 Jun 2017 21:39:12 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/popl/SiekW10},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{reticPython2014,
+  author    = {Michael M. Vitousek and
+               Andrew M. Kent and
+               Jeremy G. Siek and
+               Jim Baker},
+  title     = {Design and evaluation of gradual typing for {P}ython},
+  booktitle = {DLS'14, Proceedings of the 10th {ACM} Symposium on Dynamic Languages,
+               part of {SPLASH} 2014, Portland, OR, USA, October 20-24, 2014},
+  pages     = {45--56},
+  year      = {2014},
+  Xcrossref  = {DBLP:conf/dls/2014},
+  Xurl       = {http://doi.acm.org/10.1145/2661088.2661101},
+  Xdoi       = {10.1145/2661088.2661101},
+  timestamp = {Thu, 15 Jun 2017 21:41:41 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/dls/VitousekKSB14},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{monotonic2015,
+  author    = {Jeremy G. Siek and
+               Michael M. Vitousek and
+               Matteo Cimini and
+               Sam Tobin{-}Hochstadt and
+               Ronald Garcia},
+  title     = {Monotonic References for Efficient Gradual Typing},
+  Xbooktitle = {Programming Languages and Systems - 24th European Symposium on Programming,
+               {ESOP} 2015, Held as Part of the European Joint Conferences on Theory
+               and Practice of Software, {ETAPS} 2015, London, UK, April 11-18, 2015.
+               Proceedings},
+  booktitle = {European Symposium on Programming {(ESOP)}},
+  pages     = {432--456},
+  year      = {2015},
+  Xcrossref  = {DBLP:conf/esop/2015},
+  Xurl       = {https://doi.org/10.1007/978-3-662-46669-8\_18},
+  Xdoi       = {10.1007/978-3-662-46669-8\_18},
+  timestamp = {Thu, 15 Jun 2017 21:35:18 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/esop/SiekVCTG15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Pycket2015,
+  author    = {Spenser Bauman and
+               Carl Friedrich Bolz and
+               Robert Hirschfeld and
+               Vasily Kirilichev and
+               Tobias Pape and
+               Jeremy G. Siek and
+               Sam Tobin{-}Hochstadt},
+  title     = {Pycket: a tracing {JIT} for a functional language},
+  booktitle = {Proceedings of the 20th {ACM} {SIGPLAN} International Conference on
+               Functional Programming, {ICFP} 2015, Vancouver, BC, Canada, September
+               1-3, 2015},
+  pages     = {22--34},
+  year      = {2015},
+  Xcrossref  = {DBLP:conf/icfp/2015},
+  Xurl       = {http://doi.acm.org/10.1145/2784731.2784740},
+  Xdoi       = {10.1145/2784731.2784740},
+  timestamp = {Thu, 15 Jun 2017 21:35:31 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/icfp/BaumanBHKPST15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{typedScheme08,
+  author    = {Sam Tobin{-}Hochstadt and
+               Matthias Felleisen},
+  title     = {The design and implementation of {Ty}ped {S}cheme},
+  booktitle = {Proceedings of the 35th {ACM} {SIGPLAN-SIGACT} Symposium on Principles
+               of Programming Languages, {POPL} 2008, San Francisco, California,
+               USA, January 7-12, 2008},
+  pages     = {395--406},
+  year      = {2008},
+  Xcrossref  = {DBLP:conf/popl/2008},
+  Xurl       = {http://doi.acm.org/10.1145/1328438.1328486},
+  Xdoi       = {10.1145/1328438.1328486},
+  timestamp = {Tue, 22 May 2012 15:24:56 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/popl/Tobin-HochstadtF08},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{optimizerCoach2012,
+  author    = {Vincent St{-}Amour and
+               Sam Tobin{-}Hochstadt and
+               Matthias Felleisen},
+  title     = {Optimization coaching: optimizers learn to communicate with programmers},
+  booktitle = {Proceedings of the 27th Annual {ACM} {SIGPLAN} Conference on Object-Oriented
+               Programming, Systems, Languages, and Applications, {OOPSLA} 2012,
+               part of {SPLASH} 2012, Tucson, AZ, USA, October 21-25, 2012},
+  pages     = {163--178},
+  year      = 2012,
+  Xcrossref  = {DBLP:conf/oopsla/2012},
+  Xurl       = {http://doi.acm.org/10.1145/2384616.2384629},
+  Xdoi       = {10.1145/2384616.2384629},
+  timestamp = {Tue, 23 Oct 2012 08:56:35 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/oopsla/St-AmourTF12},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@Misc{HACK,
+  author = 	 {Julien Verlaguet and Alok Menghrajani},
+  title = 	 {Hack: a new programming language for {HHVM}},
+  howpublished = {\texttt{https://\-code.\-fb.\-com/\-developer\--tools/\-hack-\-a\--new\--pro\-gram\-ming\--lan\-guage\--for\--hhvm/}},
+  month = 	 mar,
+  year = 	 2014}
+
+@Book{dartbook,
+  author = 	 {Gilad Bracha},
+  title = 	 {The {D}art Programming Language},
+  publisher = 	 {Addison-Wesley Professional},
+  year = 	 2015}
+
+@inproceedings{typeScriptTyping,
+  author    = {Aseem Rastogi and
+               Nikhil Swamy and
+               C{\'{e}}dric Fournet and
+               Gavin M. Bierman and
+               Panagiotis Vekris},
+  title     = {Safe {\&} Efficient Gradual Typing for {TypeScript}},
+  booktitle = {Proceedings of the 42nd Annual {ACM} {SIGPLAN-SIGACT} Symposium on
+               Principles of Programming Languages, {POPL} 2015, Mumbai, India, January
+               15-17, 2015},
+  pages     = {167--180},
+  year      = {2015},
+  xcrossref  = {DBLP:conf/popl/2015},
+  xurl       = {http://doi.acm.org/10.1145/2676726.2676971},
+  xdoi       = {10.1145/2676726.2676971},
+  timestamp = {Sat, 20 Dec 2014 16:58:56 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/popl/RastogiSFBV15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{typeScriptECOOP,
+  author    = {Gavin M. Bierman and
+               Mart{\'{\i}}n Abadi and
+               Mads Torgersen},
+  title     = {Understanding {TypeScript}},
+  booktitle = {{ECOOP} 2014 - Object-Oriented Programming - 28th European Conference,
+               Uppsala, Sweden, July 28 - August 1, 2014. Proceedings},
+  pages     = {257--281},
+  year      = {2014},
+  Xcrossref  = {DBLP:conf/ecoop/2014},
+  Xurl       = {https://doi.org/10.1007/978-3-662-44202-9_11},
+  Xdoi       = {10.1007/978-3-662-44202-9_11},
+  timestamp = {Tue, 18 Jul 2017 16:43:00 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/ecoop/BiermanAT14},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
