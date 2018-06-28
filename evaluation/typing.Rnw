@@ -10,17 +10,14 @@ source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
 # bench <- readRDS("acme.rds.bz2")
-
-data_1 <- select(load_data_file("benchmark-5adea5e8a0f6b60a4eaabc2e2b838ce666ab5799.data.bz2"),
-                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
-data_2 <- select(load_data_file("benchmark-d98bf528ae475c426b33ac4cfa07852a48054d10.data.bz2"),
+data_0 <- select(load_data_file("benchmark-8a6ab780.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 ## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
-data_1 <- filter(data_1, Iteration >= warmup_low & Iteration < warmup_high)
+data_0 <- filter(data_0, Iteration >= warmup_low & Iteration < warmup_high)
 
-data <- rbind(data_1, data_2)
+#data <- rbind(data_1, data_2)
 
-data <- droplevels(data)
+data <- droplevels(data_0)
 
 # levels(droplevels(filter(data, VM == "MothTyped"))$Benchmark)
 
@@ -57,7 +54,7 @@ typing_overhead <- droplevels(filter(norm, VM=="MothTyped"))
 #to_vm_names <- vm_names[levels(typing_overhead$VM)]
 #typing_overhead$VM <- revalue(typing_overhead$VM, to_vm_names)
 
-p <- ggplot(typing_overhead, aes(Benchmark, RuntimeRatio))
+p <- ggplot(typing_overhead, aes(reorder(Benchmark, desc(Benchmark)), RuntimeRatio))
 p <- p +
   geom_hline(aes(yintercept=0.95), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +

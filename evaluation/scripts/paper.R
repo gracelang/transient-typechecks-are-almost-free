@@ -23,7 +23,7 @@ vm_names <- c(
   
   "Java8U66"              = "Java",
   
-  "Node"                  = "Node.js",
+  "Node"                  = "Node.js (V8)",
   "SOMns-no-tracing"      = "SOMns",
   "SOMns"                 = "SOMns",
   "SOMns-Enterprise"      = "SOMns GraalVM",
