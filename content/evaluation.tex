@@ -41,6 +41,7 @@ Our experimental setup is available online to enable reproductions.\footnote{
 \smtodo{add version info}
 \url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}}
 
+\sm{averages over ratios are reported as geomeans}
 
 \subsection{\AWFY?}
 \label{sec:baseline-perf}
@@ -76,25 +77,26 @@ Consequently, these benchmarks are not necessarily a predictor
 for application performance,
 but can give a good indication for basic mechanisms such as type checking.
 
+% - arguing that Moth has state of the art performance on the given benchmarks
+% - this is a reasonable foundation to make performance claims
+%   that can generalize to state-of-the-art custom VMs such as V8
+
 \Cref{fig:awfy-baseline} shows the results.
 We use Java as baseline since it is the fasted language implementation
 in this experiment.
-We see that Node.js (V8) is about XXx\smtodo{add macro} (min, max) slower than Java.
-Moth is about XXx\smtodo{add macro} (min, max) slower than Java.
-As such, its on average XXx\smtodo{add macro} slower than Node.js.
+We see that Node.js (V8) is about
+\OverheadNodeGMeanX (min. \OverheadNodeMinX, max. \OverheadNodeMaxX)
+slower than Java.
+Moth is about \OverheadMothGMeanX (min. \OverheadMothMinX, max. \OverheadMothMaxX) slower than Java.
+As such, its on average \OverheadMothNodeGMeanP (min. \OverheadMothNodeMinP, max. \OverheadMothNodeMaxX) slower than Node.js.
 Compared to the Higgs VM, which is on these benchmarks
-XXx\smtodo{add macro} (min, max) than Java,
+\OverheadHiggsGMeanX (min. \OverheadHiggsMinX, max. \OverheadHiggsMaxX) than Java,
 Moth reaches the performance of Node.js much closer.
 With these results, we argue that Moth is a suitable platform to
 assess the impact of our approach to dynamic type checking,
 because its performance is close enough to state-of-the-art VMs,
 and run-time overhead is not going to be hidden by slow baseline performance.
 
-\begin{cnote}
-- arguing that Moth has state of the art performance on the given benchmarks
-- this is a reasonable foundation to make performance claims
-  that can generalize to state-of-the-art custom VMs such as V8
-\end{cnote}
 
 \subsection{Performance of Dynamic Type Checking}
 

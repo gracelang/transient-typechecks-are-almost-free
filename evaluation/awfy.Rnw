@@ -1,6 +1,6 @@
 %!TEX root = ../paper.tex
 
-<<knitr-settings, echo=FALSE, include=FALSE, cache=TRUE>>=
+<<knitr-settings, echo=FALSE, include=FALSE>>=
 # load libraries, the data, and prepare it
 if (Sys.getenv("RSTUDIO") == "1") { 
   if (Sys.getenv("LOGNAME") == "smarr") {
@@ -11,18 +11,26 @@ source("scripts/paper.R", chdir=TRUE)
 
 # bench <- readRDS("acme.rds.bz2")
 
-data_1 <- select(load_data_file("benchmark-5adea5e8a0f6b60a4eaabc2e2b838ce666ab5799.data.bz2"),
-                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+# data_1 <- select(load_data_file("benchmark-5adea5e8a0f6b60a4eaabc2e2b838ce666ab5799.data.bz2"),
+#                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 data_2 <- select(load_data_file("benchmark-3fe02efc6cb2e5f9222bd8456ebc30b005f9fb61.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_2 <- filter(data_2, VM != "Moth" & VM != "MothTyped")
 data_3 <- select(load_data_file("benchmark-15d82ec0f8ec0805153fcf156c939facbc7fb7dd.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_4 <- select(load_data_file("001-1077e532.data"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_4 <- filter(data_4, VM != "MothTyped" & Benchmark != "Bounce")
+data_5 <- select(load_data_file("002-ce565fc9.data"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_5 <- filter(data_5, VM != "MothTyped")
 
 
 ## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
-data_1 <- filter(data_1, Iteration >= warmup_low & Iteration < warmup_high)
+data_4 <- filter(data_4, Iteration >= warmup_low & Iteration < warmup_high)
+data_5 <- filter(data_5, Iteration >= warmup_low & Iteration < warmup_high)
 
-data <- rbind(data_1, data_2, data_3)
+data <- rbind(data_2, data_3, data_4, data_5)
 
 data <- filter(data, Benchmark %in% c("DeltaBlue",
                                       "Richards",
@@ -38,7 +46,6 @@ data <- filter(data, Benchmark %in% c("DeltaBlue",
                                       "Sieve",
                                       "Storage",
                                       "Towers" ))
-data <- filter(data, VM != "MothTyped")
 data <- droplevels(data)
 
 # levels(droplevels(filter(data, VM == "MothTyped"))$Benchmark)
@@ -48,12 +55,33 @@ java <- data %>%
   group_by(Benchmark) %>%
   summarise(RuntimeMean = mean(Value))
 
+node <- data %>%
+  filter(VM == "Node") %>%
+  group_by(Benchmark) %>%
+  summarise(RuntimeMean = mean(Value))
+
+
 norm <- data %>%
   left_join(java, by = "Benchmark") %>%
   group_by(Benchmark) %>%
   transform(RuntimeRatio = Value / RuntimeMean)
   
+norm_node <- data %>%
+  left_join(node, by = "Benchmark") %>%
+  group_by(Benchmark) %>%
+  transform(RuntimeRatio = Value / RuntimeMean)
+
+
 stats <- norm %>%
+  group_by(VM, Benchmark) %>%
+  summarise(
+    Time.ms = mean(Value),
+    sd      = sd(Value),
+    RuntimeFactor = mean(RuntimeRatio),
+    RR.sd         = sd(RuntimeRatio),
+    RR.median     = median(RuntimeRatio))
+
+stats_node <- norm_node %>%
   group_by(VM, Benchmark) %>%
   summarise(
     Time.ms = mean(Value),
@@ -69,11 +97,23 @@ vm_stats <- stats %>%
     median = median(RuntimeFactor),
     min = min(RuntimeFactor),
     max = max(RuntimeFactor))
+
+vm_stats_node <- stats_node %>%
+  group_by(VM) %>%
+  summarise(
+    geomean = geometric.mean(RuntimeFactor),
+    median = median(RuntimeFactor),
+    min = min(RuntimeFactor),
+    max = max(RuntimeFactor))
+
+# View(filter(stats, VM == "Moth" | VM == "Node" | VM == "SOMns"))
 @
 
 \def\AwfyBaseline{%
 <<awfy-baseline, fig.height=1.2, fig.width=3.3>>=
-baseline <- droplevels(stats)
+baseline <- droplevels(stats_node)
+base_names <- vm_names[levels(baseline$VM)]
+baseline$VM <- revalue(baseline$VM, base_names)
 
 p <- ggplot(baseline, aes(VM, RuntimeFactor))
 p <- p +
@@ -95,4 +135,28 @@ p <- p + ylab("Run-time factor, normalized to Moth (untyped)\n(lower is better)"
 p
 @
 }%
+
+
+
+\newcommand{\OverheadNodeGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Node")$geomean)}x\xspace}
+\newcommand{\OverheadNodeMinX}{\Sexpr{X1(filter(vm_stats, VM=="Node")$min)}x\xspace}
+\newcommand{\OverheadNodeMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Node")$max)}x\xspace}
+
+\newcommand{\OverheadMothGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Moth")$geomean)}x\xspace}
+\newcommand{\OverheadMothMinX}{\Sexpr{X1(filter(vm_stats, VM=="Moth")$min)}x\xspace}
+\newcommand{\OverheadMothMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Moth")$max)}x\xspace}
+
+\newcommand{\OverheadMothNodeGMeanX}{\Sexpr{X1(filter(vm_stats_node, VM=="Moth")$geomean)}x\xspace}
+\newcommand{\OverheadMothNodeMinX}{\Sexpr{X1(filter(vm_stats_node, VM=="Moth")$min)}x\xspace}
+\newcommand{\OverheadMothNodeMaxX}{\Sexpr{X1(filter(vm_stats_node, VM=="Moth")$max)}x\xspace}
+
+\newcommand{\OverheadMothNodeGMeanP}{\Sexpr{per(filter(vm_stats_node, VM=="Moth")$geomean)}\%\xspace}
+\newcommand{\OverheadMothNodeMinP}{\Sexpr{per(filter(vm_stats_node, VM=="Moth")$min)}\%\xspace}
+\newcommand{\OverheadMothNodeMaxP}{\Sexpr{per(filter(vm_stats_node, VM=="Moth")$max)}\%\xspace}
+
+\newcommand{\OverheadHiggsGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$geomean)}x\xspace}
+\newcommand{\OverheadHiggsMinX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$min)}x\xspace}
+\newcommand{\OverheadHiggsMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$max)}x\xspace}
+
+
 

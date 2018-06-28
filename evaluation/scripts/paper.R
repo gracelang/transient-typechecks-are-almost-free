@@ -21,13 +21,14 @@ vm_names <- c(
   "GraalBasic"            = "Graal",
   "GraalEnterprise"       = "Graal VM",
   
-  "Java8U66"              = "Java",
+  "Java"              = "Java",
   
   "Node"                  = "Node.js (V8)",
   "SOMns-no-tracing"      = "SOMns",
   "SOMns"                 = "SOMns",
   "SOMns-Enterprise"      = "SOMns GraalVM",
   
+  "Higgs"      = "Higgs",
   "Moth"      = "Moth",
   "MothTyped" = "Fully Typed")
 
