@@ -16,7 +16,24 @@
 
 
 - possible optimization for reads
-
+  - we can use truffle's approach to specializing ASTs to propagate
+    type constraints into the code we are using, which means,
+    all type checks can be omitted for code that promises to obey
+    type constraints.
+    Idea: pass expected return type down, don't check it when getting
+     the return value. instead, us truffle approach of reverting optimizations
+     by indicating violations with an exception.
  \sm{do we say very precisely what is done in the implementation section?}
+ 
+ 
+ \sm{the set of changes necessary for the support.
+ how much did we need to change to make it work?
+ }
+ - discuss what the effect of dropping checks on reads would be
+   -> need to change more of the primitives
+   -> don't do this a the moment
+   -> could give performance benefits (experiment?)
+   -> but would either delay errors (more imprecision)
+      or require all assignments, also from primitives to be checked
 \end{cnote}
 
