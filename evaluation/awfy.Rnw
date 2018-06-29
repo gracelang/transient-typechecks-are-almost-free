@@ -159,4 +159,4 @@ p
 \newcommand{\OverheadHiggsMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$max)}x\xspace}
 
 
-
+\newcommand{\WarmupCutOff}{\Sexpr{warmup_low}\xspace}

@@ -1,6 +1,6 @@
 %!TEX root = ../paper.tex
 
-<<knitr-settings, echo=FALSE, include=FALSE, cache=TRUE>>=
+<<knitr-settings, echo=FALSE, include=FALSE>>=
 # load libraries, the data, and prepare it
 if (Sys.getenv("RSTUDIO") == "1") { 
   if (Sys.getenv("LOGNAME") == "smarr") {
@@ -72,4 +72,5 @@ p <- p + ylab("Run-time factor, normalized to Moth (untyped)\n(lower is better)"
 p
 @
 }%
+
 
