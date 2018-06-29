@@ -119,7 +119,8 @@ and run-time overhead is not going to be hidden by slow baseline performance.
 The performance overhead of our dynamic type checking system
 is assessed based on the \AWFY benchmarks
 as well as benchmarks from the gradual-typing literature.
-Our goal was to use benchmarks that are widely used and can be ported to Grace.
+The goal was to complement our benchmarks with additional that are
+used for similar experiments and can be ported to Grace.
 To this end, we surveyed a number of papers\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}
 and selected the benchmarks that have been used by multiple papers.
 Some of the benchmarks overlapped with the \AWFY suite,
@@ -127,6 +128,7 @@ or were available in different versions.
 While not always behavioral equivalent,
 we used the \AWFY benchmarks since we already used them to
 establish the performance baseline.
+The list of selected benchmarks is given in \cref{tab:gradual-benchmarks}.
 
 \begin{table}
 \caption{Benchmarks selected from literature.}
@@ -140,15 +142,41 @@ Queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} & used \cite{Marr2016} 
 PyStone & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
 Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
 Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
-Spectralnorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
 \end{tabular}
 \end{table}
 
 \begin{figure}
 	\TypingOverhead{}
-	\caption{Overhead\smtodo{describe}}
+	\caption{A boxplot comparing the performance of Moth without type checking
+  to Moth with type checking.
+  The plot depicts the run-time overhead on peak performance over
+  the untyped performance. On average, dynamic type checking introduces
+  an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).}
 	\label{fig:typing-overhead}
 \end{figure}
+
+The results are depicted in \cref{fig:typing-overhead}.
+Overall, we see a peak-performance overhead of only 
+\OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
+
+The benchmark with the highest overhead of \OverheadListP is List,
+which traverses a linked list and has to check the list elements individually
+in a way that introduces checks that do not coincide with any operations
+on the relevant objects that have been performed before.
+We consider this benchmark a pathological case and discuss this example
+in detail in \cref{sec:disc-pathological-case}.
+
+
+Indication that results of \citet{Richards2017}
+are also applicable to highly optimizing language implementations
+
+% explain minima maxima.
+
+% reference optimization techniques?
+% reference spec
+
+\OverheadListP
 
 \begin{cnote}
   - which experiments?
