@@ -119,16 +119,23 @@ and run-time overhead is not going to be hidden by slow baseline performance.
 The performance overhead of our dynamic type checking system
 is assessed based on the \AWFY benchmarks
 as well as benchmarks from the gradual-typing literature.
-The goal was to complement our benchmarks with additional that are
+The goal was to complement our benchmarks with additional ones that are
 used for similar experiments and can be ported to Grace.
 To this end, we surveyed a number of papers\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}
-and selected the benchmarks that have been used by multiple papers.
-Some of the benchmarks overlapped with the \AWFY suite,
+and selected benchmarks that have been used by multiple papers.
+Some of these benchmarks overlapped with the \AWFY suite,
 or were available in different versions.
 While not always behavioral equivalent,
-we used the \AWFY benchmarks since we already used them to
+we chose the \AWFY versions since we already used them to
 establish the performance baseline.
 The list of selected benchmarks is given in \cref{tab:gradual-benchmarks}.
+
+The benchmarks were modified to have complete type information.
+We modified Moth to report absent type information and ensured it was complete.
+To assess the performance overhead of type checking,
+we compare Moth with all checks disabled, \ie, the baseline version from 
+\cref{sec:baseline-perf}, with a Moth that has all checks enabled.
+
 
 \begin{table}
 \caption{Benchmarks selected from literature.}
@@ -157,34 +164,62 @@ SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
 \end{figure}
 
 The results are depicted in \cref{fig:typing-overhead}.
-Overall, we see a peak-performance overhead of only 
+Overall, we see a peak-performance overhead of 
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
+
+% explain maxima
 
 The benchmark with the highest overhead of \OverheadListP is List,
 which traverses a linked list and has to check the list elements individually
-in a way that introduces checks that do not coincide with any operations
-on the relevant objects that have been performed before.
-We consider this benchmark a pathological case and discuss this example
+in a way that introduces checks that do not coincide with any shape checks
+on the relevant objects that are performed in the unchecked version.
+We consider this benchmark a pathological case and discuss it
 in detail in \cref{sec:disc-pathological-case}.
 
+Beside List, the highest overheads are on
+Richards (\OverheadRichardsP), CD (\OverheadCDP), 
+Snake (\OverheadSnakeP), and Towers (\OverheadTowersP).
+Richards has as one major component also a linked list traversal,
+similar to List.
+Snake and Towers access primarily arrays in a way that introduces checks
+that do not coincide with behavior in the unchecked version.
 
-Indication that results of \citet{Richards2017}
-are also applicable to highly optimizing language implementations
+% explain minima
 
-% explain minima maxima.
+Some benchmarks show however performance improvements,
+so that the run time decreased.
+Notable are here Permute (\OverheadPermuteP),
+GraphSearch (\OverheadGraphSearchP), and Storage (\OverheadStorageP).
+Permute simply creates the permutations over an array.
+GraphSearch implements a page rank algorithm
+and thus is primarily graph traversal.
+Storage stresses the garbage collector by constructing a tree of arrays.
+For these benchmarks the introduced checks seem to coincide with shape-check operations
+already performed in the untyped version.
+The performance improvement is possibly caused by having checks earlier,
+which enables the compiler to more aggressively move them out of loops.
+Another reason could simply be that the extra checks shift the boundaries
+of compilation units.
+In such cases, checks might not be eliminated completely,
+but the shifted boundary between compilation units might mean that
+objects do not need to be materialized and thus do not need to be allocated,
+or simply that the generated native code interacts better with
+the instruction cache of the processor.
+Such shifts in performance of about 10\%
+are somewhat common for highly optimizing just-in-time compilers.
 
-% reference optimization techniques?
-% reference spec
 
-\OverheadListP
+% discuss optimization techniques?
+% discuss specializations?
 
-\begin{cnote}
-  - which experiments?
-  
-  - fully types
-  - no types
-  - no types on fields
-  - all run on moth
 
-\end{cnote}
+% \begin{cnote}
+%   - which experiments?
+%
+%   - fully types
+%   - no types
+%   - no types on fields
+%   - all run on moth
+%
+% \end{cnote}
 
