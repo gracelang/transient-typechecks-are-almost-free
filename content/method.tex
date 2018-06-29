@@ -98,7 +98,8 @@ intended to represent a car (\cref{lst:car-reg} \cref{ex:object}) and write a me
 given the car object,
 returns the registration number (\cref{ex:method}).
 
-\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},label=lst:car-reg,escapechar=|]
+
+\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},label=lst:car-reg,escapechar=|,float,floatplacement=htbp]
 def car = object {|\label{ex:object}|
     var reg := "JO3553"
 }
@@ -115,7 +116,8 @@ Our system supports the student by allowing them to verify
 any value passed to the \code{getReg} function will respond
 to the \code{reg} message. 
 
-\begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|]
+
+\begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|,float,floatplacement=htbp]
 type Vehicle = interface = {
     reg    
 }
@@ -146,12 +148,12 @@ In particular, our design \ugh{ignores typing information}\sm{don't say ignore, 
 to avoid the overhead incurred by needing to track assumptions for blame and
 also to offer a high level of flexibility.
 
-\begin{lstlisting}[caption={A well-typed but globally inconsistent program.},escapechar=|,label={ex:complex}]
-type Person = interface {
-  name
-}
 
-method makePersonalCar -> Car { |\label{ex:personal-car}|
+\begin{lstlisting}[caption={A globally inconsistent program that has a well-typed execution.},escapechar=|,label={ex:complex},float,floatplacement=htbp]
+type Person = interface { name }
+type Department = interface { code }
+
+method personalCar -> Car { |\label{ex:personal-car}|
   object {
     method registerTo(p: Person) {|\label{ex:personal-car:changeOwner}|
       ...
@@ -159,11 +161,7 @@ method makePersonalCar -> Car { |\label{ex:personal-car}|
   }
 }
 
-type Department = interface {
-  code
-}
-
-method makeGovernmentCar -> Car { |\label{ex:government-car}|
+method governmentCar -> Car { |\label{ex:government-car}|
   object {
     method registerTo(d: Department) { |\label{ex:government-car:changeOwner}|
       ...
@@ -171,9 +169,12 @@ method makeGovernmentCar -> Car { |\label{ex:government-car}|
   }
 }
 
-method purchase(c: Car, p: Person) { |\label{ex:purchase}|
-  c.registerTo(p)
-}
+car.registerTo(
+  object {
+    var name := "Noble"
+  }
+)
+
 \end{lstlisting}
 
 As a consequence of being shallow our system \ugh{considers programs
