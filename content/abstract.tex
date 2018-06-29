@@ -1,30 +1,45 @@
 \begin{abstract}
 
-Languages with optional dynamic types, like
-Groovy, Dart, and Typescript,
-are becoming increasingly popular in practical development and education.
-Unfortunately,
-current implementations of gradual languages tend to
-perform worse than either purely static or purely dynamically typed languages.
-Removing type tests make programs in these languages run faster. 
-We add shallow-structural type checking, 
-to an existing interpreter Grace, 
-that enables developers to check 
-that executions of their program are well-typed.
-Grace is designed primarily for education and, consequently,
-the performance profile of its execution is important
-to enable both teachers and students to explore different concepts.
-Following from Grace's design goals,
-our focus is to provide flexible checking
-with minimal overhead to execution.
-We achieve flexibility through our shallow-structural design and,
-for our implementation, 
-we achieve minimal overhead by
-taking advantage of common JIT VM techniques 
-that can remove much of the overhead of dynamic type checking;
-allowing programs with explicit dynamic checks 
-to run at roughly the same speed as programs without those checks.
-Overall, adopting common JIT techniques can make these languages
-more effective in practice.
+%kjx I kent beck-ified it again
+%
+  Languages with optional explcit dynamic type checking, like
+  Typescript, Dart, Groovy, and Grace are increasingly popular in
+  practical development and programming education.  Unfortunately,
+  current implementations of these languages perform worse than either
+  purely statically or purely dynamically typed languages.  We show
+  how virtual machines can use common optimisations to remove
+  redundant dynamic type checks, by adding dynamic type
+  checks to Moth, a Truffle-based interpreter for  Grace.
+% or "for thr Grace programming language."
+  Moth runs programs with dynamic type checks
+  roughly as fast as programs without checks, so developers do not
+  need to disable checks in production code, and
+  educators can teach types without also teaching that types slow
+  programs down.
+
+%% Removing \kjx{redundant} type tests makes programs in these
+%% languages run faster. 
+% We add shallow-structural type checking
+% to an existing interpreter Grace, 
+%that enables developers to check 
+%that executions of their program are well-typed. % WTF else would you
+%need 'em
+%
+% Grace is designed primarily for education and, consequently,
+% the performance profile of its execution is important
+% to enable both teachers and students to explore different concepts.
+%
+% Following from Grace's design goals,
+% our focus is to provide flexible checking
+% with minimal overhead to execution.
+% We achieve flexibility through our shallow-structural design and,
+% for our implementation, 
+% we achieve minimal overhead by
+% taking advantage of common JIT VM techniques 
+% that can remove much of the overhead of dynamic type checking;
+% allowing programs with explicit dynamic checks 
+% to run at roughly the same speed as programs without those checks.
+% Overall, adopting common JIT techniques can make these languages
+% more effective in practice.
 
 \end{abstract}
