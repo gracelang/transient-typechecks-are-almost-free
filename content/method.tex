@@ -92,7 +92,7 @@ available, but omits any further typing information of those messages.
 
 Being able to express a set of messages to which an object
 must respond is useful. For example, our student can begin
-developing its vehicle application
+developing their vehicle application
 by defining an object
 intended to represent a car (\cref{lst:car-reg} \cref{ex:object}) and write a method that, 
 given the car object,
@@ -101,11 +101,11 @@ returns the registration number (\cref{ex:method}).
 
 \begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},label=lst:car-reg,escapechar=|,float,floatplacement=htbp]
 def car = object {|\label{ex:object}|
-    var reg := "JO3553"
+    var registration := "JO3553"
 }
 
-method getReg(v) {|\label{ex:method}|
-    return v.reg
+method getRegistration(v) {|\label{ex:method}|
+    return v.registration
 }
 \end{lstlisting}
 
@@ -113,17 +113,17 @@ Since the student is still developing the program,
 they may be concerned that the interface of a vehicles will change 
 and therefore want to avoid fully typing the program.
 Our system supports the student by allowing them to verify
-any value passed to the \code{getReg} function will respond
-to the \code{reg} message. 
+that any value passed to the \code{getRegistration} function will respond
+to the \code{registration} message. 
 
 
 \begin{lstlisting}[caption={Adding a type annotation to a method parameter.},escapechar=|,float,floatplacement=htbp]
 type Vehicle = interface = {
-    reg    
+    registration    
 }
 
-method getReg(v: Vehicle) { |\label{ex:adding-type}|
-    return v.reg
+method getRegistration(v: Vehicle) { |\label{ex:adding-type}|
+    return v.registration
 }
 \end{lstlisting}
 
@@ -131,31 +131,33 @@ We can achieve this using a type annotation
 as illustrated in \cref{ex:adding-type}. 
 In this case, 
 the annotation specifies a type with just one member
-corresponding to the \code{reg} message.
-\sm{you already said the following}
-By adding the type annotation to the program, 
-the student can now be sure the \code{getReg} method
-will only be invoked when its arguments can respond to this message.
-With the assurance that they will be altered when a value 
-does not conform to this type,
-the student can continue developing the program.
+corresponding to the \code{registration} message.
+% \sm{you already said the following}
+% By adding the type annotation to the program,
+% the student can now be sure the \code{getReg} method
+% will only be invoked when its arguments can respond to this message.
+This gives the student the assurance that they will be alerted when a value 
+does not conform to this expected type.
 
 \paragraph{Flexibility.}
 
 The notion of our type system being shallow means 
 that members of a type are untyped.
-In particular, our design \ugh{ignores typing information}\sm{don't say ignore, just say that our types do not have types for parameters and return types of members}
-to avoid the overhead incurred by needing to track assumptions for blame and
-also to offer a high level of flexibility.
+In particular, our design does not have information on parameter types
+and return types for the type members.
+This design implies that blame tracking is not needed,
+because the types are less detailed than in other systems.
+One reason for this design is that it avoid the overhead incurred
+by tracking type assumptions for precise blame attribution.
 
 
-\begin{lstlisting}[caption={A globally inconsistent program that has a well-typed execution.},escapechar=|,label={ex:complex},float,floatplacement=htbp]
+\begin{lstlisting}[caption={A globally inconsistent program that has a well-typed execution.},escapechar=|,label={ex:complex},float,floatplacement=htb]
 type Person = interface { name }
 type Department = interface { code }
 
 method personalCar -> Car { |\label{ex:personal-car}|
   object {
-    method registerTo(p: Person) {|\label{ex:personal-car:changeOwner}|
+    method registerTo(p: Person) {|\label{ex:personal-car:registerTo}|
       ...
     } 
   }
@@ -163,7 +165,7 @@ method personalCar -> Car { |\label{ex:personal-car}|
 
 method governmentCar -> Car { |\label{ex:government-car}|
   object {
-    method registerTo(d: Department) { |\label{ex:government-car:changeOwner}|
+    method registerTo(d: Department) { |\label{ex:government-car:registerTo}|
       ...
     }
   }
@@ -174,41 +176,42 @@ car.registerTo(
     var name := "Noble"
   }
 )
-
 \end{lstlisting}
 
-As a consequence of being shallow our system \ugh{considers programs
-well-typed}\sm{no, don't say this. we do not have a notion of well typed programs. We only have a notion of well typed executions. You perhaps want to say this} even when they are globally inconsistent.
-For example, in \cref{ex:complex}, the student has defined a type containing
-three members and assigned this to the identifier \code{Car} (\cref{ex:complex:car}).
-They also introduce two methods to create cars 
+Another aspect of this design is
+that our shallow approach to types
+allows for a more flexible use of these structural types
+without requiring type parameters, \ie, generics.
+For example, in \cref{ex:complex}, the student defined a type containing
+three members and assigned this to the identifier \code{Car} (\cref{ex:complex:car}).\sm{there is no car type???}
+They also add two methods to create cars 
 (\cref{ex:personal-car,ex:government-car}),
-in which both methods are well-typed and indeed return objects that conform to
+in which both methods are typed and return objects that conform to
 the \code{Car} type.
-However, note that each version of the \code{changeOwner} method
+However, note that each version of the \code{registerTo} method
 declares a different type for its parameter
-(\cref{ex:personal-car:changeOwner,ex:government-car:changeOwner}).
+(\cref{ex:personal-car:registerTo,ex:government-car:registerTo}).
 and, consequently, calling the 
 \code{processPurchase} method \cref{ex:purchase} with
 an object created from the first method would execute as expected
 while its with an object created from the second would terminate with
-an error. 
+an error. \sm{this inconsistent, these elements don't exist! is this unchanged after a revision???}
 
-\sm{don't say anything about stuff we don't do. this is not really necessary,
-and I don't think this is necessarily correct, depending on specific type systems}
-A full structural type-checking system would alert the student to 
-the inconsistency described above statically,
-perhaps displaying an error in their idea. 
-While the alert is correct in that their is an inconsistency,
-such a system is less flexible. 
+% \sm{don't say anything about stuff we don't do. this is not really necessary,
+% and I don't think this is necessarily correct, depending on specific type systems}
+% A full structural type-checking system would alert the student to
+% the inconsistency described above statically,
+% perhaps displaying an error in their idea.
+% While the alert is correct in that their is an inconsistency,
+% such a system is less flexible.
 
-\sm{I would just say: possible inconsistency between elements can be approached
-step wise, when necessary as the sophistication and completeness of the program improves}
-Our system offers a higher level of flexibility in that the student
-may still execute the program, 
-which may indeed be only partially developed and remain globally inconsistent.
-The student may be satisfied that a particular test passes successfully, and
-is then free to address the inconsistency in later development.
+% \sm{I would just say: possible inconsistency between elements can be approached
+% step wise, when necessary as the sophistication and completeness of the program improves}
+% Our system offers a higher level of flexibility in that the student
+% may still execute the program,
+% which may indeed be only partially developed and remain globally inconsistent.
+% The student may be satisfied that a particular test passes successfully, and
+% is then free to address the inconsistency in later development.
 
 
 \paragraph{Termination by Type Error.}
@@ -217,8 +220,8 @@ When executing a program without types, there are three possible outcomes.
 Either the program (1) terminates successfully,
 (2) terminates with an exception, or 
 (3) the execution diverges, \ie, it does not terminate.
-Using our type system, a
-fourth outcome is possible: termination with a typing error.
+Using our approach, a
+fourth outcome is possible: termination with a type error.
 
 Provided that the corresponding annotations are present, 
 our system will perform a check
@@ -233,22 +236,23 @@ and the execution terminate with a typing error
 when a value fails to conform to the expected type.
 
 % Summarize the design section
-In summary, our type system enables a developer to express
-the capabilities objects throughout different components of 
+\paragraph{Summary}
+Our type checking approach enables developers to express
+the capabilities of objects throughout different components of 
 their programs.
 Our representation of types is shallow,
 in that a type expresses only the set of members (messages) an object
 should respond to while excluding any further typing information. 
-With the shallow design we can offer flexibility in the sense that
-globally inconsistent programs can still be executed and checked,
-which will fail with a typing error when as soon as an value is found
-to be inconsistent with a type annotation. 
-Overall, our system offers a mechanism to check that a program's execution
+The shallow design enables a flexible use of structural types without
+requiring type parameters.
+We abort program execution as soon as
+a type annotation is inconsistent with a concrete value. 
+With these design choices, our system offers a mechanism to check that a program's execution
 is well-typed---%
 rather than the program itself being well-typed.
-This both lowers overhead for the developer and, 
-helps us to avoid the overhead of tracking blame 
-as seen among previous works.
+% This both lowers overhead for the developer and,
+% helps us to avoid the overhead of tracking blame
+% as seen among previous works.
 
 \subsection{Implementation} 
 \label{ssec:implementation} 
