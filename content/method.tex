@@ -285,7 +285,7 @@ The AST node implements the algorithm to evaluate whether a given object
 conforms to the expected type.
 When executed the node first obtains the type of the given object by
 collecting the messages it can respond to into a set,
-which is used to form a new type node (\cref{ex:typenode:reflect}).
+which is used to form a new type node (\cref{ex:typenode:check}).
 The relationship between the type of the object and the expected type can
 then be evaluated using a standard superset operation (\cref{ex:typenode:superset}).
 With the AST node for type checking in place 
@@ -302,9 +302,8 @@ class Type:
       t = other._members
       return s.issuperset(t) |\label{ex:typenode:superset}|
 
-    def is_object_subtype(other: Object):
-      type = Type(reflect_members(other)) |\label{ex:typenode:reflect}|
-      return type.is_subtype_of(self)
+    def is_object_subtype(obj: Object):
+      return Type(obj.members.is_subtype_of(self) |\label{ex:typenode:check}|
 
 \end{lstlisting}
 
@@ -312,9 +311,7 @@ class Type:
 In summary, our type checking can be realized with a light-weight implementation: 
 information about the expected types needs to be attached to the AST and, 
 with that information available,
-the checks can be implemented using standard reflection and set operations. While sets and their operations are provided as primitives in most languages, support for reflection, 
-which we require to collect the set of messages to which an object can respond,
-can vary. Next in \cref{ssec:optimization} we describe how we were able to realize a fast implementation using the Moth interpreter for Grace.
+the checks can be implemented using standard set operations.
 
 
 % \1 matrix caching type relationships
