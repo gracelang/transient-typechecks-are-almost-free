@@ -339,35 +339,71 @@ Moth starts as a standard interpreter but,
 using the Graal VM,
 is able to optimize itself using profiling information seen at run time. 
 
+\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the type checking node that support type checking},float,floatplacement=htbp]
+class TypeCheckNode(Node):
+
+  expected: Type
+  cached_shape: Shape
+  cached_type: Type
+  record: Matrix
+  
+  def guard(obj: Any): |\label{ex:typenode:guard}|
+    if not (obj.shape() != shape or
+            cached_type.is_subtype_of(expected)):
+      despecialize()
+
+  def check(obj: Number): |\label{ex:typenode:number}|
+    guard(obj)
+
+  def check(obj: String): |\label{ex:typenode:string}|
+    guard(obj)
+
+  def check(obj: Immutable): |\label{ex:typenode:immut}|
+    guard(obj)
+
+  ...
+
+  def check(obj: Object):
+    guard(obj)
+  
+  def check_generic(obj: Any): |\label{ex:typenode:generic}|
+    T = get_type(obj)
+    
+    if record[T, expected] is unknown: |\label{ex:typenode:matrix}|
+      record[T, expected] =
+          T.is_subtype_of(expected)
+
+    if not record[T, expected]:
+      TypeError "{obj} doesn't implement {expected}"
+\end{lstlisting}
+
 The first performance-critical aspect to our implementation
 is how we specialize the type checking node.
 Before specialization,
 our node features a generic execution method
-that first collects the set of members
-from the given object and performs the superset operation
-to verify that it conforms to its expected type
-(recall the illustration from \cref{ex:typenode},
-\cref{ex:typenode:superset}).
-However, during the first execution of this generic method,
-we can see the concrete type of the given object and,
-in many cases,
-we can redirect future executions of this method to a more specialized version:
-one version to handle primitives like numbers or strings,
-another version to handle immutable objects,
-another to handle objects without fields,
+(\cref{ex:typenode:generic})
+that is responsible for executing full semantics of the type check.
+During the first execution of this generic method,
+we can the concrete type of the given object and,
+with the support of the Truffle framework,
+we can redirect future executions of this method
+to a more specialized version:
+one version to handle primitives like
+numbers (\cref{ex:typenode:number}) or strings (\cref{ex:typenode:number}),
+another version to handle immutable objects (\cref{ex:typenode:immut},
 and so on.
-Whenever the execution is redirected in this way,
-we attach a guard that must be verified before the specialized version can be executed.
-The guard states that the shape of the given object
+Each specialized version executes a guard in place of the type check (\cref{ex:typenode:guard}).
+The guard first checks that the shape of the given object
 -- a typical VM representation of an object's memory layout --
-must be equal to the shape of the object
-used in the first execution.
+is equal to the shape of the object
+used during the first execution.
 If the guard fails,
-we return to the generic method and choose a new specialization.
+future executions revert back to generic method
+and can later choose a new specialization.
 Since an object's shape implies its type,
 we are able to reduce overhead
 by replacing the repeated checks
-with a simple reference equality operation.
+with a reference equality operation in the guard.
 
 The other performance-critical aspect to our implementation
 is the use of a matrix-based record to cache sub-typing relationships.
