@@ -261,54 +261,59 @@ as seen among previous works.
 % semantics for type check
 
 
-We implemented our type system as an extension to an existing Grace interpreter,
-by first extracting typing information and propagating it into the program's AST
-and then. We then 
+Our approach performs checks at during different run time events:
 
 \begin{itemize}
-\item introduce a new AST node to perform type checking,
-\item attached the type checking nodes onto method and variables,
-\item and add a data structure to 
+\item the values of arguments are checked, after a method is requested, 
+      but before the body of the message is executed,
+\item the value returned by a method is checked after its body is executed, and
+\item the value of variables are checked whenever assigned to or read from.
 \end{itemize}
-As we described in \cref{ssec:moth},
-Moth is an AST-based interpreter
-using the Graal just-in-time compiler\citep{Wurthinger:2017:PPE}.
 
-\sm{deep-dive, some high-level summary first before talking about 
-anything in a step-wise/procedural way?}
-\sm{what are the main components of the implementation?}
-\sm{which aspects is this section going to cover?
-What am I going to learn?}
+Starting from an AST interpreter,
+we can implement support for approach by attaching the checks to AST nodes:
+the expected types for the argument and return values can be included
+with the node for requesting a method, and the expected type for a variable
+can be attached to the nodes for reading from and writing to a method.
+In practice,
+we encapsulate the logic of the check within a new type-checking AST node
+-- illustrated by \cref{ex:typecheck} --
+and attach instances of this node as children to the method,
+variable read, and variable write nodes. 
+The AST node implements the algorithm to evaluate whether a given object
+conforms to the expected type.
+When executed the node first obtains the type of the given object by
+collecting the messages it can respond to into a set,
+which is used to form a new type node (\cref{ex:typenode:reflect}).
+The relationship between the type of the object and the expected type can
+then be evaluated using a standard superset operation (\cref{ex:typenode:superset}).
+With the AST node for type checking in place 
+we need only extract the definitions of types during parsing 
+and record these into global record that can be recalled by the
+dispatch, variable read, and variable write nodes.
 
-Our system first processes all type literals declared in a program and records these as
-unique entries into a global record.
-When recorded, if a type of the same structure already exists we return the existing instance
-rather than creating a new one.
-When creating the AST for a program, 
-we process any type annotations present on method and variable declarations and
-recall the corresponding types from the global record. 
-\ugh{Any annotations using the literal syntax constituent adding a new type to the record.}\sm{why does this have to be explained so procedural?
-can't we just state that each type literal is an independent type or something?
-though, what does this really mean, when do you ``unify'' types?
-Is this something that needs to be discussed here?}
-Later at run time, we can extract the type of an object from its \ugh{factory 
-(a mechanism provided by Moth to instantiate objects)}\sm{do we need to explain this? if so, we need to talk about shapes/maps/hidden classes in background, and we need to explain that this can be applied to classes, too}.
-The factory maintains the definitions of the object found during parsing and
-we enumerate through this record to obtain a list of names that correspond
-to which methods the object can respond too.
-We then consult the global record to retrieve an instance of a type object,
-which can either create a new object or provide an instance already created.
-Finally, we iterate through the list of members defined by the expected type 
-(recalled from the AST) and verify that the objects can respond to each one.
-We throw an error as soon as an object fails to conform to its expected type, 
-and otherwise execution continues unaffected.\sm{but we already said this in the design section, don't we want to say something more specific here?}
 
-An example of the implementation is provided by \cref{code:typecheck}.
+\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the AST node that we use to perform type checks},float,floatplacement=htbp]
+class Type:
 
-\input{../content/example-typecheck}
-\sm{what is this? needs an explanation. what is the key idea here?
-what part is relevant? what do you want me to take away from it?}
+    def is_subtype_of(other: Type):
+      s =  self._members
+      t = other._members
+      return s.issuperset(t) |\label{ex:typenode:superset}|
 
+    def is_object_subtype(other: Object):
+      type = Type(reflect_members(other)) |\label{ex:typenode:reflect}|
+      return type.is_subtype_of(self)
+
+\end{lstlisting}
+
+
+In summary, our type checking can be realized with a light-weight implementation: 
+information about the expected types needs to be attached to the AST and, 
+with that information available,
+the checks can be implemented using standard reflection and set operations. While sets and their operations are provided as primitives in most languages, support for reflection, 
+which we require to collect the set of messages to which an object can respond,
+can vary. Next in \cref{ssec:optimization} we describe how we were able to realize a fast implementation using the Moth interpreter for Grace.
 
 
 % \1 matrix caching type relationships
