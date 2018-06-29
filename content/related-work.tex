@@ -3,12 +3,12 @@
 \section{Related Work}
 \label{sec:related-work}
 
-Although syntaxen for type annotations in dynamic languages go back at
-least as far as Lisp \cite{cltl2}, the first attempts at adding a
+Although syntaxes for type annotations in dynamic languages go back at
+least as far as Lisp\citep{cltl2}, the first attempts at adding a
 coherent static type system to a dynamically typed language involved
-Smalltalk \cite{RalphJohnson1986}, with the first practical system
-being Bracha's Strongtalk \cite{strongtalk}. Strongtalk
-(independently replicated for Ruby \cite{DBRuby09}) provided a
+Smalltalk\citep{RalphJohnson1986}, with the first practical system
+being Bracha's Strongtalk\citep{strongtalk}. Strongtalk
+(independently replicated for Ruby\citep{DBRuby09}) provided a
 powerful and flexible static type system, where crucially, the system
 was \emph{optional} (also known as pluggable
 \cite{GiladPluggable2004}. Programmers could run the static checker
@@ -16,87 +16,86 @@ over their Smalltalk code (or not); either way the type annotations
 had no impact whatsoever of the semantics of the underlying Smalltalk
 program.
 
-Siek and Taha introduced the term ``gradual typing''
-\cite{Siek2006} to describe the logical extension of this scheme: a
+\citet{Siek2006} introduced the term ``gradual typing''
+ to describe the logical extension of this scheme: a
 dynamic language with type annotations that could if necessary be
-checked at runtime. Siek and Taha build on earlier, complementary,
+checked at runtime. \citeauthor{Siek2006} build on earlier, complementary,
 work extending fully statically typed languages with a ``\texttt{DYNAMIC}''
-type --- Abadi and Cardelli et al.\ \cite{AbadiTOPLAS1991} is an
+type---\citet{AbadiTOPLAS1991} is an
 important early attempt
 and also surveys previous work. Revived practical adoption of dynamic
 languages generated revived research interest, leading to the
-formulation of the ``gradual guarantee''
-\cite{Siek2006,Siek2015} to characterise sound
+formulation of the ``gradual guarantee''\citep{Siek2006,Siek2015} to characterize sound
 gradual type systems: removing type annotations should not change the
 semantics of a correct program, drawing on the Boyland's critical
 insight that, of course, such a guarantee must by its nature forbid
 code that can depend on the presence or absence of type declarations 
-elsewhere in the program \cite{Boyland2014}. 
+elsewhere in the program\citep{Boyland2014}. 
 
 Type errors in gradual (or other dynamically checked) type systems will
 often be triggered by the type declarations, but often those
-declarations will not be at fault --- indeed in a correctly typed
+declarations will not be at fault---indeed in a correctly typed
 program in a sound gradually typed system,  the declarations cannot be
 at fault because they will have passed the static type
 checker. Rather, the underlying fault must be somewhere within the
-barbarian dynamically typed code \emph{trans vallum}.  Blame tracking
-\cite{blame2009,blameThreesomes2010,blameForAll2011} localises these
+barbarian dynamically typed code \emph{trans vallum}.
+Blame tracking\citep{blame2009,blameThreesomes2010,blameForAll2011} localizes these
 faults by identifying 
 the point in the program where the system makes an 
 assumption about dynamically typed objects, so can identify the root
 cause should the assumption fail.  Different semantics for blame
 detect these faults slightly differently, and impose more or less
-implementation overhead \cite{reticPython2014,monotonic2015,Vitousek2017}.
+implementation overhead\citep{reticPython2014,monotonic2015,Vitousek2017}.
 
 As with language designs, there seem to be two main implementation
 strategies for languages mixing dynamic and static type checks: either
 adding static checks into a dynamic language implementation, or adding
 support for a ``dynamic'' type to an implementation that depends on
-static types for efficiently. Racket, for example, optimises code with
-a combination of type inference and type declarations --- the Racket
-IDE ``optimiser coach'' goes as far as to suggest to programmers type
-annotations that may improve their program's performance
-\cite{optimizerCoach2012}. In these implementations, values flowing
+static types for efficiently. Racket, for example, optimizes code with
+a combination of type inference and type declarations---the Racket
+IDE ``optimizer coach'' goes as far as to suggest to programmers type
+annotations that may improve their program's performance\citep{optimizerCoach2012}. In these implementations, values flowing
 from dynamically to statically typed code must be checked at the
 boundary.  Fully statically typed code needs no dynamic type checks,
 and so generally performs better than dynamically typed code. Adopting
-a gradual type system such as Typed Racket \cite{typedScheme08} allows
+a gradual type system such as Typed Racket\citep{typedScheme08} allows
 programmers declare types explicitly that can be checked statically,
 removing unnecessary overhead.
 
-On the other hand, systems such as Reticulated Python
-\cite{reticPython2014}, Higgs \cite{Richards2017}, and our
+On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
 work here takes the opposite approach: adding type checking into
 just-in-time compiling virtual machines that do not rely on static
 type declarations. These systems do not use information from type
-declarations to optimise execution speed, rather the necessity to
+declarations to optimize execution speed, rather the necessity to
 perform (potentially repeated) dynamic type checks tend to slow
 programs down, so here code with no type annotations generally
 performs better than statically typed code, or rather, code with many
 type annotations. In the limit, these kinds of systems may only ever
 check types dynamically and may not involve a static type checker at
-all.  Several recent languages including HACK \cite{HACK}, Typescript
-\cite{typeScriptECOOP,typeScriptTyping}, Dart \cite{dartbook}, and Grace
-\cite{graceOnward12} follow this general approach.
+all. 
+%% SM: removed because I still think this isn't correct
+%  Several recent languages including HACK \cite{HACK}, Typescript
+% \cite{typeScriptECOOP,typeScriptTyping}, Dart \cite{dartbook}, and Grace
+% \cite{graceOnward12} follow this general approach.
 
 As these systems have come to wider attention, the question of their
 implementation overheads has become more prominent.  
-Takikawa et al.\ \cite{Takikawa2016} asked `` is sound gradual typing
+\citet{Takikawa2016} asked ``is sound gradual typing
 dead?'' based on a systematic performance measurement on Typed Racket.
 The key here is their evaluation methodology, where they constructed a
 number of different permutations of typed and untyped code, and
 evaluated performance along the spectrum.
-Baumann et al.\ \cite{Bauman2017} replied to Takikawa's study, but
-using Pycket \cite{Pycket2015}, a tracing JIT for Racket, rather
+\citet{Bauman2017} replied to \citeauthor{Takikawa2016}'s study, but
+using Pycket\citep{Pycket2015}, a tracing JIT for Racket, rather
 than the standard Racket VM, although maintaining full gradually typed
-Racket semantics. Baumann are able to demonstrate most benchmarks
-with a slowdown of only a few percent.
-Muehlboeck et al.\ \cite{Muehlboeck2017} also replied to Takikawa, 
+Racket semantics. \citeauthor{Bauman2017} are able to demonstrate most benchmarks
+with a slowdown of \ugh{only a few percent}\smtodo{make more precise}.
+\citet{Muehlboeck2017} also replied to \citeauthor{Takikawa2016}, 
 using a similar benchmarking methodology applied to a custom language
-with features designed to make gradual types easier to optimise, 
-demonstrating speedups as more type information is added to programs. 
+with features designed to make gradual types easier to optimize, 
+\ugh{demonstrating speedups}\smtodo{make more precise} as more type information is added to programs. \sm{may want to discuss here how we relate to their implementation technique}
 Most recently, \citet{Kuhlenschmidt:2018:preprint} employ a
-``ahead of time'' (i.e.\ traditional, static) compiler for a custom
+``ahead of time'' (\ie traditional, static) compiler for a custom
 language and demonstrate good performance for code where more than
 half of the program is annotated with types, and still reasonable
 performance for code with type annotations. \kjx{mealy mouthed.}
