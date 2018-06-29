@@ -65,10 +65,12 @@ Grace, all extant implementations have the unfortunate property that
 adding type declarations to a program makes that program run slower---teaching students that \emph{removing} type declarations is an
 effective optimization technique.
 Furthermore, this property is shared
-by several other optionally typed languages including Groovy,
-TypeScript and Dart\citep{Muehlboeck2017}.\sm{I am not sure that, as it is phrased, is actually true.
+by several other optionally typed languages including \del{Groovy,
+TypeScript} and Dart\citep{Muehlboeck2017}.\sm{I am not sure that, as it is phrased, is actually true.
 TypeScript does not have types at run time, they are completely
-erased, Dart}\kjx{true of dart 1 checked mode}
+erased, Dart}\kjx{true of dart 1 checked mode}\sm{I read over Groovy, doesn't seem to do dynamic type checking, but uses types for code generation}
+\sm{how about: A prominent example is Dart 1, which uses dynamic type checking in its checked development mode.}
+
 \begin{cnote}
 Nom\citep{Muehlboeck2017}
 all the gradual systems
