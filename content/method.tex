@@ -15,10 +15,10 @@ is important for supporting effective teaching.
 
 % motivation = give students low-overhead method to check program
 In this section,
-we present a new optional and dynamically checked type system
+we present a system for optional and dynamically checked types
 with a minimal impact on run-time performance.
 Following from the design goals behind Grace,
-our motivation with the new type system
+our motivation for this work
 is to provide developers---and particularly students---with a flexible system 
 to check the consistency of the execution of their programs
 against type annotations,
@@ -28,7 +28,7 @@ without significant impact on run-time performance.
 Gradual typing systems are generally good candidates to achieve this goal.
 % Existing gradual typing systems 
 % that address the goal of flexibility currently
-Unfortunately, they do not yet have the desired performance properties\citep{Takikawa2016}\smtodo{add the other papers}.
+Unfortunately, they do not yet have the desired performance properties\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
 Specifically, they could encourage students to remove types
 to improve performance.
 
@@ -78,7 +78,7 @@ Specifically, our type system has the following properties:
 % while avoiding the burden of fully typing their program.
 
 We detail these properties
-based on a classic student exercise where a student student develops
+based on a classic student exercise where a student develops
 a program to record information about vehicles.
 
 \paragraph{Types are Sets of Members.}
