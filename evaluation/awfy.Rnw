@@ -111,7 +111,7 @@ vm_stats_node <- stats_node %>%
 
 \def\AwfyBaseline{%
 <<awfy-baseline, fig.height=1.2, fig.width=3.3>>=
-baseline <- droplevels(stats_node)
+baseline <- droplevels(stats)
 base_names <- vm_names[levels(baseline$VM)]
 baseline$VM <- revalue(baseline$VM, base_names)
 

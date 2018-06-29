@@ -76,7 +76,7 @@ features with first-class functions.
 Consequently, these benchmarks are not necessarily a predictor
 for application performance,
 but can give a good indication for basic mechanisms such as type checking.
-
+\sm{and this is the kind of language features we expect students to use when learning a language}
 % - arguing that Moth has state of the art performance on the given benchmarks
 % - this is a reasonable foundation to make performance claims
 %   that can generalize to state-of-the-art custom VMs such as V8
@@ -90,7 +90,7 @@ slower than Java.
 Moth is about \OverheadMothGMeanX (min. \OverheadMothMinX, max. \OverheadMothMaxX) slower than Java.
 As such, its on average \OverheadMothNodeGMeanP (min. \OverheadMothNodeMinP, max. \OverheadMothNodeMaxX) slower than Node.js.
 Compared to the Higgs VM, which is on these benchmarks
-\OverheadHiggsGMeanX (min. \OverheadHiggsMinX, max. \OverheadHiggsMaxX) than Java,
+\OverheadHiggsGMeanX (min. \OverheadHiggsMinX, max. \OverheadHiggsMaxX) slower than Java,
 Moth reaches the performance of Node.js much closer.
 With these results, we argue that Moth is a suitable platform to
 assess the impact of our approach to dynamic type checking,
@@ -99,6 +99,12 @@ and run-time overhead is not going to be hidden by slow baseline performance.
 
 
 \subsection{Performance of Dynamic Type Checking}
+
+% - benchmark selection
+%  - dynamic type checking performance determined based on commonly used
+%    benchmarks from the gradual typing papers
+% - we are subsetting, need to explain why
+%   - the subset of benchmarks that we managed to port to Grace/Moth
 
 The performance overhead of our dynamic type checking system
 is assessed based on the \AWFY benchmarks
@@ -109,8 +115,8 @@ and selected the benchmarks that have been used by multiple papers.
 Some of the benchmarks overlapped with the \AWFY suite,
 or were available in different versions.
 While not always behavioral equivalent,
-we used the \AWFY benchmarks since we used them to
-establish the performance baseline, too.
+we used the \AWFY benchmarks since we already used them to
+establish the performance baseline.
 
 \begin{table}
 \caption{Benchmarks selected from literature.}
@@ -135,15 +141,6 @@ Spectralnorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
 \end{figure}
 
 \begin{cnote}
-- benchmark selection
- - dynamic type checking performance determined based on commonly used
-   benchmarks from the gradual typing papers
-   - name the benchmarks
-   - for each, indicate which paper used them
-   - we are subsetting, need to explain why
-     - the subset of benchmarks that we managed to port to Grace/Moth
-
-
   - which experiments?
   
   - fully types
