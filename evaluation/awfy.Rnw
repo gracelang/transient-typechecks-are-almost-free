@@ -17,13 +17,14 @@ data_2 <- filter(data_2, VM != "Higgs" & VM != "SOMns")
 data_4 <- select(load_data_file("010-f8d6ca79-moth.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 data_4 <- filter(data_4, VM != "MothTyped")
-
+data_5 <- select(load_data_file("012-df5b8bfd-higgs.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 
 ## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
 data_2 <- filter(data_2, Iteration >= warmup_low & Iteration < warmup_high)
 data_4 <- filter(data_4, Iteration >= warmup_low & Iteration < warmup_high)
 
-data <- rbind(data_2, data_4)
+data <- rbind(data_2, data_4, data_5)
 
 data <- filter(data, Benchmark %in% c("DeltaBlue",
                                       "Richards",
@@ -149,7 +150,7 @@ p
 
 \newcommand{\OverheadHiggsGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$geomean)}x\xspace}
 \newcommand{\OverheadHiggsMinX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$min)}x\xspace}
-\newcommand{\OverheadHiggsMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$max)}x\xspace}
+\newcommand{\OverheadHiggsMaxX}{\Sexpr{X0(filter(vm_stats, VM=="Higgs")$max)}x\xspace}
 
 
 \newcommand{\WarmupCutOff}{\Sexpr{warmup_low}\xspace}
