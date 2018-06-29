@@ -10,9 +10,8 @@ source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
 # bench <- readRDS("acme.rds.bz2")
-data_0 <- select(load_data_file("benchmark-8a6ab780.data.bz2"),
+data_0 <- select(load_data_file("010-f8d6ca79-moth.data.bz2"),
                  c("Value", "Unit", "Benchmark", "VM", "Iteration"))
-## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
 data_0 <- filter(data_0, Iteration >= warmup_low & Iteration < warmup_high)
 
 #data <- rbind(data_1, data_2)
@@ -44,23 +43,26 @@ vm_stats <- stats %>%
   group_by(VM) %>%
   summarise(
     geomean = geometric.mean(RuntimeFactor),
+    median = median(RuntimeFactor),
     min = min(RuntimeFactor),
     max = max(RuntimeFactor))
 @
 
 \def\TypingOverhead{%
-<<typing-overhead, fig.height=2.2, fig.width=3.3>>=
+<<typing-overhead, fig.height=2.6, fig.width=3.3>>=
 typing_overhead <- droplevels(filter(norm, VM=="MothTyped"))
 #to_vm_names <- vm_names[levels(typing_overhead$VM)]
 #typing_overhead$VM <- revalue(typing_overhead$VM, to_vm_names)
 
 p <- ggplot(typing_overhead, aes(reorder(Benchmark, desc(Benchmark)), RuntimeRatio))
 p <- p +
-  geom_hline(aes(yintercept=0.95), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=0.8), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=0.9), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +
+  geom_hline(aes(yintercept=1.1), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=1.5), colour="#cccccc", linetype="dashed") +
   geom_boxplot(outlier.size = 0.5) +
-  coord_flip(ylim = c(0.3, 2))  # 
+  coord_flip(ylim = c(0.80, 2))  # 
 p <- p + theme_bw() + theme_simple(font_size = 8) +
     theme(axis.text.x = element_text(angle= 90, vjust=0.5, hjust=1),
           legend.position="none",
