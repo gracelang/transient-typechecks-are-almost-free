@@ -217,6 +217,7 @@ an error. \sm{this inconsistent, these elements don't exist! is this unchanged a
 
 
 \paragraph{Termination by Type Error.}
+\label{sec:term-type-error}
 
 When executing a program without types, there are three possible outcomes.
 Either the program (1) terminates successfully,
@@ -259,58 +260,57 @@ rather than the program itself being well-typed.
 \subsection{Implementation} 
 \label{ssec:implementation} 
 
-% starting from AST interpreter we need checks here, here, and here
+One of the goal for our approach to dynamic typing was to keep
+the necessary changes to an existing implementation small,
+while enabling optimization in highly efficient language runtimes.
 
-% first add knowledge of all types, can be recalled
-% new type check node
-%     child on other nodes (method has n children, var read and write have one)
+This section gives an overview of a possible implementation
+based on an abstract-syntax-tree (AST) interpreter.
 
-% semantics for type check
-
-
-Our approach performs checks at during different run time events:
+Base on \cref{sec:term-type-error},
+our approach needs to check types of values at run-time:
 
 \begin{itemize}
 \item the values of arguments are checked, after a method is requested, 
       but before the body of the message is executed,
 \item the value returned by a method is checked after its body is executed, and
-\item the value of variables are checked whenever assigned to or read from.
+\item the value of variables are checked
+      whenever assigned to or read from by user code.
 \end{itemize}
 
-Starting from an AST interpreter,
-we can implement support for approach by attaching the checks to AST nodes:
+For AST interpreter,
+we can implement this approach by attaching the corresponding checks to the relevant AST nodes:
 the expected types for the argument and return values can be included
 with the node for requesting a method, and the expected type for a variable
 can be attached to the nodes for reading from and writing to a method.
 In practice,
 we encapsulate the logic of the check within a new type-checking AST node
--- illustrated by \cref{ex:typenode} --
 and attach instances of this node as children to the method,
 variable read, and variable write nodes. 
-The AST node implements the algorithm to evaluate whether a given object
-conforms to the expected type.
-When executed the node first obtains the type of the given object by
-collecting the messages it can respond to into a set,
-which is used to form a new type node (\cref{ex:typenode:check}).
-The relationship between the type of the object and the expected type can
-then be evaluated using a standard superset operation (\cref{ex:typenode:superset}).
-With the AST node for type checking in place 
-we need only extract the definitions of types during parsing 
-and record these into global record that can be recalled by the
-dispatch, variable read, and variable write nodes.
+The check node uses the type (cf. \cref{ex:type} \cref{ex:type:check}) to test whether an observed
+object conforms to it.
+An object satisfies the type, if all members required by the type are provided
+by the object (\cref{ex:type:satisfied}).
+In addition to the AST node for type checking,
+an implementation needs to be adapted to parse the type information
+and record them in a way that it can be accessed by the
+method request, variable read, and variable write nodes.
 
 
-\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the AST node that we use to perform type checks},float,floatplacement=htbp]
+\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb]
 class Type:
+  def init(members):
+    self._members = members
 
-    def is_subtype_of(other: Type):
-      s =  self._members
-      t = other._members
-      return s.issuperset(t) |\label{ex:typenode:superset}|
+  def is_satisfied_by(other: Type): |\label{ex:type:satisfied}|
+    for m in self._members:
+      if not in other._members:
+        return False
+    return True
 
-    def is_object_subtype(obj: Object):
-      return Type(obj.members.is_subtype_of(self) |\label{ex:typenode:check}|
-
+  def check(obj: Object):
+    t = get_type(obj)
+    return self.is_satisfied_by(t) |\label{ex:type:check}|
 \end{lstlisting}
 
 
