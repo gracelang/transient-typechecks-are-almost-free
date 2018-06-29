@@ -99,11 +99,10 @@ Google's JavaScript implementation
 with only moderate effort.
 \SOMns was changed to parse Grace code.
 \SOMns' self-optimizing abstract-syntax-tree nodes were only slightly adapted to conform to Grace's semantics.
-As a result, Moth is \ugh{mostly compliant}\sm{do we need to make this
-  more concrete, James?}\kjx{no} to the Grace specification.
+As a result, Moth is mostly compliant to the Grace specification.
 
-\ugh{One exception is that it still supports the \code{nil} value of
-  Newspeak.}\kjx{who cares}
+% \ugh{One exception is that it still supports the \code{nil} value of
+  % Newspeak.}\kjx{who cares}
 
 \sm{we could say many more things here, not sure we need to though, depends a bit on what we need/rely on in late text}
 \kjx{so we fix it later}
@@ -114,47 +113,47 @@ As a result, Moth is \ugh{mostly compliant}\sm{do we need to make this
 
 % As shown by Marr et al. \cite{Marr2016}, the peak performance of benchmarks is comparable to monolithic VM's like V8 and Crystal.
 
-\subsection{Gradual Typing}
-
-\sm{not sure this belongs here. it depends on how the paper is framed,
-but my impression was that we don't want to say it is gradual, so,
-this belongs perhaps better into the related work section for discussion
-after the results}
-\kjx{don't think it does}
-
-Coined by \citet{Siek2006}, later added the gradual ``guarantee''\citep{Siek2015}.
-
-\paragraph{Languages}
-
-\sm{not sure what is supposed to be discussed here.
-Seems to detailed, seems to to be long into the beginning of the paper}
-
-\begin{itemize}
-    \item Grace \cite{Boyland2014}
-    \item Typed Racket \cite{Takikawa2016}
-    \item Dart \cite{Heinze2016, Mezzetti2016}
-    \item Pycket (using some kind of PyPy-like design) \cite{Bauman2017}
-    \item Grift (seems to be the name of a compiler) \cite{Kuhlenschmidt:2018:preprint}
-    \item TypeScript on HiggsVM \cite{Richards2017}
-    \item Reticulated Python \cite{Vitousek2017, Greenman2018}
-\end{itemize}
-
-\paragraph{Different types of type systems}
-
-\sm{Also rather for related work, I think}
-
-\begin{itemize}
-    \item Nominal \cite{Muehlboeck2017}
-    \item Structural \cite{Richards2017} (and Grace, \cite{Boyland2014})
-    \item Tag (RPython) \cite{Greenman2018}
-\end{itemize}
-
-\paragraph{Other papers}
-
-\sm{no idea what this is about}
-\kjx{just random recent stuff}
-\begin{itemize}
-    \item \cite{Bloom2009}
-    \item \cite{Castagna2017}
-    \item \cite{Stulova2016}
-\end{itemize}
+% \subsection{Gradual Typing}
+%
+% \sm{not sure this belongs here. it depends on how the paper is framed,
+% but my impression was that we don't want to say it is gradual, so,
+% this belongs perhaps better into the related work section for discussion
+% after the results}
+% \kjx{don't think it does}
+%
+% Coined by \citet{Siek2006}, later added the gradual ``guarantee''\citep{Siek2015}.
+%
+% \paragraph{Languages}
+%
+% \sm{not sure what is supposed to be discussed here.
+% Seems to detailed, seems to to be long into the beginning of the paper}
+%
+% \begin{itemize}
+%     \item Grace \cite{Boyland2014}
+%     \item Typed Racket \cite{Takikawa2016}
+%     \item Dart \cite{Heinze2016, Mezzetti2016}
+%     \item Pycket (using some kind of PyPy-like design) \cite{Bauman2017}
+%     \item Grift (seems to be the name of a compiler) \cite{Kuhlenschmidt:2018:preprint}
+%     \item TypeScript on HiggsVM \cite{Richards2017}
+%     \item Reticulated Python \cite{Vitousek2017, Greenman2018}
+% \end{itemize}
+%
+% \paragraph{Different types of type systems}
+%
+% \sm{Also rather for related work, I think}
+%
+% \begin{itemize}
+%     \item Nominal \cite{Muehlboeck2017}
+%     \item Structural \cite{Richards2017} (and Grace, \cite{Boyland2014})
+%     \item Tag (RPython) \cite{Greenman2018}
+% \end{itemize}
+%
+% \paragraph{Other papers}
+%
+% \sm{no idea what this is about}
+% \kjx{just random recent stuff}
+% \begin{itemize}
+%     \item \cite{Bloom2009}
+%     \item \cite{Castagna2017}
+%     \item \cite{Stulova2016}
+% \end{itemize}
