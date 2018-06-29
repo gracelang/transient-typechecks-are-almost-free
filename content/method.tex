@@ -278,7 +278,7 @@ with the node for requesting a method, and the expected type for a variable
 can be attached to the nodes for reading from and writing to a method.
 In practice,
 we encapsulate the logic of the check within a new type-checking AST node
--- illustrated by \cref{ex:typecheck} --
+-- illustrated by \cref{ex:typenode} --
 and attach instances of this node as children to the method,
 variable read, and variable write nodes. 
 The AST node implements the algorithm to evaluate whether a given object
@@ -314,56 +314,91 @@ with that information available,
 the checks can be implemented using standard set operations.
 
 
-% \1 matrix caching type relationships
-%     \2 reducing number of checks
-%     \2 example of matrix 
-
-%  \1 specializations depending on values seen at run time
-%     \2 null, literals, ...
-%     \2 example of type check node w specializations
-
-% \2 compilation at method level
-% \2 after inlining, constant prorogation and folding, compilation unit has fewer instructions.
-
 \subsection{Optimization}
 \label{ssec:optimization}
 
-% type unification
-% matrix
-% specialization
-% graal stuff
+There are two aspects to our implementation that are critical for a minimal overhead solution. These include:
 
-\sm{what are the optimizations we do? name them}
+\begin{itemize}
+  \item specialization of the type checking node and shape-based guards for the specialization, and
+  \item a matrix to cache sub-typing relationships and unification of types.
+\end{itemize}
 
-We provide two important levels of optimizations for our implementation: 
-first, we maintain a three-value matrix that records all known subtyping relationships. 
-Whenever we perform a type check, we first examine the matrix to see if the relationship, 
-between the type of an object and the expected type, has been computed before.
-If already known, the previous result is returned 
-or otherwise the relationship is evaluated and the matrix is updated.
-\ugh{This optimization alone significantly reduces the overhead}\sm{unsupported claims} of our system 
-by eagerly computed each relationship only once whenever it is first required.
-\rrtodo{How can I better word next sentence?}
-Since objects can share an instance of type,
-an check evaluated in one location can eliminate the cost in other locations.
-\sm{can we ties this to the explanation in the previous section?}
-\sm{can we have an example for a matrix that corresponds to the types used in the previous section?}
+Here we discuss each of the aspects in more detail.
 
-\sm{I want to see the type check node, the specialization.
-I would like to see an explanation on the level of truffle of how it works,
-and based on that we can explain why it works, and why we didn't need much
-changes in the interpreter to have this efficient}
-\smtodo{Check the following paragraph}
-Finally, recall from \cref{ssec:moth} that
-Moth's code is compiled using the Graal, 
-which performs
-constant sub-expression elimination,
-method and block inlining,
-aggressively propagate and fold constants, and
-perform dead code elimination.
-Once compiled, much of the computations for type checking
-is be folded into method dispatch
-(for parameter and return value checks)
-and variable reads and assignments.
-As we demonstrate later in \cref{sec:evaluation}, 
-the overhead of our system is negligible during peak performance.
+We developed our implementation as an extension to Moth.
+As described earlier in \cref{ssec:moth}),
+Moth is an AST-based interpreter that offers a highly optimized run time.
+Moth starts as a standard interpreter but,
+using the Graal VM,
+is able to optimize itself using profiling information seen at run time. 
+
+The first performance-critical aspect to our implementation
+is how we specialize the type checking node.
+Before specialization,
+our node features a generic execution method
+that first collects the set of members
+from the given object and performs the superset operation
+to verify that it conforms to its expected type
+(recall the illustration from \cref{ex:typenode},
+\cref{ex:typenode:superset}).
+However, during the first execution of this generic method,
+we can see the concrete type of the given object and,
+in many cases,
+we can redirect future executions of this method to a more specialized version:
+one version to handle primitives like numbers or strings,
+another version to handle immutable objects,
+another to handle objects without fields,
+and so on.
+Whenever the execution is redirected in this way,
+we attach a guard that must be verified before the specialized version can be executed.
+The guard states that the shape of the given object
+-- a typical VM representation of an object's memory layout --
+must be equal to the shape of the object
+used in the first execution.
+If the guard fails,
+we return to the generic method and choose a new specialization.
+Since an object's shape implies its type,
+we are able to reduce overhead
+by replacing the repeated checks
+with a simple reference equality operation.
+
+The other performance-critical aspect to our implementation
+is the use of a matrix-based record to cache sub-typing relationships.
+The matrix compares types against types,
+featuring all known types along the columns and the same types again along the rows.
+A cell in table corresponds to a sub-typing relationship:
+is the type corresponding to the row conform a subtype of the type corresponding to the column?
+We first created, all cells in the matrix assigned an unknown (null) value.
+Whenever we perform a type check during the execution of our program we 
+first consult this table
+-- if the result is known, we simply return the value assigned to that cell --
+and otherwise we perform the check, via the superset operation,
+and assign the resulting boolean value to the table.
+Using this table means that we perform each unique type check only once.
+While the number of cells in the table can grow quickly,
+many of them are unlikely to be visited. 
+Consequently, a sparse-matrix implementation can be used to reduce memory overhead.
+Finally,
+we unify instances of types to help reduce the number of potential sub-typing checks.
+Our unification of types is similar to Java's string interning; 
+during construction of a type,
+we check to see if the same set of members is held
+by an existing type and, if so,
+we we avoid creating another instance and instead
+provide the existing one.
+
+Together the self-specializing type check node and the matrix-based record
+ensure that our implementation features minimal overhead. 
+In particular, using an object's shapes
+to protect specialized versions of the type check node 
+means that the Graal compiler can eliminate redundancy. For example,
+Moth needs to query the shape of arguments to evaluate them.
+Moth then needs to query the shape again to run the specializations' guards.
+Once profiled Graal can remove this redundancy by eliminating
+reusing the first query.
+During this compilation Graal also employs other optimizations 
+-- sub-expression elimination, inlining, propagation and folding --\tabularnewline
+and, as we demonstrate next in \cref{sec:evaluation},
+produces a compiled version of the method with minimal overhead incurred from
+the type check.
