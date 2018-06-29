@@ -279,7 +279,7 @@ our approach needs to check types of values at run-time:
 \end{itemize}
 
 For AST interpreter,
-we can implement this approach by attaching the corresponding checks to the relevant AST nodes:
+we can implement this approach by attaching the checks to the relevant AST nodes:
 the expected types for the argument and return values can be included
 with the node for requesting a method, and the expected type for a variable
 can be attached to the nodes for reading from and writing to a method.
@@ -287,9 +287,12 @@ In practice,
 we encapsulate the logic of the check within a new type-checking AST node
 and attach instances of this node as children to the method,
 variable read, and variable write nodes. 
-The check node uses the type (cf. \cref{ex:type} \cref{ex:type:check}) to test whether an observed
+The check node is detailed in \cref{ssec:optimization} to discuss relevant
+optimizations.
+
+The check node uses the \code{Type} (cf. \cref{ex:type} \cref{ex:type:check}) to test whether an observed
 object conforms to it.
-An object satisfies the type, if all members required by the type are provided
+An object satisfies a type, if all members required by the type are provided
 by the object (\cref{ex:type:satisfied}).
 In addition to the AST node for type checking,
 an implementation needs to be adapted to parse the type information
@@ -317,7 +320,7 @@ class Type:
 In summary, our type checking can be realized with a light-weight implementation: 
 information about the expected types needs to be attached to the AST and, 
 with that information available,
-the checks can be implemented using standard set operations.
+and the check itself can be as simple as confirming that all expected members are provided by an object.
 
 
 \subsection{Optimization}
