@@ -1,2 +1,73 @@
+%!TEX root = ../latex/paper.tex
+
 \section{Conclusion}
 \label{sec:conclusion}
+
+%% Context
+With the wide-spread use of dynamically typed languages,
+research on efficient approaches to add type to systems using such languages
+becomes more important.
+%
+%% goals
+%% approach to support types in a dynamic language
+%% - without significant overhead
+%% - simple to implement
+This work proposes design for shallow structural approach to types
+that are checked at run time.
+The main goal of the design was to enable an implementation that
+does not introduce significant run time overhead.
+A secondary goal was that it should be able to add this approach to
+existing language implementations with only a small amount of work.
+
+
+%% proposed technique
+%% - shallow structural types
+The proposed approach to shallow types considers only the names of type members.
+Thus, it does not consider types on these members.
+This design enables a flexible use of structural types without requiring
+type parameters.
+Furthermore, it enables precise feedback on type violations
+without requiring blame tracking,
+as it is usually needed for approaches to gradual typing
+at the cost of run-time performance.
+
+%% - type checks, optimization based on object shapes
+In our design, types are checked on access to variables,
+when assigning to method parameters as well as for return values.
+The information on types is encoded as part of an object's shape,
+which means that they already performed shape checks in a normal dynamic
+language implementation can be used to check types, too.
+
+%% results
+%% + context (baseline)
+We evaluated this approach with Moth, an implementation of the Grace language
+on top of Truffle and Graal.
+Using the \AWFY benchmarks as well as a collection of benchmarks from the
+gradual typing literature, we find that our approach to dynamic type checking
+introduces an overhead of 
+\OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP)
+on peak performance.
+Since Moth reaches the performance of highly optimized JavaScript VM such as V8,
+we believe that these results are a good indication for the low overhead of this
+approach.
+
+%% relevance
+%%   where to go from here?
+
+%% future work
+In specific cases, the overhead is still significant and requires further
+research to be practical. Thus, future research should investigate how the
+number of dynamic type checks can be reduced without causing
+the type feedback to be come too imprecise to be useful.
+One approach might increase the necessary changes to a language implementation,
+but avoid checking each read.
+Another approach might leverage Truffle's approach to self-specialization
+to propagate type requirements and avoid unnecessary checks.
+%%  - investigate optimizations
+%%  - might enable a full structural type system, \ie, not shallow
+%%  - verify results of Richards2017 in context of highly optimizing VM
+Full structural types should be further investigated, too.
+We believe it should be verified that \citet{Richards2017} result generalize
+to highly optimizing virtual machines,
+or other optimizations for precise blame would need to be investigated.
+
