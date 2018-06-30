@@ -44,7 +44,7 @@ what \code{next} is going to read and it needs to be able to trigger an error
 on the assignment.
 For our List benchmark, this check induces an overhead of \OverheadListP.
 \sm{I am not sure why this does not fold with the .next check.
-I am sure that it couldn't when we were at the whiteboad,
+I am sure that it couldn't when we were at the whiteboard,
 but I don't see it any more}
 
 \begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},escapechar=|,label={ex:pathological-case},float,floatplacement=htb]
@@ -54,30 +54,48 @@ while (...) {
 }
 \end{lstlisting}
 
+\paragraph{Optimizations}
 
-\begin{cnote}
+% - possible optimization for reads
+% - discuss what the effect of dropping checks on reads would be
+%   -> need to change more of the primitives
+%   -> don't do this a the moment
+%   -> could give performance benefits (experiment?)
+%   -> but would either delay errors (more imprecision)
+%      or require all assignments, also from primitives to be checked
 
+As a simplification, we currently check variables access on reads and writes.
+This approach simplifies the implementation, because we do not need to
+adapt all builtins, \ie, primitive operations provided by the interpreter.
+One optimization could be to avoid read checks.
+A type violation can normally only occur when writing to a variable,
+but not when reading.
+However, to maintain the semantics, this would require us to adapt for instance
+all primitive operations that activate blocks to check their arguments,
+or that write to variables or fields.
+With our current implementation,
+we get errors as soon as user code access fields, but not primitive operations,
+which simplifies the implementation.
 
+%   - we can use truffle's approach to specializing ASTs to propagate
+%     type constraints into the code we are using, which means,
+%     all type checks can be omitted for code that promises to obey
+%     type constraints.
+%     Idea: pass expected return type down, don't check it when getting
+%      the return value. instead, us truffle approach of reverting optimizations
+%      by indicating violations with an exception.
 
-- possible optimization for reads
-  - we can use truffle's approach to specializing ASTs to propagate
-    type constraints into the code we are using, which means,
-    all type checks can be omitted for code that promises to obey
-    type constraints.
-    Idea: pass expected return type down, don't check it when getting
-     the return value. instead, us truffle approach of reverting optimizations
-     by indicating violations with an exception.
- \sm{do we say very precisely what is done in the implementation section?}
- 
- 
- \sm{the set of changes necessary for the support.
- how much did we need to change to make it work?
- }
- - discuss what the effect of dropping checks on reads would be
-   -> need to change more of the primitives
-   -> don't do this a the moment
-   -> could give performance benefits (experiment?)
-   -> but would either delay errors (more imprecision)
-      or require all assignments, also from primitives to be checked
-\end{cnote}
+Another optimization could be to use Truffle's approach to 
+self-specialization\citep{Wurthinger:2012:SelfOptAST}
+to propagate type information and avoid redundant checks.
+At the moment, Truffle interpreters use self-specialization typically to 
+specialize the abstract syntax tree to avoid boxing of primitive types.
+This is done by speculating that some subtree always returns the expected type.
+If this is not the case, the return value of the subtree is going to be
+propagated via an exception, which is caught and triggers respecialization.
+This idea could possibly be used to encode higher-level type information for
+return values, too.
+This could be used to remove redundant checks in the interpreter
+by simply discovering at run time that whole subexpressions conform to the
+type annotations.
 
