@@ -24,12 +24,16 @@ existing language implementations with only a small amount of work.
 %% - shallow structural types
 The proposed approach to shallow types considers only the names of type members.
 Thus, it does not consider types on these members.
-This design enables a flexible use of structural types without requiring
-type parameters.
-Furthermore, it enables precise feedback on type violations
-without requiring blame tracking,
-as it is usually needed for approaches to gradual typing
-at the cost of run-time performance.
+With this shallow design, we enable flexibility in the sense that
+globally inconsistent programs can still be executed and
+checked for consistency with their annotations in so far as
+that particular execution%
+--- an attribute that supports an incremental style of development
+that may be more common among students learning programming---%.
+% Furthermore, it enables precise feedback on type violations
+% without requiring blame tracking,
+% as it is usually needed for approaches to gradual typing
+% at the cost of run-time performance.
 
 %% - type checks, optimization based on object shapes
 In our design, types are checked on access to variables,
