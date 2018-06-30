@@ -36,11 +36,13 @@ that may be more common among students learning programming---%.
 % at the cost of run-time performance.
 
 %% - type checks, optimization based on object shapes
-In our design, types are checked on access to variables,
-when assigning to method parameters as well as for return values.
+In our design types are checked on access to variables,
+when assigning to method parameters, and also on return values.
 The information on types is encoded as part of an object's shape,
-which means that they already performed shape checks in a normal dynamic
-language implementation can be used to check types, too.
+which means that shape checks already performed in a normal dynamic
+language implementation can be used to check types, too. 
+Being able to tie checks to the shapes in this way is critical for 
+a minimal overhead implementation of dynamic checking.
 
 %% results
 %% + context (baseline)
