@@ -65,7 +65,7 @@ as in typical gradually typed approaches.
 Specifically, our type system has the following properties:
 
 \begin{itemize}
-  \item types are a sets of untyped members,
+  \item types are sets of untyped members,
   \item types are optional and checked eagerly at run time,
         which results in a flexible type system that does not require global
         consistency and complete typing, and
@@ -80,7 +80,7 @@ Specifically, our type system has the following properties:
 % while avoiding the burden of fully typing their program.
 
 We detail these properties
-based on a classic student exercise where a student develops
+based on an exercise where a student develops
 a program to record information about vehicles.
 
 \paragraph{Types are Sets of Members.}
@@ -243,13 +243,13 @@ Provided that the corresponding annotations are present,
 our system will perform a check
 on the values of arguments before invoking a method, 
 on the value returned by a method after invocation, and
-also before any assignment to and read from a variable local to
-a method or belonging to an object. 
+also before any assignment to and read from a variable 
+(either local to a method or belonging to an object). 
 
 The checks are performed eagerly%
 ---as soon as they are encountered during execution---%
-and the execution terminate with a typing error 
-when a value fails to conform to the expected type.
+and cause the execution to terminate with a typing error 
+when a value fails to implement its expected type.
 
 % Summarize the design section
 \paragraph{Summary}
@@ -273,14 +273,14 @@ rather than the program itself being well-typed.
 \subsection{Implementation} 
 \label{ssec:implementation} 
 
-One of the goal for our approach to dynamic typing was to keep
+One of the goals for our approach to dynamic typing was to keep
 the necessary changes to an existing implementation small,
 while enabling optimization in highly efficient language runtimes.
 
 This section gives an overview of a possible implementation
 based on an abstract-syntax-tree (AST) interpreter.
 
-Base on \cref{sec:term-type-error},
+Based on \cref{sec:term-type-error},
 our approach needs to check types of values at run-time:
 
 \begin{itemize}
@@ -291,7 +291,7 @@ our approach needs to check types of values at run-time:
       whenever assigned to or read from by user code.
 \end{itemize}
 
-For AST interpreter,
+For an AST interpreter,
 we can implement this approach by attaching the checks to the relevant AST nodes:
 the expected types for the argument and return values can be included
 with the node for requesting a method, and the expected type for a variable
@@ -303,13 +303,13 @@ variable read, and variable write nodes.
 The check node is detailed in \cref{ssec:optimization} to discuss relevant
 optimizations.
 
-The check node uses the \code{Type} (cf. \cref{ex:type} \cref{ex:type:check}) to test whether an observed
+The check node uses the \code{Type} (cf. \cref{ex:type}, \cref{ex:type:check}) to test whether an observed
 object conforms to it.
 An object satisfies a type, if all members required by the type are provided
 by the object (\cref{ex:type:satisfied}).
 In addition to the AST node for type checking,
-an implementation needs to be adapted to parse the type information
-and record them in a way that it can be accessed by the
+an implementation needs to be adapted to parse and record
+the type information in a way that it can be accessed by the
 method request, variable read, and variable write nodes.
 
 
