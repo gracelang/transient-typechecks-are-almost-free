@@ -12,31 +12,34 @@
 %   consequently, we see overhead that can be up to XX\% (cf. sec. XX).
 
 
-One of the key optimizations for our
+One of the key optimizations for our work
 and the work of others\citep{Richards2017,Bauman2017}
 is the use of object shapes
-to encode information about types as in our case,
-or type casts and type assumptions in the case of gradual type systems.
+to encode information about types
+(in our case),
+or type casts and assumptions
+(in the case of gradually typed systems)
 
 The general idea is that a VM will already use object shapes
 for method dispatches, field accesses, and other operations on objects.
-Thus, any further use, for instance to also imply type information could simply
-be optimized away by a compiler since it sees that the same checks are
-done and can be combined similar to 
+Thus, any further use, for instance to also imply type information
+can often be optimized away
+by the compiler when it sees that the same checks are done
+and therefore can be combined; similar to 
 other side-effect-free common subexpressions.
 
-However, this assumption breaks when dynamic type checking
-introduces checks that do not correspond to already existing checks.
+However, this assumption breaks when checks are introduced
+that do not correspond to those that exist already.
 As described in \cref{sec:method},
 our approach introduces checks for reading and writing to variables.
 \Cref{ex:pathological-case} gives an example of a pathological case.
 It is a loop traversing a linked list.
-For our type checking,
-it introduces checks on assigning to \code{elem}, on reading from \code{elem},
-and when activating the \code{next} method.
+For this example our approach 
+introduces a check, for the \code{ListElement} type,
+when (1) assigning to and reading from \code{elem} and
+(2) when activating the \code{next} method.
 The checks for reading from \code{elem} and activating the method can be
-combined with the already done check of the object shape when doing the
-dispatch to \code{next}.
+combined with the dispatch's check on object shape.
 %
 Unfortunately, the compiler can not remove the check
 when writing to \code{elem}, because it has no information about
@@ -64,17 +67,21 @@ while (...) {
 %   -> but would either delay errors (more imprecision)
 %      or require all assignments, also from primitives to be checked
 
-As a simplification, we currently check variables access on reads and writes.
+As a simplification, we currently check variables access
+on both reads and writes.
 This approach simplifies the implementation, because we do not need to
-adapt all builtins, \ie, primitive operations provided by the interpreter.
+adapt all built-ins, \ie,
+all primitive operations provided by the interpreter.
 One optimization could be to avoid read checks.
 A type violation can normally only occur when writing to a variable,
 but not when reading.
-However, to maintain the semantics, this would require us to adapt for instance
-all primitive operations that activate blocks to check their arguments,
+However, to maintain the semantics, this would require us to adapt
+many primitives; 
+such as operations that activate blocks to check their arguments,
 or that write to variables or fields.
 With our current implementation,
-we get errors as soon as user code access fields, but not primitive operations,
+we get errors as soon as user code accesses fields,
+% but not primitive operations,
 which simplifies the implementation.
 
 %   - we can use truffle's approach to specializing ASTs to propagate
@@ -87,9 +94,9 @@ which simplifies the implementation.
 
 Another optimization could be to use Truffle's approach to 
 self-specialization\citep{Wurthinger:2012:SelfOptAST}
-to propagate type information and avoid redundant checks.
-At the moment, Truffle interpreters use self-specialization typically to 
-specialize the abstract syntax tree to avoid boxing of primitive types.
+and propagate type information to avoid redundant checks.
+At the moment, Truffle interpreters typically use self-specialization to 
+specialize the AST to avoid boxing of primitive types.
 This is done by speculating that some subtree always returns the expected type.
 If this is not the case, the return value of the subtree is going to be
 propagated via an exception, which is caught and triggers respecialization.
@@ -98,4 +105,3 @@ return values, too.
 This could be used to remove redundant checks in the interpreter
 by simply discovering at run time that whole subexpressions conform to the
 type annotations.
-
