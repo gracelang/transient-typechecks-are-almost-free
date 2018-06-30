@@ -5,18 +5,18 @@
 
 %% Context
 With the wide-spread use of dynamically typed languages,
-research on efficient approaches to add type to systems using such languages
-becomes more important.
+research on efficient approaches for type checking
+such languages becomes more important.
 %
 %% goals
 %% approach to support types in a dynamic language
 %% - without significant overhead
 %% - simple to implement
-This work proposes design for shallow structural approach to types
-that are checked at run time.
+This work proposes a new design for checking shallow structural
+types at run time.
 The main goal of the design was to enable an implementation that
 does not introduce significant run time overhead.
-A secondary goal was that it should be able to add this approach to
+A secondary goal was to be able to implement this approach for
 existing language implementations with only a small amount of work.
 
 
@@ -53,9 +53,10 @@ gradual typing literature, we find that our approach to dynamic type checking
 introduces an overhead of 
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP)
 on peak performance.
-Since Moth reaches the performance of highly optimized JavaScript VM such as V8,
-we believe that these results are a good indication for the low overhead of this
-approach.
+Since Moth reaches the performance of a
+highly optimized JavaScript VM such as V8,
+we believe that these results are a good indication
+for the low overhead of our approach.
 
 %% relevance
 %%   where to go from here?
@@ -64,10 +65,10 @@ approach.
 In specific cases, the overhead is still significant and requires further
 research to be practical. Thus, future research should investigate how the
 number of dynamic type checks can be reduced without causing
-the type feedback to be come too imprecise to be useful.
+the type feedback to become too imprecise to be useful.
 One approach might increase the necessary changes to a language implementation,
-but avoid checking each read.
-Another approach might leverage Truffle's approach to self-specialization
+but avoid checking every variable read.
+Another approach might further leverage Truffle's self-specialization
 to propagate type requirements and avoid unnecessary checks.
 %%  - investigate optimizations
 %%  - might enable a full structural type system, \ie, not shallow
