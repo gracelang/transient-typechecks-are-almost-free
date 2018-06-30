@@ -221,3 +221,54 @@ are somewhat common for highly optimizing just-in-time compilers.
 %
 % \end{cnote}
 
+\subsection{Changes to Moth}
+
+One of our goals, outlined earlier \cref{sec:method}, a secondary
+goal of our design was to enable the implementation of our approach to be
+realized with few changes to the underlying interpreter. 
+Providing the system with few changes is important to us because
+we maintain three different Grace implementations%
+---a C\# based interpreter, a self-hosting compiler, and a high performance implementation---%
+that support teaching in different contexts.
+When able to be provided with fewer changes, 
+we ensure that each implementation can provide the type checking
+in a uniform way.
+
+By examining the history of changes maintained by our version control, 
+we estimate that implemented our dynamic checking for Moth with
+slightly more than 549 new lines and 59 changed lines. 
+The majority of new lines correspond to the implementation of 
+new modules for the type class (179 lines) and 
+the self-specializing type checking node (139 lines),
+along with changes to the parsing (115 new lines, 14 lines changes)
+and AST nodes (116 new lines, 45 lines changes) to extract and store
+typing information.
+
+% New Classes
+% -----------
+% TypeCheckNode               (139 new lines)
+% SomStructuralType           (179 new lines) = 318 new
+
+% Parsing
+% -------
+% returnType                  ( 18 new lines)  
+% typeFor                     ( 31 new lines)
+% typesForParameters          ( 27 new lines)
+% typesForLocals              ( 11 new lines)
+% parseTypeLiteral            ( 19 new lines)
+% invoke parseTypeLiteral     (  6 new lines)
+% adding return type          (  3 new lines)
+% types for declarations      (  4 changed lines)
+% adding type to parameters   (  4 changed lines)
+% adding type locals          (  4 changed lines)
+% adding type to variable     (  2 changed lines) = 115 new, 14 changed
+
+% AST
+% ---
+% Storage location            ( 20 changed lines)
+% local variable read/write   ( 28 new lines,  1 changed)
+% add type to slot read/write (  4 new lines,  2 changed)
+% cached TX slot read/write   ( 14 new lines, 21 changed)
+% dispatch                    ( 31 new lines,  1 changed)
+% class factory getTyoe       ( 39 new lines)     = 116 new, 45 changed
+
