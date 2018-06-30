@@ -111,13 +111,6 @@ method getRegistration(v) {|\label{ex:method}|
 }
 \end{lstlisting}
 
-Since the student is still developing the program they 
-may wish to avoid fully typing the program,  
-for concern that the interface of a vehicle will change soon. 
-Our system supports the student by allowing them to verify
-that any value passed to the \code{getRegistration} function will respond
-to the \code{registration} message. 
-
 
 \begin{lstlisting}[label={ex:vehicle},caption={Adding a type annotation to a method parameter.},escapechar=|,float,floatplacement=htbp]
 type Vehicle = interface = { |\label{ex:adding-type:vehicle}|
@@ -129,17 +122,24 @@ method getRegistration(v: Vehicle) { |\label{ex:adding-type}|
 }
 \end{lstlisting}
 
-The support adds a type annotation to the method 
+Since the student is still developing the program they 
+may wish to avoid fully typing the program,  
+for concern that the interface of a vehicle will change soon. 
+Our system supports the student by allowing them to verify
+that any value passed to the \code{getRegistration} function will respond
+to the \code{registration} message.
+To get this support the support adds a type annotation to the method 
 as illustrated in \cref{ex:adding-type}. 
 In this case, 
 the annotation specifies a type with just one member
 corresponding to the \code{registration} message.
+This gives the student the assurance that they will be alerted when a value 
+does not conform to this expected type.
+
 % \sm{you already said the following}
 % By adding the type annotation to the program,
 % the student can now be sure the \code{getReg} method
 % will only be invoked when its arguments can respond to this message.
-This gives the student the assurance that they will be alerted when a value 
-does not conform to this expected type.
 
 \paragraph{Flexibility.}
 
@@ -180,7 +180,7 @@ method governmentCar -> Vehicle { |\label{ex:government-car}|
   }
 }
 
-personalCar.registerTo(
+personalCar.registerTo( |\label{ex:invoke-register-to}|
   object {
     var name := "Noble"
   }
@@ -195,22 +195,19 @@ For example, in \cref{ex:complex}, the student
 develops two methods to create cars 
 (\cref{ex:personal-car,ex:government-car}),
 in which both methods are typed and return objects that conform to
-the \code{Vehicle} type from \cref{ex:vehicle}.
+the amended \code{Vehicle} type (\cref{ex:new-vehicle}).
 However, note that each version of the \code{registerTo} method
 declares a different type for its parameter
 (\cref{ex:personal-car:registerTo,ex:government-car:registerTo}).
-Due to the inconsistency, a typing error could be reported
-for this program (depending on the semantics of a full structural
-system).
-However, the program only states sends the \code{registerTo} message to 
-an object created with the \code{personalCar},
-and not one created with \code{governmentCar},
-which does not result in an inconsistent execution. 
-Consequently, our shallow semantics enable the student to execute the program
-despite its inconsistency. 
-Our approach can provide this flexibility while preserving the ability
-to throw a typing error if \code{registerTo} is ever requested 
-on an object made from the \code{governmentCar} method.
+Depending on its semantics,
+a less shallow type checking system could throw an error
+due to the inconsistency.
+In contrast
+our approach allows the student to execute the program 
+despite its inconsistency, 
+while preserving the guarantee that any value found to be
+inconsistent with the annotation will result in
+a termination by a typing error.
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
@@ -263,9 +260,10 @@ The shallow design enables a flexible use of structural types without
 requiring type parameters.
 We abort program execution as soon as
 a type annotation is inconsistent with a concrete value. 
-With these design choices, our system offers a mechanism to check that a program's execution
-is well-typed---%
-rather than the program itself being well-typed.
+With these design choices, our system offers a
+mechanism to check for well-typed executions%
+---rather than well-typed programs---%
+without negatively affectingly the performance portfolio.
 % This both lowers overhead for the developer and,
 % helps us to avoid the overhead of tracking blame
 % as seen among previous works.
@@ -330,26 +328,20 @@ class Type:
 \end{lstlisting}
 
 
-In summary, our type checking can be realized with a light-weight implementation: 
-information about the expected types needs to be attached to the AST and, 
-with that information available,
-and the check itself can be as simple as confirming that all expected members are provided by an object.
-
-
 \subsection{Optimization}
 \label{ssec:optimization}
 
 There are two aspects to our implementation that are critical for a minimal overhead solution. These include:
 
 \begin{itemize}
-  \item specialization of the type checking node and shape-based guards for the specialization, and
-  \item a matrix to cache sub-typing relationships and unification of types.
+  \item specialized executions of the type checking node, along with guards to protect these specialized version, and
+  \item a matrix to cache sub-typing relationships to eliminate redundant executions.
 \end{itemize}
 
 Here we discuss each of the aspects in more detail.
 
 We developed our implementation as an extension to Moth.
-As described earlier in \cref{ssec:moth}),
+As described earlier in \cref{ssec:moth},
 Moth is an AST-based interpreter that offers a highly optimized run time.
 Moth starts as a standard interpreter but,
 using the Graal VM,
@@ -398,65 +390,60 @@ is how we specialize the type checking node.
 Before specialization,
 our node features a generic execution method
 (\cref{ex:typenode:generic})
-that is responsible for executing full semantics of the type check.
+that is responsible for executing the check.
 During the first execution of this generic method,
-we can the concrete type of the given object and,
+we can see the concrete type of the given object and,
 with the support of the Truffle framework,
-we can redirect future executions of this method
+we are able to redirect future executions of this method
 to a more specialized version:
 one version to handle primitives like
-numbers (\cref{ex:typenode:number}) or strings (\cref{ex:typenode:number}),
-another version to handle immutable objects (\cref{ex:typenode:immut},
+numbers (\cref{ex:typenode:number}) or strings (\cref{ex:typenode:string}),
+another version to handle immutable objects (\cref{ex:typenode:immut}),
 and so on.
-Each specialized version executes a guard in place of the type check (\cref{ex:typenode:guard}).
+Each specialized version executes a guard (\cref{ex:typenode:guard})
+in place of the type check.
 The guard first checks that the shape of the given object
--- a typical VM representation of an object's memory layout --
 is equal to the shape of the object
 used during the first execution.
-If the guard fails,
-future executions revert back to generic method
-and can later choose a new specialization.
-Since an object's shape implies its type,
-we are able to reduce overhead
-by replacing the repeated checks
-with a reference equality operation in the guard.
+If the guard fails
+we revert back to generic method,
+perform the check again,
+and then choose a new specialization.
+The specialization approach is applicable because
+an object's shape implies its type and, therefore,
+we are able to replace repeated checks
+with a cheap equality check between objects' shapes.
 
 The other performance-critical aspect to our implementation
 is the use of a matrix-based record to cache sub-typing relationships.
 The matrix compares types against types,
 featuring all known types along the columns and the same types again along the rows.
 A cell in table corresponds to a sub-typing relationship:
-is the type corresponding to the row conform a subtype of the type corresponding to the column?
-We first created, all cells in the matrix assigned an unknown (null) value.
-Whenever we perform a type check during the execution of our program we 
-first consult this table
--- if the result is known, we simply return the value assigned to that cell --
-and otherwise we perform the check, via the superset operation,
-and assign the resulting boolean value to the table.
-Using this table means that we perform each unique type check only once.
-While the number of cells in the table can grow quickly,
-many of them are unlikely to be visited. 
-Consequently, a sparse-matrix implementation can be used to reduce memory overhead.
-Finally,
-we unify instances of types to help reduce the number of potential sub-typing checks.
+does the type corresponding to the row implement
+the type corresponding to the column?
+All cells in the matrix begin are unknown and as 
+encounter a check during execution
+we populate the table.
+If a particular relationship has been computed before
+we can skip the check and instead recall the previously computed value.
+Using this table we are able to eliminate the redundancy of evaluating
+the same type to type relationships across different checks in the program. To reduce redundancy further we also unify type.
 Our unification of types is similar to Java's string interning; 
-during construction of a type,
-we check to see if the same set of members is held
-by an existing type and, if so,
-we we avoid creating another instance and instead
-provide the existing one.
+during the construction of a type we first check to see if the same
+set of members is expressed by a previously created type and, if so,
+we avoid creating the new instance and provide the existing one.
 
 Together the self-specializing type check node and the matrix-based record
-ensure that our implementation features minimal overhead. 
-In particular, using an object's shapes
-to protect specialized versions of the type check node 
-means that the Graal compiler can eliminate redundancy. For example,
-Moth needs to query the shape of arguments to evaluate them.
-Moth then needs to query the shape again to run the specializations' guards.
-Once profiled Graal can remove this redundancy by eliminating
-reusing the first query.
-During this compilation Graal also employs other optimizations 
--- sub-expression elimination, inlining, propagation and folding --\tabularnewline
-and, as we demonstrate next in \cref{sec:evaluation},
-produces a compiled version of the method with minimal overhead incurred from
-the type check.
+ensure that our implementation eliminates redundancy and,
+consequently, we are able to minimize the overhead of our system. 
+
+% The Graal compiler 
+% Moth needs to query the shape of arguments to evaluate them.
+% Moth then needs to query the shape again to run the specializations' guards.
+% Once profiled Graal can remove this redundancy by eliminating
+% reusing the first query.
+% During this compilation Graal also employs other optimizations 
+% -- sub-expression elimination, inlining, propagation and folding --\tabularnewline
+% and, as we demonstrate next in \cref{sec:evaluation},
+% produces a compiled version of the method with minimal overhead incurred from
+% the type check.
