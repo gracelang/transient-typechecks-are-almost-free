@@ -55,7 +55,7 @@ Our experimental setup is available online to enable reproductions.\footnote{
 	\caption{Comparison of Java 1.8, Node.js 10.4, Higgs VM, and Moth.
   The boxplot depicts the peak-performance results for the \AWFY benchmarks,
   each benchmark normalized based on the result for Java.
-  For these benchmarks, Moth reaches within the performance range
+  For these benchmarks, Moth is within the performance range
   of JavaScript, as implemented by Node.js,
   which makes Moth an acceptable platform for our experiments.}
 	\label{fig:awfy-baseline}
@@ -101,11 +101,11 @@ Moth is about \OverheadMothGMeanX (min. \OverheadMothMinX, max. \OverheadMothMax
 As such, its on average \OverheadMothNodeGMeanP (min. \OverheadMothNodeMinP, max. \OverheadMothNodeMaxX) slower than Node.js.
 Compared to the Higgs VM, which is on these benchmarks
 \OverheadHiggsGMeanX (min. \OverheadHiggsMinX, max. \OverheadHiggsMaxX) slower than Java,
-Moth reaches the performance of Node.js much closer.
+Moth reaches the performance of Node.js more closely.
 With these results, we argue that Moth is a suitable platform to
 assess the impact of our approach to dynamic type checking,
 because its performance is close enough to state-of-the-art VMs,
-and run-time overhead is not going to be hidden by slow baseline performance.
+and run-time overhead is not hidden by slow baseline performance.
 
 
 \subsection{Performance of Dynamic Type Checking}
@@ -125,7 +125,7 @@ To this end, we surveyed a number of papers\citep{Takikawa2016,Vitousek2017,Mueh
 and selected benchmarks that have been used by multiple papers.
 Some of these benchmarks overlapped with the \AWFY suite,
 or were available in different versions.
-While not always behavioral equivalent,
+While not always behaviorally equivalent,
 we chose the \AWFY versions since we already used them to
 establish the performance baseline.
 The list of selected benchmarks is given in \cref{tab:gradual-benchmarks}.
@@ -133,8 +133,8 @@ The list of selected benchmarks is given in \cref{tab:gradual-benchmarks}.
 The benchmarks were modified to have complete type information.
 We modified Moth to report absent type information and ensured it was complete.
 To assess the performance overhead of type checking,
-we compare Moth with all checks disabled, \ie, the baseline version from 
-\cref{sec:baseline-perf}, with a Moth that has all checks enabled.
+we compare the execution of Moth with all checks disabled, \ie, the baseline version from 
+\cref{sec:baseline-perf}, against an execution that has all checks enabled.
 
 
 \begin{table}
@@ -179,18 +179,16 @@ in detail in \cref{sec:disc-pathological-case}.
 Beside List, the highest overheads are on
 Richards (\OverheadRichardsP), CD (\OverheadCDP), 
 Snake (\OverheadSnakeP), and Towers (\OverheadTowersP).
-Richards has as one major component also a linked list traversal,
+Richards has one major component, also a linked list traversal,
 similar to List.
 Snake and Towers access primarily arrays in a way that introduces checks
 that do not coincide with behavior in the unchecked version.
 
 % explain minima
 
-Some benchmarks show however performance improvements,
-so that the run time decreased.
-Notable are here Permute (\OverheadPermuteP),
+However, in some benchmarks the run time decreased; notably Permute (\OverheadPermuteP),
 GraphSearch (\OverheadGraphSearchP), and Storage (\OverheadStorageP).
-Permute simply creates the permutations over an array.
+Permute simply creates the permutations of an array.
 GraphSearch implements a page rank algorithm
 and thus is primarily graph traversal.
 Storage stresses the garbage collector by constructing a tree of arrays.
