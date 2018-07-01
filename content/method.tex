@@ -28,12 +28,17 @@ A secondary goal is to have a design that can be implemented with
 only a small set of changes to facilitate integration in existing systems.
 
 % gradual typing drawback = slow
-Gradual typing systems are generally good candidates to achieve this goal.
+\chg{Gradual typing systems are generally good candidates to achieve this goal.}
+{Gradual typing systems are good candidates,
+because they provide the gradual guarantee and the mechanisms for blame
+would be desirable.}
 % Existing gradual typing systems 
 % that address the goal of flexibility currently
 Unfortunately, they do not yet have the desired performance properties\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
 Specifically, they could encourage students to remove types
 to improve performance.\mwh{This paragraph seems confused to me. They're good, but also they're bad. What is a ``gradual typing system'' here, and how does it relate to ``gradual typing'' and ``type systems'' as separate concepts?}
+\sm{the above change makes the desirable things about gradual typing more concrete. wrt ``gradual typing'' and ``type systems''. one is a general idea, and a concrete realization is a ``system''. I don't know whether this is how typing people talk. but this is how I see the distinction.
+we don't want to criticize the abstract idea, but concrete systems.}
 
 % % summary of goals
 % Instead, the design behind our type system is focused
@@ -93,8 +98,8 @@ of an object in terms of the messages an object
 can respond to, for example whether a particular accessor is
 available, but omits any further typing information of those messages.
 
-Being able to express a set of messages to which an object
-must respond is useful. For example, our student can begin
+Being able to express a set of members which an object
+must offer is useful. For example, our student can begin
 developing their vehicle application
 by defining an object
 intended to represent a car (\cref{lst:car-reg}, \cref{ex:object}) and write a method that, 
@@ -130,7 +135,7 @@ Our system supports the student by allowing them to verify
 that any value passed to the \code{getRegistration} function will respond
 to the \code{registration} message.
 To get this support the student adds a type annotation to the method 
-as illustrated in \cref{ex:adding-type}. 
+as illustrated in \cref{ex:vehicle} \cref{ex:adding-type}. 
 In this case, 
 the annotation specifies a type with just one member
 corresponding to the \code{registration} message.
@@ -149,7 +154,16 @@ that members of a type are untyped.
 In particular, our design does not have information on parameter types
 and return types for types' members.
 This design implies that blame tracking is not needed,\mwh{Um.}
-because the types are less detailed than in other systems.\mwh{I would hope that a competent reviewer would't fall for this\ldots}
+because the types are less detailed than in other systems.\mwh{I would hope that a competent reviewer would't fall for this\ldots}\sm{ok, what can we do about this? what's the precise issue here?
+The idea is that we do not need blame, because we do not have the type casts
+from blame-supported gradual systems.
+The difference is, I think that there is nothing we can not check immediately,
+and error as soon as there is a type.
+I believe the examples are usually higher-order functions/blocks.
+We only check the arity. So, there is no type cast wrapping necessary,
+when we pass it into a method that would expect another type of block arguments.
+(because passing in should not error, the error should only happen when
+the block is used in these systems, right?)}
 One reason for this design is that it avoids the overhead incurred
 by tracking type assumptions for precise blame attribution.
 
@@ -255,8 +269,8 @@ Our type checking approach enables developers to express
 the capabilities of objects throughout different components of 
 their programs.
 Our representation of types is shallow,
-in that a type expresses only the set of members (messages) an object
-should respond to while excluding any further typing information. 
+in that a type expresses only the set of members an object
+should offer, while excluding any further typing information. 
 The shallow design enables a flexible use of structural types without
 requiring type parameters.
 We abort program execution as soon as
