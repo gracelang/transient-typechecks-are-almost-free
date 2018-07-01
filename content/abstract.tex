@@ -7,12 +7,12 @@
   practical development and programming education.  Unfortunately,
   current implementations of these languages perform worse than either
   purely statically or purely dynamically typed languages.  We show
-  how virtual machines can use common optimisations to remove
-  redundant dynamic type checks, by adding dynamic type
-  checks to Moth, a Truffle-based interpreter for  Grace.
+  how virtual machines can use common optimizations to remove
+  redundancy in dynamic type checking, by adding shallow structural type
+  checks to Moth, a Truffle-based interpreter for Grace.
 % or "for thr Grace programming language."
   Moth runs programs with dynamic type checks
-  roughly as fast as programs without checks, so developers do not
+  roughly as fast as programs without checks so developers do not
   need to disable checks in production code, and
   educators can teach types without also teaching that types slow
   programs down.

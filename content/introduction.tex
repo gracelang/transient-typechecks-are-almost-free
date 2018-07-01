@@ -18,7 +18,7 @@ much work in academia and industry
 has gone into making them more efficient\citep{Bolz2013,Bolz:2013:IMT,Wurthinger:2017:PPE,Daloze2016,Clifford:2015:MM,Degenbaev:2016:ITG}.
 Just-in-time compilers have taken JavaScript, for example, from a
 na{\"\i}vely interpreted langauge barely suitable for browser scripting, 
-to a highly efficient ecosystem that is sweeping  across industry
+to a highly efficient ecosystem that is sweeping across industry
 and academia \cite{githut2018}.
 
 % Types
@@ -34,19 +34,22 @@ which leads to typing approaches being adopted
 to support programmer productivity and document a program's structures.
 Two important approaches are optional\citep{GiladPluggable2004}
 and gradual typing\citep{Siek2006,Siek2015}.
-These are applied to dynamic languages to reap the benefits of typing.
-Unfortunately, these approach have limitations.
-With optional or pluggable  approaches such as 
+These are applied to dynamic languages to reap the benefits of typing but,
+unfortunately, also have limitations.
+With optional or pluggable approaches such as 
 %\citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June
 %2018}{https://www.typescriptlang.org/}
 TypeScript \cite{typeScriptECOOP,GiladPluggable2004}
 %
 types are erased before the execution,
 limiting the benefit of types to the statically typed parts of programs.
-Gradual type systems retain types until runtime, check types dynamically, and
+In contrast, gradual type systems retain types until runtime,
+performing the checks dynamically, and
 can give detailed information about type violations via blame 
 tracking\citep{Siek2015,blame2009}.
-Unfortunately, dynamic type checks currently impose significant run-time overheads\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
+Unfortunately, these gradual systems currently impose significant
+run-time overheads
+\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
 
 % our context
 % - dynamic language
@@ -64,17 +67,18 @@ its core, we want to have the option to teach students about types,
 and so Grace supports type annotations which may be checked either
 statically or dynamically to give students feedback on whether their
 type annotations are correct.  We do not want students to remove
-types, however, because they discover that types induce a run-time
-overhead.  We are currently maintaining three different
-implementations for different educational settings (web browsers, dotNet,
-and JVM), which means a typing approach for Grace ideally requires
+types, however, if they discover that types induce a run-time
+overhead. We are currently maintaining three different
+implementations to support a variety of educational settings
+(web browsers, dotNet, and JVM),
+which means a typing approach for Grace ideally requires
 only small changes to keep these implementations as consistent as
 possible.
 
 Based on these constraints,
 we propose a shallow approach to dynamic type checking
 for an optional type system.\mwh{Wait, what?}
-Shallow means that types are defined based on the names of object's methods
+Shallow means that types are defined based on the names of objects' methods
 but do not consider any type information on methods arguments or results (so
 called ``Boyand checks''\citep{Boyland2014}\mwh{No.}).
 These types are checked eagerly at run time, so whenever 
@@ -83,12 +87,13 @@ we check types dynamically and terminate the program with a type error
 if a check fails. We evaluate this approach with Moth,
 a Grace implementation on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
-Inspired by \citet{Richards2017,Bauman2017},
+Inspired by \citet{Richards2017} and \citet{Bauman2017},
 our implementation conflates types
 with information about the dynamic object structure 
-(maps\citep{Self} or object shapes\citep{woss2014object})
-allowing Moth to eliminate most type checks as redundant, greatly
-reducing the overhead of dynamic checking.
+(maps\citep{Self} or object shapes\citep{woss2014object}), 
+which allows Moth to reduce redundancy between checking structure
+and checking types; and consequently, most of the overhead 
+that results from type checking is eliminated.
 
 % In this paper, we present a \emph{responds as expected} type-checking system for the Grace programming language. Through \cref{sec:method} we will describe how we extending \SOMns to support Grace and provide support for the simple type checks and, later in \cref{sec:evaluation}, we present two suites of benchmarks that demonstrate our system can offer these checks with little overhead in terms of execution time.
 
