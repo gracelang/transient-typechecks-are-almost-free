@@ -7,11 +7,17 @@ if (Sys.getenv("RSTUDIO") == "1") {
     setwd("/Users/smarr/Collab/Richard-Roberts/AliveTyping/evaluation") } }
 
 source("scripts/libraries.R", chdir=TRUE)
+data_2 <- select(load_data_file("007-6484e45d-others.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_2 <- filter(data_2, VM != "Higgs" & VM != "SOMns")
+data_4 <- select(load_data_file("010-f8d6ca79-moth.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+data_5 <- select(load_data_file("012-df5b8bfd-higgs.data.bz2"),
+                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+
+
 data <- rbind(
-  select(load_data_file("benchmark-5adea5e8a0f6b60a4eaabc2e2b838ce666ab5799.data.bz2"),
-         c("Value", "Unit", "Benchmark", "VM", "Iteration")),
-  select(load_data_file("benchmark-d98bf528ae475c426b33ac4cfa07852a48054d10.data.bz2"),
-         c("Value", "Unit", "Benchmark", "VM", "Iteration"))
+  data_2, data_4, data_5
 )
 data <- prepare_vm_names(data)
 
@@ -39,22 +45,10 @@ warmup_plot <- function (data_b, b) {
 # Plots
 
 ```{r warmup-plots, echo=FALSE, dev='png', fig.keep='all', fig.width=10, fig.height=6}
-b <- "Mandelbrot"
+# b <- "Mandelbrot"
 
 for (b in levels(data$Benchmark)) {
   data_b <- droplevels(subset(data, Benchmark == b))
-  warmup_plot(data_b, b)
-}
-```
-
-# Plots JRuby with Indy
-
-```{r warmup-plots-jruby, echo=FALSE, dev='png', fig.keep='all', fig.width=10, fig.height=6}
-b <- "Mandelbrot"
-d <- droplevels(subset(data, VM %in% c("JRubyGraal", "JRubyC2")))
-
-for (b in levels(d$Benchmark)) {
-  data_b <- droplevels(subset(d, Benchmark == b))
   warmup_plot(data_b, b)
 }
 ```
