@@ -13,6 +13,7 @@ As described in \cref{ssec:grace},
 Grace is an educational language and its performance profile
 is important for supporting effective teaching. 
 
+\mwh{It seems like a \textit{remarkably terrible} idea to be proposing this as a contribution, especially when it's conflated and confused with the performance contributions.}
 % motivation = give students low-overhead method to check program
 In this section,
 we present a system for optional and dynamically checked types
@@ -32,7 +33,7 @@ Gradual typing systems are generally good candidates to achieve this goal.
 % that address the goal of flexibility currently
 Unfortunately, they do not yet have the desired performance properties\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
 Specifically, they could encourage students to remove types
-to improve performance.
+to improve performance.\mwh{This paragraph seems confused to me. They're good, but also they're bad. What is a ``gradual typing system'' here, and how does it relate to ``gradual typing'' and ``type systems'' as separate concepts?}
 
 % % summary of goals
 % Instead, the design behind our type system is focused
@@ -128,7 +129,7 @@ for concern that the interface of a vehicle will change soon.
 Our system supports the student by allowing them to verify
 that any value passed to the \code{getRegistration} function will respond
 to the \code{registration} message.
-To get this support the support adds a type annotation to the method 
+To get this support the support\mwh{???} adds a type annotation to the method 
 as illustrated in \cref{ex:adding-type}. 
 In this case, 
 the annotation specifies a type with just one member
@@ -147,8 +148,8 @@ The notion of our type system being shallow means
 that members of a type are untyped.
 In particular, our design does not have information on parameter types
 and return types for types' members.
-This design implies that blame tracking is not needed,
-because the types are less detailed than in other systems.
+This design implies that blame tracking is not needed,\mwh{Um.}
+because the types are less detailed than in other systems.\mwh{I would hope that a competent reviewer would't fall for this\ldots}
 One reason for this design is that it avoids the overhead incurred
 by tracking type assumptions for precise blame attribution.
 
@@ -200,7 +201,7 @@ However, note that each version of the \code{registerTo} method
 declares a different type for its parameter
 (\cref{ex:personal-car:registerTo,ex:government-car:registerTo}).
 Depending on its semantics,
-a less shallow type checking system could throw an error
+a less-shallow type checking system could throw an error
 due to the inconsistency.
 In contrast
 our approach allows the student to execute the program 
@@ -418,19 +419,19 @@ The other performance-critical aspect to our implementation
 is the use of a matrix-based record to cache sub-typing relationships.
 The matrix compares types against types,
 featuring all known types along the columns and the same types again along the rows.
-A cell in table corresponds to a sub-typing relationship:
+A cell in the table corresponds to a sub-typing relationship:
 does the type corresponding to the row implement
 the type corresponding to the column?
-All cells in the matrix begin are unknown and as 
-encounter a check during execution
+All cells in the matrix begin as unknown and as 
+encountered in a check during execution
 we populate the table.
 If a particular relationship has been computed before
-we can skip the check and instead recall the previously computed value.
+we can skip the check and instead recall the previously-computed value.
 Using this table we are able to eliminate the redundancy of evaluating
-the same type to type relationships across different checks in the program. To reduce redundancy further we also unify type.
+the same type to type relationships across different checks in the program. To reduce redundancy further we also unify types.
 Our unification of types is similar to Java's string interning; 
 during the construction of a type we first check to see if the same
-set of members is expressed by a previously created type and, if so,
+set of members is expressed by a previously-created type and, if so,
 we avoid creating the new instance and provide the existing one.
 
 Together the self-specializing type check node and the matrix-based record

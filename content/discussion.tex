@@ -22,10 +22,10 @@ or type casts and assumptions
 
 The general idea is that a VM will already use object shapes
 for method dispatches, field accesses, and other operations on objects.
-Thus, any further use, for instance to also imply type information
+Thus, any further use, for instance to also imply type information,
 can often be optimized away
 by the compiler when it sees that the same checks are done
-and therefore can be combined; similar to 
+and therefore can be combined; this is similar to 
 other side-effect-free common subexpressions.
 
 However, this assumption breaks when checks are introduced
@@ -67,7 +67,7 @@ while (...) {
 %   -> but would either delay errors (more imprecision)
 %      or require all assignments, also from primitives to be checked
 
-As a simplification, we currently check variables access
+As a simplification, we currently check variable access
 on both reads and writes.
 This approach simplifies the implementation, because we do not need to
 adapt all built-ins, \ie,

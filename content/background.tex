@@ -53,7 +53,7 @@ optional or ``pluggable'' \citep{GiladPluggable2004} (removing explicit
 type annotations should not affect the semantics of a correct
 program \citep{Siek2015}) and gradual (the type system
 includes a distinguished ``Unknown'' type that reverts to fully 
-dynamic type checking).
+dynamic type checking\mwh{I'm not convinced this is what Unknown does.}).
 
 As an educational language\citep{panel}, absolute performance of an
 implementation is less important than the performance profile---the
@@ -67,7 +67,7 @@ with a language's performance profile could mean the students will
 were faster than arrays or hash-tables, students cannot learn the
 performance benefits of more complex data structures. In the case of
 Grace, all extant implementations have the unfortunate property that
-adding type declarations to a program makes that program run slower---teaching students that \emph{removing} type declarations is an
+adding type declarations to a program makes that program run slower\mwh{This is simply not true. Most extant implementations have no performance impact whatsoever from adding type declarations, because they disregard them entirely.}---teaching students that \emph{removing} type declarations is an
 effective optimization technique.
 Furthermore, this property is shared
 by other optionally typed languages including Groovy\citep{Muehlboeck2017} and 

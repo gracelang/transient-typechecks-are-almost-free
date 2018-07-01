@@ -17,7 +17,7 @@ Building on the pioneering work on Self\citep{Self},
 much work in academia and industry
 has gone into making them more efficient\citep{Bolz2013,Bolz:2013:IMT,Wurthinger:2017:PPE,Daloze2016,Clifford:2015:MM,Degenbaev:2016:ITG}.
 Just-in-time compilers have taken JavaScript, for example, from a
-na{\"\i}ively interpreted langauge barely suitable for browser scripting, 
+na{\"\i}vely interpreted langauge barely suitable for browser scripting, 
 to a highly efficient ecosystem that is sweeping  across industry
 and academia \cite{githut2018}.
 
@@ -58,7 +58,7 @@ Unfortunately, dynamic type checks currently impose significant run-time overhea
 %  Language}{}{}{http://gracelang.org/}
 We are working on Grace\citep{graceOnward12}, a dynamic language in
 the tradition of Smalltalk\citep{bluebook}, Self\citep{Self}, and
-JavaScript that is meant for the use in
+JavaScript that is meant for use in
 education\citep{graceSigcse13}.  While Grace is a dynamic language at
 its core, we want to have the option to teach students about types,
 and so Grace supports type annotations which may be checked either
@@ -73,10 +73,10 @@ possible.
 
 Based on these constraints,
 we propose a shallow approach to dynamic type checking
-for an optional type system.
+for an optional type system.\mwh{Wait, what?}
 Shallow means that types are defined based on the names of object's methods
 but do not consider any type information on methods arguments or results (so
-called ``Boyand checks''\citep{Boyland2014}).
+called ``Boyand checks''\citep{Boyland2014}\mwh{No.}).
 These types are checked eagerly at run time, so whenever 
 an annotated method is called or a variable is assigned,
 we check types dynamically and terminate the program with a type error
@@ -99,7 +99,7 @@ The contributions of this paper are:
 \begin{itemize}
 \item shallow dynamic type checking with minimal overhead
       in a dynamic language implementation
-      with performance comparable to V8 JavaScript
+      with performance comparable to V8 JavaScript\mwh{This doesn't really sound like a contribution. Is the contribution an approach, a demonstration of practicality, or what? It doesn't match with what was said above either.}
 \item an implementation approach that requires
       only small changes to existing abstract-syntax-tree interpreters
 \item an evaluation based on classic benchmarks

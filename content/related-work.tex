@@ -66,7 +66,7 @@ work here takes the opposite approach: adding type checking into
 just-in-time compiling virtual machines that do not rely on static
 type declarations. These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
-perform (potentially repeated) dynamic type checks tend to slow
+perform (potentially repeated) dynamic type checks tends to slow
 programs down, so here code with no type annotations generally
 performs better than statically typed code, or rather, code with many
 type annotations. In the limit, these kinds of systems may only ever
@@ -89,11 +89,11 @@ using Pycket\citep{Pycket2015}, a tracing JIT for Racket, rather
 than the standard Racket VM, although maintaining full gradually typed
 Racket semantics. \citeauthor{Bauman2017} are able to demonstrate most benchmarks
 with a slowdown of 2x on average over all configurations.
-Note, this is not directly comparable to our system,
+Note that this is not directly comparable to our system,
 since typed modules do not need to do any checks at run time.
 Typed Racket only needs to perform checks at boundaries between typed and untyped modules.
-However, they use the same essential optimization technique that we apply.
-They use object shapes to encode information about gradual types.
+However, they use the same essential optimization technique that we apply,
+using object shapes to encode information about gradual types.
 % - argument about acceptable performance made indirectly
 %   using the "CDF-based slowdown plots"
 %   - allows choice of arbitrary threshold of what is acceptable overhead
@@ -157,7 +157,7 @@ used by a VM to optimize dynamic languages can be used to eliminate most of
 the overhead of dynamic type checks.
 Unlike our work, Richards
 implement ``full'' gradual typing with blame tracking, rather than
-simple Boyland tag-type checks, and do so on top of an adapted Higgs
+simple Boyland\mwh{Still no.} tag-type checks, and do so on top of an adapted Higgs
 VM.
 The Higgs VM implements a baseline just-in-time compiler based on
 basic-block versioning\citep{Chevalier-Boisvert:2016:ITS}.
