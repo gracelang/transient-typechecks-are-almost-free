@@ -13,13 +13,13 @@
 % - dynamic languges are important
 % - much work on performance
 Dynamic languages are increasingly prominent in the software industry.
-Building on the pioneering work on Self\citep{Self}, 
+Building on the pioneering work of Self\citep{Self}, 
 much work in academia and industry
 has gone into making them more efficient\citep{Bolz2013,Bolz:2013:IMT,Wurthinger:2017:PPE,Daloze2016,Clifford:2015:MM,Degenbaev:2016:ITG}.
 Just-in-time compilers have taken JavaScript, for example, from a
-na{\"\i}vely interpreted langauge barely suitable for browser scripting, 
+na{\"\i}vely interpreted language barely suitable for browser scripting, 
 to a highly efficient ecosystem that is sweeping across industry
-and academia \cite{githut2018}.
+and academia\citep{githut2018}.
 
 % Types
 % - useful for programmer productivity on large systems
@@ -34,16 +34,16 @@ which leads to typing approaches being adopted
 to support programmer productivity and document a program's structures.
 Two important approaches are optional\citep{GiladPluggable2004}
 and gradual typing\citep{Siek2006,Siek2015}.
-These are applied to dynamic languages to reap the benefits of typing but,
-unfortunately, also have limitations.
+These are applied to dynamic languages to reap the benefits of typing, but
+unfortunately also have limitations.
 With optional or pluggable approaches such as 
 %\citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June
 %2018}{https://www.typescriptlang.org/}
-TypeScript \cite{typeScriptECOOP,GiladPluggable2004}
+TypeScript\citep{typeScriptECOOP,GiladPluggable2004}
 %
 types are erased before the execution,
 limiting the benefit of types to the statically typed parts of programs.
-In contrast, gradual type systems retain types until runtime,
+In contrast, gradual type systems retain types until run time,
 performing the checks dynamically, and
 can give detailed information about type violations via blame 
 tracking\citep{Siek2015,blame2009}.
@@ -70,7 +70,7 @@ type annotations are correct.  We do not want students to remove
 types, however, if they discover that types induce a run-time
 overhead. We are currently maintaining three different
 implementations to support a variety of educational settings
-(web browsers, dotNet, and JVM),
+(web browsers, .NET, and JVM),
 which means a typing approach for Grace ideally requires
 only small changes to keep these implementations as consistent as
 possible.
@@ -91,7 +91,8 @@ Inspired by \citet{Richards2017} and \citet{Bauman2017},
 our implementation conflates types
 with information about the dynamic object structure 
 (maps\citep{Self} or object shapes\citep{woss2014object}), 
-which allows Moth to reduce redundancy between checking structure
+which allows the just-in-time compiler
+to reduce redundancy between checking structure
 and checking types; and consequently, most of the overhead 
 that results from type checking is eliminated.
 
