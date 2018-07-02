@@ -70,7 +70,7 @@ vm_stats <- stats %>%
 @
 
 \def\TypingOverhead{%
-<<typing-overhead, fig.height=2.6, fig.width=3.3>>=
+<<typing-overhead, fig.height=3.6, fig.width=3.3>>=
 typing_overhead <- droplevels(filter(norm, VM=="MothTyped"))
 #to_vm_names <- vm_names[levels(typing_overhead$VM)]
 #typing_overhead$VM <- revalue(typing_overhead$VM, to_vm_names)
