@@ -4,50 +4,70 @@
 \label{sec:conclusion}
 
 %% Context
-With the wide-spread use of dynamically typed languages,
-research on efficient approaches for type checking
-such languages becomes more important.
+With the wide-spread use of dynamically, optionally, and gradually
+typed languages, efficient techniques for  type checking
+become more important.
 %
 %% goals
 %% approach to support types in a dynamic language
 %% - without significant overhead
 %% - simple to implement
-This work proposes a new design for checking shallow structural
-types at run time.
-The main goal of the design was to enable an implementation that
-does not introduce significant run time overhead.
-A secondary goal was to be able to implement this approach for
-existing language implementations with only a small amount of work.
-
-
+%
+%
+%
+%
+% This work proposes a new design for checking shallow structural
+%  types at run time.
+%  The main goal of the design was to enable an implementation that
+%  does not introduce significant run time overhead.
+%  A secondary goal was to be able to implement this approach for
+%  existing language implementations with only a small amount of work.
+%
+In this paper, we have demonstrated that relatively straightforward VM optimizations enable
+dynamic checks of shallow structural types with relatively little
+overhead, and require only small modifications to an AST interpreter.
+We evaluated this approach with Moth, an implementation of the Grace language
+on top of Truffle and Graal.
+%
+% We propose a new design for checking shallow structural
+%  types at run time.
+%  The main goal of the design was to enable an implementation that
+%  does not introduce significant run time overhead.
+%  A secondary goal was to be able to implement this approach for
+%  existing language implementations with only a small amount of work.
+%
+%
 %% proposed technique
 %% - shallow structural types
-The proposed approach to shallow types considers only the names of type members.
-Thus, it does not consider types on these members.
-With this shallow design, we enable flexibility in the sense that
-globally inconsistent programs can still be executed and
-checked for consistency with their annotations as far as
-that particular execution goes%
---- an attribute that supports an incremental style of development
-that may be more common among students learning programming---%.
+%The proposed approach to shallow types considers only the names of
+%type members. 
+% Thus, it does not consider types on these members.
+% With this shallow design, we enable flexibility in the sense that
+% globally inconsistent programs can still be executed and
+% checked for consistency with their annotations as far as
+% that particular execution goes%
+% --- an attribute that supports an incremental style of development
+% that may be more common among students learning programming---%.
 % Furthermore, it enables precise feedback on type violations
 % without requiring blame tracking,
 % as it is usually needed for approaches to gradual typing
 % at the cost of run-time performance.
 
 %% - type checks, optimization based on object shapes
-In our design types are checked on access to variables,
+In our implementation, types are structural and shallow: a type
+specifies only the names of methods supported by objects, and not
+the types of their arguments and results.
+These types are checked on access to variables,
 when assigning to method parameters, and also on return values.
 The information on types is encoded as part of an object's shape,
-which means that shape checks already performed in a normal dynamic
+which means that shape checks already performed in an optimizing dynamic
 language implementation can be used to check types, too. 
 Being able to tie checks to the shapes in this way is critical for 
-a minimal overhead implementation of dynamic checking.
-
+reducing the overhead of dynamic checking.
+%
 %% results
 %% + context (baseline)
-We evaluated this approach with Moth, an implementation of the Grace language
-on top of Truffle and Graal.
+
 Using the \AWFY benchmarks as well as a collection of benchmarks from the
 gradual typing literature, we find that our approach to dynamic type checking
 introduces an overhead of 
@@ -73,8 +93,13 @@ to propagate type requirements and avoid unnecessary checks.
 %%  - investigate optimizations
 %%  - might enable a full structural type system, \ie, not shallow
 %%  - verify results of Richards2017 in context of highly optimizing VM
-Full structural types should be further investigated, too.
-We believe it should be verified that \citet{Richards2017} result generalize
+
+Finally, we hope to apply our approach to full structural types with blame that
+support the gradual guarantee.
+%
+% For transient semantics   \cite{reticPython2014}
+%
+This should let us verify that \citet{Richards2017} result generalize
 to highly optimizing virtual machines,
-or other optimizations for precise blame would need to be investigated.
+or alternatively other optimizations for precise blame would need to be investigated.
 
