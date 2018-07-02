@@ -3,7 +3,7 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{The VM Could Not Already Know That.}
+\paragraph{The VM could not already know that.}
 \label{sec:disc-pathological-case}
 
 % - pathological case
@@ -18,14 +18,14 @@ is the use of object shapes
 to encode information about types
 (in our case),
 or type casts and assumptions
-(in the case of gradually typed systems)
+(in the case of gradually typed systems).
 
 The general idea is that a VM will already use object shapes
 for method dispatches, field accesses, and other operations on objects.
-Thus, any further use, for instance to also imply type information,
+Thus any further use to also imply type information
 can often be optimized away
-by the compiler when it sees that the same checks are done
-and therefore can be combined; this is similar to 
+when the compiler sees that the same checks are done (
+and therefore can be combined). This is similar to 
 the elimination of other side-effect-free common subexpressions.
 
 This assumption breaks, however, when checks are introduced
@@ -41,9 +41,9 @@ when (1) assigning to and reading from \code{elem} and
 The checks for reading from \code{elem} and activating the method can be
 combined with the dispatch's check on object shape.
 %
-Unfortunately, the compiler can not remove the check
+Unfortunately, the compiler cannot remove the check
 when writing to \code{elem}, because it has no information about
-what \code{next} is going to read and it needs to be able to trigger an error
+what value will be returned from \code{next}, and so it needs to preserve the check to be able to trigger an error
 on the assignment.
 For our List benchmark, this check induces an overhead of \OverheadListP.
 % TODO: reconsider after submission:
@@ -80,7 +80,7 @@ However, to maintain the semantics, this would require us to adapt
 many primitives; 
 such as operations that activate blocks to check their arguments,
 or that write to variables or fields.
-With our current implementation,
+With our current implementation
 we get errors as soon as user code accesses fields,
 % but not primitive operations,
 which simplifies the implementation.
