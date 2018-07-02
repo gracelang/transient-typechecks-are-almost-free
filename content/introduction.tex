@@ -75,16 +75,18 @@ which means a typing approach for Grace ideally requires
 only small changes to keep these implementations as consistent as
 possible.
 
-Based on these constraints,
-we propose a shallow approach to dynamic type checking
-for an optional type system.\mwh{Wait, what?}
-Shallow means that types are defined based on the names of objects' methods
-but do not consider any type information on methods arguments or results (so
-called ``Boyand checks''\citep{Boyland2014}\mwh{No.}).
-These types are checked eagerly at run time, so whenever 
-an annotated method is called or a variable is assigned,
-we check types dynamically and terminate the program with a type error
-if a check fails. We evaluate this approach with Moth,
+In this paper we illustrate that using an optimising meta-VM allows dynamic
+checks of shallow structural types with low overhead and relatively low
+implementation effort. These checks are inserted na\"ively based on local
+annotations and checked eagerly when control flow reaches them: whenever an
+annotated method is called or a variable is assigned, we check types
+dynamically and terminate the program with a type error if the check fails.
+Despite this simplistic approach, straightforward VM optimisations eliminate
+almost all of the overhead of the checks\,---\,notably, removing redundant
+checks to create straight-line check-freecode in many cases\,---\,for a
+performance profile aligned with untyped code.
+%
+We evaluate this approach with Moth,
 a Grace implementation on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
 Inspired by \citet{Richards2017} and \citet{Bauman2017},
@@ -103,9 +105,9 @@ that results from type checking is eliminated.
 The contributions of this paper are:
 
 \begin{itemize}
-\item shallow dynamic type checking with minimal overhead
-      in a dynamic language implementation
-      with performance comparable to V8 JavaScript\mwh{This doesn't really sound like a contribution. Is the contribution an approach, a demonstration of practicality, or what? It doesn't match with what was said above either.}
+\item demonstrating that relatively straightforward VM optimisations
+      enable dynamic checks of shallow structural types with low
+      performance cost
 \item an implementation approach that requires
       only small changes to existing abstract-syntax-tree interpreters
 \item an evaluation based on classic benchmarks
