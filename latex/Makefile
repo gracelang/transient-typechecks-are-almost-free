@@ -23,3 +23,9 @@ clean:
 	*.lot *.bbl *.blg *.gls *.cut *.hd \
 	*.dvi *.ps *.thm *.tgz *.zip *.rpi \
 	paper.pdf
+
+arxiv: all
+	mkdir arxiv
+	cp collab.sty references.bib paper.bbl arxiv/
+	latexpand --empty-comments paper.tex --output arxiv/paper.tex
+	zip arxiv.zip arxiv/*
