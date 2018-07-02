@@ -15,7 +15,7 @@ and then assess the impact of the type checks themselves.
 \subsection{Methodology and Setup}
 
 To account for the complex warmup behavior
-of modern system\citep{Barrett:2017:VMW},
+of modern systems\citep{Barrett:2017:VMW},
 we run each benchmark for \NumIterationsAll iterations in the same
 VM invocation.\footnote{
 For the Higgs VM, we only use \NumIterationsHiggs iterations,
@@ -26,7 +26,7 @@ Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
 In this work, we do not consider startup performance,
-because we want to assess the impact on dynamic type checks
+because we want to assess the impact of dynamic type checks
 on the best possible performance.
 All reported averages use the geometric mean since they aggregate ratios.
 
@@ -44,7 +44,7 @@ Node.js 10.4, and Higgs from 9 May 2018 (\code{aa95240}).
 Our experimental setup is available online to enable reproductions.\footnote{
 %% \smtodo{add version info}
 % TODO: for final version add version info
-\url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}}
+\url{https://github.com/richard-roberts/Moth/tree/master}}
 
 
 \subsection{\AWFY?}
@@ -214,8 +214,8 @@ the instruction cache of the processor.
 	\caption{Plot of the run time for the first 100 iterations.
            The gray line is smoothed version, including a confidence interval,
            to indicate the trend.
-           The first iteration, \ie, mostly interpreted, does only seems
-           to be affected for Mandelbrot.}
+           The first iteration, \ie, mostly interpreted, seems
+           to be affected significantly only for Mandelbrot.}
 	\label{fig:typing-warmup}
 \end{figure}
 
@@ -254,26 +254,23 @@ possibly triggered by the additional data structures for type information.
 
 \subsection{Changes to Moth}
 
-One of our goals, outlined earlier \cref{sec:method}, a secondary
+Outlined earlier in \cref{sec:method}, a secondary
 goal of our design was to enable the implementation of our approach to be
-realized with few changes to the underlying interpreter. 
-Providing the system with few changes is important to us because
-we maintain three different Grace implementations%
----a C\# based interpreter, a self-hosting compiler, and a high performance implementation---%
-that support teaching in different contexts.
+realized with few changes to the underlying interpreter.
 When able to be provided with fewer changes, 
-we ensure that each implementation can provide the type checking
-in a uniform way.
+we help ensure that each Grace implementation
+can provide the type checking in a uniform way.
 
 By examining the history of changes maintained by our version control, 
-we estimate that implemented our dynamic checking for Moth with
-slightly more than 549 new lines and 59 changed lines. 
-The majority of new lines correspond to the implementation of 
+we estimate that our implementation for Moth required
+549 new lines and 59 changes to existing lines. 
+The changes correspond to the implementation of 
 new modules for the type class (179 lines) and 
 the self-specializing type checking node (139 lines),
-along with changes to the parsing (115 new lines, 14 lines changes)
-and AST nodes (116 new lines, 45 lines changes) to extract and store
-typing information.
+modifications to the front end to extract typing information
+(115 new lines, 14 lines changes)
+and finally the new fields and amended constructors for AST nodes 
+(116 new lines, 45 lines changes).
 
 % New Classes
 % -----------
