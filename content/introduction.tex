@@ -85,11 +85,12 @@ whenever an annotated method is called or
 an annotated variable is read from or assigned to,
 we check types dynamically and
 terminate the program with a type error if the check fails.
-Despite this simplistic approach, a just-in-time compiler can eliminate
-almost all of the overhead of the checks ---%
-notably, removing redundant checks to create straight-line check-free code in many cases---%
-for a performance profile aligned with untyped code.
-%
+Despite this simplistic approach, a just-in-time compiler can
+elminate the redundant checks---%
+removing almost all of the checking overhead,
+resulting in
+a performance profile aligned with untyped code.
+
 We evaluate this approach with Moth,
 a Grace implementation on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
