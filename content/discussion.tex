@@ -46,9 +46,10 @@ when writing to \code{elem}, because it has no information about
 what \code{next} is going to read and it needs to be able to trigger an error
 on the assignment.
 For our List benchmark, this check induces an overhead of \OverheadListP.
-\sm{I am not sure why this does not fold with the .next check.
-I am sure that it couldn't when we were at the whiteboard,
-but I don't see it any more}
+% TODO: reconsider after submission:
+% \sm{I am not sure why this does not fold with the .next check.
+% I am sure that it couldn't when we were at the whiteboard,
+% but I don't see it any more}
 
 \begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},escapechar=|,label={ex:pathological-case},float,floatplacement=htb]
 var elem: ListElement := headOfList
