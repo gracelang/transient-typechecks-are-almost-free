@@ -82,7 +82,7 @@ checks of shallow structural types with low overhead and relatively low
 implementation effort. These checks are inserted na\"ively based on local
 annotations and checked eagerly when control flow reaches them: 
 whenever an annotated method is called or
-an annotated variable is read from or assigned to,
+an annotated variable is accessed
 we check types dynamically and
 terminate the program with a type error if the check fails.
 Despite this simplistic approach, a just-in-time compiler can
