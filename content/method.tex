@@ -162,7 +162,7 @@ defines the structural type \code{Vehicle}\citep{theCleanVehicle}
 naming just that method (\cref{ex:vehicle},
 \cref{ex:adding-type:vehicle}), and then annotates the
 \code{printRegistration} method's argument with that type
-(\cref{ex:vehicle}, \cref{ex:adding-type}).  This ensures the student
+(\cref{ex:vehicle}, \cref{ex:adding-type}). This ensures the student
 will be alerted as soon as a value that does not conform to this
 expected type is passed into the \code{printRegistration} method,
 rather than that method crashing somewhere in the middle of the
@@ -399,7 +399,7 @@ object conforms to it.
 % These \code{Type} objects are created by
 % Grace \code{interface} expressions, and also help
 % to support Grace's pattern matching facilities \cite{gracePatternsDLS12}.
-An object satisfies a type, if all members required by the type are provided
+An object satisfies a type if all members required by the type are provided
 by the object (\cref{ex:type:satisfied}).
 
 
@@ -460,7 +460,7 @@ class TypeCheckNode(Node):
     
     if record[T, expected] is unknown: |\label{ex:typenode:matrix}|
       record[T, expected] =
-          T.is_subtype_of(expected)
+          T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
 
     if not record[T, expected]:
       raise TypeError(
@@ -470,8 +470,8 @@ class TypeCheckNode(Node):
 The first performance-critical aspect to our implementation
 is the optimization of the type checking node.
 We rely on Truffle and its TruffleDSL\citep{humer2014domainspecific}.
-This means, we provide a number of special cases,
-which are selected during execution based on the concrete observed
+This means we provide a number of special cases,
+which are selected during execution based on the observed concrete 
 kinds of objects.
 A sketch of our type checking node using a pseudo-code version of the DSL
 is given in \cref{ex:typenode}.
@@ -496,7 +496,7 @@ It checks that the object satisfies the expected type.
 If that is the case, it reads the shape of the object at specialization time,
 and caches it for later comparisons.
 Thus, during normal execution,
-we only need to read the shape of the object, compare it to the cached one
+we only need to read the shape of the object and then compare it to the cached one
 with a simple reference comparison.
 If the shapes are the same, we can assume the type check passed successfully.
 
@@ -507,17 +507,16 @@ featuring all known types along the columns and the same types again along the r
 A cell in the table corresponds to a sub-typing relationship:
 does the type corresponding to the row implement
 the type corresponding to the column?
-All cells in the matrix begin as unknown and as 
-encountered in a check during execution
-we populate the table.
+All cells in the matrix begin as unknown and, as
+encountered in checks during execution, we populate the table.
 If a particular relationship has been computed before
-we can skip the check and instead recall the previously-computed value.
+we can skip the check and instead recall the previously-computed value
+(\cref{ex:typenode:reuse}).
 Using this table we are able to eliminate the redundancy of evaluating
-the same type to type relationships across different checks in the program. To reduce redundancy further we also unify types.
-Our unification of types is similar to Java's string interning; 
+the same type to type relationships across different checks in the program. To reduce redundancy further we also unify types in a similar way to Java's string interning; 
 during the construction of a type we first check to see if the same
 set of members is expressed by a previously-created type and, if so,
-we avoid creating the new instance and provide the existing one.
+we avoid creating the new instance and provide the existing one instead.
 
 Together the self-specializing type check node and the matrix-based record
 ensure that our implementation eliminates redundancy, and
