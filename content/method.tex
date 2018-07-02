@@ -25,9 +25,9 @@ dynamically, from a student's or a programmer's point of view.
 Following from the design goals behind Grace,
 our motivation for this work
 is to provide a flexible system 
-to check the consistency of the execution of their programs 
-against type annotations,
-but without significant impact on run-time performance.
+to check consistency between an execution of a program
+and its type annotations,
+without significant impact on run-time performance.
 A secondary goal is to have a design that can be implemented with
 only a small set of changes to facilitate integration in existing systems.
 %
@@ -55,15 +55,15 @@ annotated with a type must conform to that type.  Third, adding type
 annotations should not degrade a program's performance, or rather,
 students should not be encouraged to improve performance by removing
 type annotations.  Unfortunately, existing gradual type
-implementations do not meet these goals, particularly the regarding
-performance: thus the ongoing debate about whether gradual typing is
-alive, dead, or in some state in
-between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
+implementations do not meet these goals, particularly regarding
+performance; hence the ongoing debate about whether gradual typing is
+alive, dead, or some state
+inbetween\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
 % Specifically, they could encourage students to remove types to improve performance.
-\mwh{This paragraph seems confused to me. They're good, but also they're bad. What is a ``gradual typing system'' here, and how does it relate to ``gradual typing'' and ``type systems'' as separate concepts?}
-\sm{the above change makes the desirable things about gradual typing more concrete. wrt ``gradual typing'' and ``type systems''. one is a general idea, and a concrete realization is a ``system''. I don't know whether this is how typing people talk. but this is how I see the distinction.
-we don't want to criticize the abstract idea, but concrete systems.}
-\kjx{I've rewritten this bit, particularly the last paragraph.}
+% \mwh{This paragraph seems confused to me. They're good, but also they're bad. What is a ``gradual typing system'' here, and how does it relate to ``gradual typing'' and ``type systems'' as separate concepts?}
+% \sm{the above change makes the desirable things about gradual typing more concrete. wrt ``gradual typing'' and ``type systems''. one is a general idea, and a concrete realization is a ``system''. I don't know whether this is how typing people talk. but this is how I see the distinction.
+% we don't want to criticize the abstract idea, but concrete systems.}
+% \kjx{I've rewritten this bit, particularly the last paragraph.}
 \kjx{I'm not sure if the goals should go here, or in the intro?}
 \kjx{now we have two different lists of goals here}
 \kjx{I'm more than half temped to just delete all of 3.0 --- but I've left
@@ -111,7 +111,7 @@ Does this make sense? is it any better?}
 % Message sending
 % As we described in \cref{ssec:grace}, Grace is message-sending-based language.
 
-Our static type checks for Grace are designed to be simple,
+Our type checks for Grace are designed to be simple,
 straightforward, and hopefully easy for students to understand:
 \begin{itemize}
   \item types are shallow interfaces
@@ -159,10 +159,10 @@ Next, the student could decide to ensure that any object passed to the
 \code{printRegistration} method will respond to the
 \code{registration} request.  To get this support, the student first
 defines the structural type \code{Vehicle}\citep{theCleanVehicle}
-naming just that method \cref{ex:vehicle}
-\cref{ex:adding-type:vehicle}, and then annotates the
+naming just that method (\cref{ex:vehicle},
+\cref{ex:adding-type:vehicle}), and then annotates the
 \code{printRegistration} method's argument with that type
-(\cref{ex:vehicle} \cref{ex:adding-type}).  This ensures the student
+(\cref{ex:vehicle}, \cref{ex:adding-type}).  This ensures the student
 will be alerted as soon as a value that does not conform to this
 expected type is passed into the \code{printRegistration} method,
 rather than that method crashing somewhere in the middle of the
@@ -247,7 +247,7 @@ At \cref{ex:invoke-register-to} the student can attempt to register a
 government car to a person: only when the method is invoked
 (\cref{ex:government-car:registerTo}) the dynamic type test on the
 argument will fail (the object that is passed in is not a
-\code{Department}) even so the body of the \code{registerTo} method
+\code{Department}) even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
 
