@@ -94,12 +94,13 @@ to propagate type requirements and avoid unnecessary checks.
 %%  - might enable a full structural type system, \ie, not shallow
 %%  - verify results of Richards2017 in context of highly optimizing VM
 
-Finally, we hope to apply our approach to full structural types with blame that
-support the gradual guarantee.
-%
-% For transient semantics   \cite{reticPython2014}
-%
-This should let us verify that \citet{Richards2017} result generalize
-to highly optimizing virtual machines,
-or alternatively other optimizations for precise blame would need to be investigated.
+Finally, we hope to apply our approach to full structural types with
+blame that support the gradual guarantee.  For
+\citet{reticPython2014}'s transient semantics, this should primarily
+require finer distinctions in the subtype matrix; monotonic and
+guarded semantics will require more work, including extensions to the
+underlying object model.  This should let us verify that
+\citet{Richards2017}'s results generalize to highly optimizing virtual
+machines, or alternatively, show that other optimizations for precise
+blame need to be investigated.
 

@@ -501,7 +501,7 @@ with a simple reference comparison.
 If the shapes are the same, we can assume the type check passed successfully.
 
 The other performance-critical aspect to our implementation
-is the use of a matrix-based record to cache sub-typing relationships.
+is the use of a matrix to cache sub-typing relationships.
 The matrix compares types against types,
 featuring all known types along the columns and the same types again along the rows.
 A cell in the table corresponds to a sub-typing relationship:
