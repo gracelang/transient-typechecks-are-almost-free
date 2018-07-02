@@ -5,7 +5,8 @@
 
 Although syntaxes for type annotations in dynamic languages go back at
 least as far as Lisp\citep{cltl2}, the first attempts at adding a
-coherent static type system to a dynamically typed language involved
+comprehensive static type system to a dynamically typed
+language involved 
 Smalltalk\citep{RalphJohnson1986}, with the first practical system
 being Bracha's Strongtalk\citep{strongtalk}. Strongtalk
 (independently replicated for Ruby\citep{DBRuby09}) provided a
@@ -49,7 +50,7 @@ implementation overhead\citep{reticPython2014,monotonic2015,Vitousek2017}.
 As with language designs, there seem to be two main implementation
 strategies for languages mixing dynamic and static type checks: either
 adding static checks into a dynamic language implementation, or adding
-support for a ``dynamic'' type to an implementation that depends on
+support for a dynamic types to an implementation that depends on
 static types for efficiently. Racket, for example, optimizes code with
 a combination of type inference and type declarations---the Racket
 IDE ``optimizer coach'' goes as far as to suggest to programmers type
@@ -62,7 +63,7 @@ programmers declare types explicitly that can be checked statically,
 removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
-work here takes the opposite approach: adding type checking into
+work, here takes the opposite approach: adding type checking into
 just-in-time compiling virtual machines that do not rely on static
 type declarations. These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
@@ -91,8 +92,8 @@ Racket semantics. \citeauthor{Bauman2017} are able to demonstrate most benchmark
 with a slowdown of 2x on average over all configurations.
 Note that this is not directly comparable to our system,
 since typed modules do not need to do any checks at run time.
-Typed Racket only needs to perform checks at boundaries between typed and untyped modules.
-However, they use the same essential optimization technique that we apply,
+Typed Racket only needs to perform checks at boundaries between typed and untyped modules,
+however, they use the same essential optimization technique that we apply,
 using object shapes to encode information about gradual types.
 % - argument about acceptable performance made indirectly
 %   using the "CDF-based slowdown plots"
@@ -114,20 +115,28 @@ using a similar benchmarking methodology applied to Nom, a language
 with features designed to make gradual types easier to optimize, 
 demonstrating speedups as more type information is added to programs.
 Their approach enables such type-driven optimizations,
-but relies on an analysis, which can utilize the type information.
+but relies on a static analysis which can utilize the type information.
+
+
+% \rrtodo{Are we nearly equal Greenman,
+% in the sense that a reference to a type object the same as a tag?}
+
 
 %% SM: Removed, I can't say anything concrete here.
 %%     No idea how to compare to this system.
 %%     Their base lines are just too diffent, and I have no how these systems
 %%     would perform on our benchmarks.
-% Most recently, \citet{Kuhlenschmidt:2018:preprint} employ a
-% ``ahead of time'' (\ie traditional, static) compiler for a custom
-% language called Grift and demonstrate good performance for code where more than
-% half of the program is annotated with types, and still reasonable
-% performance for code with type annotations. \kjx{mealy mouthed.}
 
-% \rrtodo{Are we nearly equal Greenman,
-% in the sense that a reference to a type object the same as a tag?}
+%%%dumpted in anyway since we cite it, we should say something
+%%%even if we are saying nothing
+%%%
+Most recently, \citet{Kuhlenschmidt:2018:preprint} employ an
+ahead of time (\ie traditional, static) compiler for a custom
+language called Grift and demonstrate good performance for code where more than
+half of the program is annotated with types, and reasonable
+performance for code without type annotations. 
+
+
 
 Perhaps the closest to our approach are \citet{Greenman2018}
 and \citet{Richards2017}.
@@ -150,18 +159,17 @@ We refrain from a performance comparison since
 Reticulated Python is an interpreter without just-in-time compilation
 and thus performance tradeoffs are different.
 
-
 \citet{Richards2017} take a similar implementation
 approach to our work, demonstrating that key mechanisms such as object shapes
 used by a VM to optimize dynamic languages can be used to eliminate most of
 the overhead of dynamic type checks.
 Unlike our work, Richards
 implement ``full'' gradual typing with blame tracking, rather than
-simple Boyland\mwh{Still no.} tag-type checks, and do so on top of an adapted Higgs
+shallow structural checks, and do so on top of an adapted Higgs
 VM.
 The Higgs VM implements a baseline just-in-time compiler based on
 basic-block versioning\citep{Chevalier-Boisvert:2016:ITS}.
-In contrast, our implementation of tag-type checks
+In contrast, our implementation of dynamic checks
 is built on top of the Truffle framework for the Graal VM, and reaches
 performance approaching that of V8 (cf. \cref{sec:baseline-perf}).
 The performance difference is of relevance here since any small constant factors
@@ -172,7 +180,7 @@ Overall, it is unclear whether our results confirm the ones
 reported by \citet{Richards2017},
 because our system is simpler.
 It does not introduce the polymorphism
-issues as caused by accumulating cast information on object shapes,
+issues caused by accumulating cast information on object shapes,
 which could be important for performance.
 Considering that \citeauthor{Richards2017} report ca. 4\% overhead
 on the classic Richards benchmark, while we see \OverheadRichardsP,
@@ -206,3 +214,6 @@ their approach for a highly optimizing just-in-time compiler.
 %- Higgs
 %  - no inlining, escape analysis, tuned GC, etc.
 %  - any optimizations across basic blocks (beside type propagation)
+
+
+
