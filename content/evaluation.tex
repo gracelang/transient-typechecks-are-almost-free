@@ -216,6 +216,25 @@ are somewhat common for highly optimizing just-in-time compilers.\mwh{cite?}
 	\label{fig:typing-warmup}
 \end{figure}
 
+While we did not focus on the warmup performance,
+and are mainly interested in peak performance,
+\cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
+The run time factor is the result for the typed version over the untyped one.
+Thus, any increase indicates a slow down because of typing.
+The gray line in the background indicates a smoothed version of the curve,
+also indicating a confidence interval.
+
+Focusing on the first iteration,
+where we assume that most code is executed in the interpreter,
+the overhead appears minimal.
+Only the Mandelbrot benchmark shows a noticeable slowdown.
+However, benchmarks such as Float, PyStone, and GraphSearch show various spikes.
+Since spikes appear in both directions (speedups and slowdowns),
+we assume that this merely indicates a shift
+for instance of garbage collection pauses.
+This can happen because of different heap configurations
+possibly triggered by the additional data structures for type information.
+
 % discuss optimization techniques?
 % discuss specializations?
 
