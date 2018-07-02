@@ -68,7 +68,9 @@ and so Grace supports type annotations which may be checked either
 statically or dynamically to give students feedback on whether their
 type annotations are correct.  We do not want students to remove
 types, however, if they discover that types induce a run-time
-overhead. We are currently maintaining three different
+overhead.
+
+Additionally, we are currently maintaining three different
 implementations to support a variety of educational settings
 (web browsers, .NET, and JVM),
 which means a typing approach for Grace ideally requires
@@ -78,13 +80,15 @@ possible.
 In this paper we illustrate that using an optimizing virtual machine allows dynamic
 checks of shallow structural types with low overhead and relatively low
 implementation effort. These checks are inserted na\"ively based on local
-annotations and checked eagerly when control flow reaches them: whenever an
-annotated method is called or a variable is assigned, we check types
-dynamically and terminate the program with a type error if the check fails.
+annotations and checked eagerly when control flow reaches them: 
+whenever an annotated method is called or
+an annotated variable is read from or assigned to,
+we check types dynamically and
+terminate the program with a type error if the check fails.
 Despite this simplistic approach, a just-in-time compiler can eliminate
-almost all of the overhead of the checks---notably, removing redundant
-checks to create straight-line check-free code in many cases---for a
-performance profile aligned with untyped code.
+almost all of the overhead of the checks ---%
+notably, removing redundant checks to create straight-line check-free code in many cases---%
+for a performance profile aligned with untyped code.
 %
 We evaluate this approach with Moth,
 a Grace implementation on top of Truffle
@@ -105,9 +109,9 @@ that results from type checking is eliminated.
 The contributions of this paper are:
 
 \begin{itemize}
-\item demonstrating that relatively straightforward VM optimisations
-      enable dynamic checks of shallow structural types with low
-      performance cost
+\item demonstrating that VM optimisations enable
+        dynamic checks of shallow structural types with low
+        performance cost
 \item an implementation approach that requires
       only small changes to existing abstract-syntax-tree interpreters
 \item an evaluation based on classic benchmarks
