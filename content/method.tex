@@ -19,8 +19,7 @@ is important for supporting effective teaching.
 %\kjx{we wont}
 %
 % motivation = give students low-overhead method to check program
-The core of Grace's static type system is well described elsewhere
-\cite{JonesECOOP2016}; here we explain how these types can be understood
+The core of Grace's static type system is well described elsewhere\citep{JonesECOOP2016}; here we explain how these types can be understood
 dynamically, from a student's or a programmer's point of view.
 %\kjx{code for: no formalism, sorry.}
 Following from the design goals behind Grace,
@@ -113,11 +112,11 @@ Does this make sense? is it any better?}
 % As we described in \cref{ssec:grace}, Grace is message-sending-based language.
 
 Our static type checks for Grace are designed to be simple,
-straightfoward, and hopefully easy for students to understand:
+straightforward, and hopefully easy for students to understand:
 \begin{itemize}
   \item types are shallow interfaces
-  \item optional type anotations are checked at runtime
-  \item failing runtime type checks terminate execution
+  \item optional type annotations are checked at run time
+  \item failing run-time type checks terminate execution
 \end{itemize}
 
 % Together these properties enable a flexible system
@@ -131,7 +130,7 @@ We illustrate how the type checks work in practice
 in the context of an exercise where a student is developing
 a program to record information about vehicles.
 %
-Grace is structrually typed \cite{graceOnward12}:
+Grace is structurally typed\citep{graceOnward12}:
 an object implements a type whenever it
 implements all the methods required by a 
 type (as in Go) rather than requiring types to be declared
@@ -163,7 +162,7 @@ defines the structural type \code{Vehicle}\citep{theCleanVehicle}
 naming just that method \cref{ex:vehicle}
 \cref{ex:adding-type:vehicle}, and then annotates the
 \code{printRegistration} method's argument with that type
-\cref{ex:vehicle} \cref{ex:adding-type}.  This ensures the student
+(\cref{ex:vehicle} \cref{ex:adding-type}).  This ensures the student
 will be alerted as soon as a value that does not conform to this
 expected type is passed into the \code{printRegistration} method,
 rather than that method crashing somewhere in the middle of the
@@ -176,7 +175,7 @@ type Vehicle = interface = { |\label{ex:adding-type:vehicle}|
 }
 
 method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
-    return v.registration
+    print "Registration: {v.registration}"
 }
 \end{lstlisting}
 
@@ -188,18 +187,16 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 %\paragraph{Flexibility.}
 %\paragraph{Semnatics}
 
-While Grace's static type system supports full static type checking
-\cite{graceOnward12}, Grace's dynamic type tests are \textit{shallow},
+While Grace's static type system supports full static type checking\citep{graceOnward12}, Grace's dynamic type tests are \emph{shallow},
 that is, they check only for the presence of methods in an object,
 rather than also checking conformance of argument and result types.
 This is to ensure that the presence or absence of type annotations
 does not affect the execution of a program, for the reason originally
-outlined by Boyland \cite{Boyland2014}, thus maintaining a version of
+outlined by \citet{Boyland2014}, thus maintaining a version of
 the gradual guarantee.
-The resulting semantics are more-or-less equivalent to type-tag soundness
-\cite{Greenman2018} --- the difference being that where type-tag
-soundness is supports shallow \textit{nominal} type checks, we support
-shallow \textit{structural} type checks.
+The resulting semantics are more-or-less equivalent to type-tag soundness\citep{Greenman2018}---the difference being that where type-tag
+soundness supports shallow \emph{nominal} type checks, we support
+shallow \emph{structural} type checks.
 
 % The notion of our type system being shallow means 
 % that members of a type are untyped.
@@ -250,7 +247,7 @@ At \cref{ex:invoke-register-to} the student can attempt to register a
 government car to a person: only when the method is invoked
 (\cref{ex:government-car:registerTo}) the dynamic type test on the
 argument will fail (the object that is passed in is not a
-\code{Department}) even the the body of the \code{registerTo} method
+\code{Department}) even so the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
 
