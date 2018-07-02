@@ -24,8 +24,8 @@ The general idea is that a VM will already use object shapes
 for method dispatches, field accesses, and other operations on objects.
 Thus any further use to also imply type information
 can often be optimized away
-when the compiler sees that the same checks are done (
-and therefore can be combined). This is similar to 
+when the compiler sees that the same checks are done
+(and therefore can be combined). This is similar to 
 the elimination of other side-effect-free common subexpressions.
 
 This assumption breaks, however, when checks are introduced
