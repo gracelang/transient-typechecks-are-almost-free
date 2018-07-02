@@ -26,9 +26,9 @@ Thus, any further use, for instance to also imply type information,
 can often be optimized away
 by the compiler when it sees that the same checks are done
 and therefore can be combined; this is similar to 
-other side-effect-free common subexpressions.
+the elimination of other side-effect-free common subexpressions.
 
-However, this assumption breaks when checks are introduced
+This assumption breaks, however, when checks are introduced
 that do not correspond to those that exist already.
 As described in \cref{sec:method},
 our approach introduces checks for reading and writing to variables.
@@ -51,9 +51,9 @@ I am sure that it couldn't when we were at the whiteboard,
 but I don't see it any more}
 
 \begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},escapechar=|,label={ex:pathological-case},float,floatplacement=htb]
-var elem: ListElement = headOfList
-while (...) {
-  elem = elem.next
+var elem: ListElement := headOfList
+while (...) do {
+  elem := elem.next
 }
 \end{lstlisting}
 
