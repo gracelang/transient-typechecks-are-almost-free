@@ -302,24 +302,24 @@ governmentCar.registerTo( |\label{ex:invoke-register-to}|
 
 
 %\paragraph{Termination by Type Error.}
-\label{sec:term-type-error}
+% \label{sec:term-type-error}
 
-When executing a program without types, there are three possible outcomes.
-Either the program (1) terminates successfully,
-(2) terminates with an exception, or 
-(3) the execution diverges, \ie, it does not terminate.
-Using our approach, a
-fourth outcome is possible: termination with a type error.
-Our implementation checks  every type annotation
-on the values of arguments before invoking a method, 
-on the value returned by a method when it returns, and
-before any assignment to and read from a variable 
-(either local to a method or belonging to an object). 
+% When executing a program without types, there are three possible outcomes.
+% Either the program (1) terminates successfully,
+% (2) terminates with an exception, or 
+% (3) the execution diverges, \ie, it does not terminate.
+% Using our approach, a
+% fourth outcome is possible: termination with a type error.
+% Our implementation checks  every type annotation
+% on the values of arguments before invoking a method, 
+% on the value returned by a method when it returns, and
+% before any assignment to and read from a variable 
+% (either local to a method or belonging to an object). 
 
-The checks are performed eagerly%
----as soon as they are encountered during execution---%
-and cause the execution to terminate with a typing error 
-when a value fails to implement its expected type.
+% The checks are performed eagerly%
+% ---as soon as they are encountered during execution---%
+% and cause the execution to terminate with a typing error 
+% when a value fails to implement its expected type.
 
 % % kjx deleted this summary because it doesn't add anything.
 % % 
