@@ -46,15 +46,15 @@ only a small set of changes to facilitate integration in existing systems.
 These goals are shared with much of the other work on gradual type
 systems, but our context leads to some different choices. First, so
 that students can see concrete examples of type errors, they should be
-able to run their programs even if those programs are not type-correct
---- i.e.\ i.e.\ Grace's static type checking is optional, and so an
+able to run their programs even if those programs are not type-correct%
+---\ie Grace's static type checking is optional, and so an
 implementation cannot depend on the correctness of a program's type
 annotations. Second, while checking Grace's type annotations
 statically checking may be optional, checking them dynamically should
 not be: any value that flows into a variable, argument, or result
 annotated with a type must conform to that type.  Third, adding type
 annotations should not degrade a program's performance, or rather,
-students shouldn't be encouraged to improve performance by removing
+students should not be encouraged to improve performance by removing
 type annotations.  Unfortunately, existing gradual type
 implementations do not meet these goals, particularly the regarding
 performance: thus the ongoing debate about whether gradual typing is
