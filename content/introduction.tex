@@ -75,15 +75,15 @@ which means a typing approach for Grace ideally requires
 only small changes to keep these implementations as consistent as
 possible.
 
-In this paper we illustrate that using an optimising meta-VM allows dynamic
+In this paper we illustrate that using an optimizing virtual machine allows dynamic
 checks of shallow structural types with low overhead and relatively low
 implementation effort. These checks are inserted na\"ively based on local
 annotations and checked eagerly when control flow reaches them: whenever an
 annotated method is called or a variable is assigned, we check types
 dynamically and terminate the program with a type error if the check fails.
-Despite this simplistic approach, straightforward VM optimisations eliminate
-almost all of the overhead of the checks\,---\,notably, removing redundant
-checks to create straight-line check-freecode in many cases\,---\,for a
+Despite this simplistic approach, a just-in-time compiler can eliminate
+almost all of the overhead of the checks---notably, removing redundant
+checks to create straight-line check-free code in many cases---for a
 performance profile aligned with untyped code.
 %
 We evaluate this approach with Moth,
