@@ -27,12 +27,12 @@ and also surveys previous work. Revived practical adoption of dynamic
 languages generated revived research interest, leading to the
 formulation of the ``gradual guarantee''\citep{Siek2006,Siek2015} to characterize sound
 gradual type systems: removing type annotations should not change the
-semantics of a correct program, drawing on the Boyland's critical
+semantics of a correct program, drawing on Boyland's critical
 insight that, of course, such a guarantee must by its nature forbid
 code that can depend on the presence or absence of type declarations 
 elsewhere in the program\citep{Boyland2014}. 
 
-Type errors in gradual (or other dynamically checked) type systems will
+Type errors in gradual, or other dynamically checked, type systems will
 often be triggered by the type declarations, but often those
 declarations will not be at fault---indeed in a correctly typed
 program in a sound gradually typed system,  the declarations cannot be
@@ -59,11 +59,11 @@ from dynamically to statically typed code must be checked at the
 boundary.  Fully statically typed code needs no dynamic type checks,
 and so generally performs better than dynamically typed code. Adopting
 a gradual type system such as Typed Racket\citep{typedScheme08} allows
-programmers declare types explicitly that can be checked statically,
+programmers to explicitly declare types that can be checked statically,
 removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
-work, here takes the opposite approach: adding type checking into
+work here, takes the opposite approach: adding type checking into
 just-in-time compiling virtual machines that do not rely on static
 type declarations. These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
