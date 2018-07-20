@@ -501,7 +501,7 @@ which may raise a type error.
 
 For generic objects, we rely on the specialization on \cref{ex:typenode:object},
 which checks that the object satisfies the expected type.
-If that is the case, it reads the shape of the object at specialization time,
+If that is the case, it reads the shape of the object (cf. \cref{ssec:moth}) at specialization time,
 and caches it for later comparisons.
 Thus, during normal execution,
 we only need to read the shape of the object and then compare it to the cached one
