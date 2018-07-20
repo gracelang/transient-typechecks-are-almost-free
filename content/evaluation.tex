@@ -15,7 +15,8 @@ and then assess the impact of the type checks themselves.
 \subsection{Methodology and Setup}
 
 To account for the complex warmup behavior
-of modern systems\citep{Barrett:2017:VMW},
+of modern systems\citep{Barrett:2017:VMW} as well as
+the non-determinism caused by \eg garbage collection and cache effects,
 we run each benchmark for \NumIterationsAll iterations in the same
 VM invocation.\footnote{
 For the Higgs VM, we only use \NumIterationsHiggs iterations,
@@ -25,6 +26,8 @@ and leads to more stable measurements.}
 Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
+As a result, we use a large number of data points to compute the average,
+but outliers, caused by \eg garbage collection, remain visible in the plots.
 In this work, we do not consider startup performance,
 because we want to assess the impact of dynamic type checks
 on the best possible performance.
@@ -161,7 +164,9 @@ SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
   to Moth with type checking.
   The plot depicts the run-time overhead on peak performance over
   the untyped performance. On average, dynamic type checking introduces
-  an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).}
+  an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
+  The visible outliers reflect the noise in today's complex system
+  and correspond \eg to garbage collection and cache effects.}
 	\label{fig:typing-overhead}
 \end{figure}
 
