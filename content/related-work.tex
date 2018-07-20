@@ -134,17 +134,19 @@ Most recently, \citet{Kuhlenschmidt:2018:preprint} employ an
 ahead of time (\ie traditional, static) compiler for a custom
 language called Grift and demonstrate good performance for code where more than
 half of the program is annotated with types, and reasonable
-performance for code without type annotations. 
+performance for code without type annotations.
 
-
-
-Perhaps the closest to our approach are \citet{Greenman2018}
+Perhaps the closest to our approach are \citet{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
 and \citet{Richards2017}.
-\citeauthor{Greenman2018} describe dynamically checking ``tag-type''
-soundness for Reticulated Python.
-As with our work, \citeauthor{Greenman2018} check only the ``top-level'' type of an
-object against a declaration, although \citeauthor{Greenman2018}'s checks are nominal
-while ours are structural.
+\citeauthor{reticPython2014} describe dynamically checking ``tag-type''
+soundness for Reticulated Python (term coined by \citet{Greenman2018}).
+As with our work, \citeauthor{reticPython2014} check only the ``top-level'' type of an
+object against a declaration.
+\sm{any important difference we need to mention here?}
+\sm{and please make sure this is true!!}
+%
+%  although \citeauthor{reticPython2014}'s checks are nominal
+% while ours are structural.
 % - based on Reticulated Python
   % - Python 3-based implementation (interpretation, no compilation)
 %- soundness notion and supported semantics very similar to ours
