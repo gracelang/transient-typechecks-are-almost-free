@@ -507,6 +507,9 @@ Thus, during normal execution,
 we only need to read the shape of the object and then compare it to the cached one
 with a simple reference comparison.
 If the shapes are the same, we can assume the type check passed successfully.
+Note that shapes are not equivalent to types.
+However, shapes imply the set of members of an object, and thus,
+do imply whether an object fulfills a type.
 
 The other performance-critical aspect to our implementation
 is the use of a matrix to cache sub-typing relationships.
