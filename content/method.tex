@@ -48,13 +48,25 @@ that students can see concrete examples of type errors, they should be
 able to run their programs even if those programs are not type-correct%
 ---\ie Grace's static type checking is optional, and so an
 implementation cannot depend on the correctness of a program's type
-annotations. Second, while checking Grace's type annotations
+annotations.
+
+Second, while checking Grace's type annotations
 statically may be optional, checking them dynamically should
 not be: any value that flows into a variable, argument, or result
-annotated with a type must conform to that type annotation.  Third, adding type
+annotated with a type must conform to that type annotation.
+This means, the focus is not to devise a sound typing approach,
+but one that ensure that the observed behavior matches
+the one that one may expect considering the type annotations.
+
+Third, adding type
 annotations should not degrade a program's performance, or rather,
 students should not be encouraged to improve performance by removing
-type annotations.  Unfortunately, existing gradual type
+type annotations.
+However, reported errors should conform to the basic expectations one
+may derive from the type annotations
+and a strict interpretation of their shallow semantics.
+
+Unfortunately, existing gradual type
 implementations do not meet these goals, particularly regarding
 performance; hence the ongoing debate about whether gradual typing is
 alive, dead, or some state
@@ -258,6 +270,10 @@ argument will fail (the object that is passed in is not a
 \code{Department}) even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
+The intention here is to ensure that the run-time values
+match the given types in a strict and eager sense,
+which is the intuition we derive from types having a constraining meaning
+on values.
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
