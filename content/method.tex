@@ -138,8 +138,9 @@ a program to record information about vehicles.
 Grace is structurally typed\citep{graceOnward12}:
 an object implements a type whenever it
 implements all the methods required by a 
-type (as in Go) rather than requiring types to be declared
-explicitly. 
+type rather than requiring types to be declared
+explicitly.
+In this context, methods match when they have the same name and arity.
 A type expresses the requests
 an object can respond to, for example whether a particular accessor is
 available,  rather than a location in an explicit inheritance
@@ -195,7 +196,7 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 While Grace's static type system supports full static type
 checking\citep{graceOnward12}, Grace's specification requires dynamic
 type tests to be \emph{shallow}, that is, they check only for the
-presence of methods in an object, rather than also checking
+presence and arity of methods in an object, rather than also checking
 conformance of argument and result types.  This is to ensure that the
 presence or absence of type annotations does not affect the execution
 of a program, for the reason originally outlined by
