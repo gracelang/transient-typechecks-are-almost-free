@@ -63,8 +63,8 @@ programmers to explicitly declare types that can be checked statically,
 removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
-work here, takes the opposite approach: adding type checking into
-just-in-time compiling virtual machines that do not rely on static
+work here, takes the opposite approach.
+They add run-time type checks that do not rely on static
 type declarations. These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
 perform (potentially repeated) dynamic type checks tends to slow
