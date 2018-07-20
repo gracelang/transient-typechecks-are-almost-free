@@ -218,8 +218,9 @@ the instruction cache of the processor.
 \begin{figure}
 	\TypingWarmup{}
 	\caption{Plot of the run time for the first 100 iterations.
-           The gray line is smoothed version, including a confidence interval,
-           to indicate the trend.
+           The gray line is a local polynomial regression fit
+           with a 0.95 confidence interval
+           indicating the trend.
            The first iteration, \ie, mostly interpreted, seems
            to be affected significantly only for Mandelbrot.}
 	\label{fig:typing-warmup}
@@ -230,8 +231,10 @@ and are mainly interested in peak performance,
 \cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
 The run time factor is the result for the typed version over the untyped one.
 Thus, any increase indicates a slow down because of typing.
-The gray line in the background indicates a smoothed version of the curve,
-also indicating a confidence interval.
+The gray line indicates a smoothed version of the curve
+based on local polynomial regression fitting\citep{Cleveland:1992}
+using neighboring data points.
+It also indicates a 0.95 confidence interval.
 
 Focusing on the first iteration,
 where we assume that most code is executed in the interpreter,
