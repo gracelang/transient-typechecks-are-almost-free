@@ -145,7 +145,9 @@ We modified Moth to report absent type information and ensured it was complete.
 To assess the performance overhead of type checking,
 we compare the execution of Moth with all checks disabled, \ie, the baseline version from 
 \cref{sec:baseline-perf}, against an execution that has all checks enabled.
-
+We did not measure programs that mix typed and untyped code
+because with our implementation technique a fully typed program is expected to
+have the largest overhead.
 
 \begin{table}
 \caption{Benchmarks selected from literature.}
