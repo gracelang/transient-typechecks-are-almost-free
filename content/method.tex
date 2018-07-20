@@ -277,7 +277,7 @@ annotation requires of the argument.
 
 \begin{lstlisting}[caption={A program in development with inconsistent
     types.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible]
-type Vehicle = interface = { |\label{ex:new-vehicle}|
+type Vehicle = interface { |\label{ex:new-vehicle}|
     registration
     registerTo(_)
 }
@@ -418,7 +418,7 @@ class Type:
 
   def is_satisfied_by(other: Type): |\label{ex:type:satisfied}|
     for m in self._members:
-      if not in other._members:
+      if m not in other._members:
         return False
     return True
 
