@@ -48,13 +48,25 @@ that students can see concrete examples of type errors, they should be
 able to run their programs even if those programs are not type-correct%
 ---\ie Grace's static type checking is optional, and so an
 implementation cannot depend on the correctness of a program's type
-annotations. Second, while checking Grace's type annotations
+annotations.
+
+Second, while checking Grace's type annotations
 statically may be optional, checking them dynamically should
 not be: any value that flows into a variable, argument, or result
-annotated with a type must conform to that type annotation.  Third, adding type
+annotated with a type must conform to that type annotation.
+This means the focus is not to devise a sound typing approach,
+but rather an approach that ensures that the observed execution matches
+the one the Grace programmer expects when considering a program's type annotations.
+
+Third, adding type
 annotations should not degrade a program's performance, or rather,
 students should not be encouraged to improve performance by removing
-type annotations.  Unfortunately, existing gradual type
+type annotations.
+However, reported errors should conform to the basic expectations one
+may derive from the type annotations
+and a strict interpretation of their shallow semantics.
+
+Unfortunately, existing gradual type
 implementations do not meet these goals, particularly regarding
 performance; hence the ongoing debate about whether gradual typing is
 alive, dead, or some state
@@ -138,8 +150,9 @@ a program to record information about vehicles.
 Grace is structurally typed\citep{graceOnward12}:
 an object implements a type whenever it
 implements all the methods required by a 
-type (as in Go) rather than requiring types to be declared
-explicitly. 
+type rather than requiring types to be declared
+explicitly.
+In this context, methods match when they have the same name and arity.
 A type expresses the requests
 an object can respond to, for example whether a particular accessor is
 available,  rather than a location in an explicit inheritance
@@ -150,7 +163,7 @@ application by defining an object intended to represent a car
 (\cref{lst:car-reg}, \cref{ex:object}) and write a method that, given
 the car object, prints out its registration number (\cref{ex:method}).
 
-\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},label=lst:car-reg,escapechar=|,columns=flexible]
+\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},float,label=lst:car-reg,escapechar=|,columns=flexible]
 def car = object {|\label{ex:object}|
     var registration is public := "JO3553"
 }
@@ -195,15 +208,18 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 While Grace's static type system supports full static type
 checking\citep{graceOnward12}, Grace's specification requires dynamic
 type tests to be \emph{shallow}, that is, they check only for the
-presence of methods in an object, rather than also checking
+presence and arity of methods in an object, rather than also checking
 conformance of argument and result types.  This is to ensure that the
 presence or absence of type annotations does not affect the execution
 of a program, for the reason originally outlined by
 \citet{Boyland2014}, thus maintaining a version of the gradual
-guarantee.  The resulting semantics are more-or-less equivalent to
-type-tag soundness\citep{Greenman2018}---the difference being that
-where type-tag soundness supports shallow \emph{nominal} type checks,
-we support shallow \emph{structural} type checks.
+guarantee.  The resulting semantics are \del{more-or-less}\sm{we really need to say something stronger here or drop this} equivalent to
+type-tag soundness\citep{reticPython2014,Vitousek2017,Greenman2018}.
+%% SM: someone should really take a really close look at these and identify the
+%%     differences. And I don't want to do that.
+% ---the difference being that
+% where type-tag soundness supports shallow \emph{nominal} type checks,
+% we support shallow \emph{structural} type checks.
 
 % The notion of our type system being shallow means 
 % that members of a type are untyped.
@@ -257,6 +273,10 @@ argument will fail (the object that is passed in is not a
 \code{Department}) even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
+The intention here is to ensure that the run-time values
+match the given types in a strict and eager sense,
+which is the intuition we derive from types having a constraining meaning
+on values.
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
@@ -277,7 +297,7 @@ annotation requires of the argument.
 
 \begin{lstlisting}[caption={A program in development with inconsistent
     types.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible]
-type Vehicle = interface = { |\label{ex:new-vehicle}|
+type Vehicle = interface { |\label{ex:new-vehicle}|
     registration
     registerTo(_)
 }
@@ -418,7 +438,7 @@ class Type:
 
   def is_satisfied_by(other: Type): |\label{ex:type:satisfied}|
     for m in self._members:
-      if not in other._members:
+      if m not in other._members:
         return False
     return True
 
@@ -430,6 +450,8 @@ class Type:
 
 \subsection{Optimization}
 \label{ssec:optimization}
+
+\smtodo{would be nice to measure all of these optimizations...}
 
 There are two aspects to our implementation that are critical for a minimal overhead solution:
 
@@ -501,12 +523,15 @@ which may raise a type error.
 
 For generic objects, we rely on the specialization on \cref{ex:typenode:object},
 which checks that the object satisfies the expected type.
-If that is the case, it reads the shape of the object at specialization time,
+If that is the case, it reads the shape of the object (cf. \cref{ssec:moth}) at specialization time,
 and caches it for later comparisons.
 Thus, during normal execution,
 we only need to read the shape of the object and then compare it to the cached one
 with a simple reference comparison.
 If the shapes are the same, we can assume the type check passed successfully.
+Note that shapes are not equivalent to types.
+However, shapes imply the set of members of an object, and thus,
+do imply whether an object fulfills a type.
 
 The other performance-critical aspect to our implementation
 is the use of a matrix to cache sub-typing relationships.

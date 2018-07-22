@@ -51,7 +51,7 @@ As with language designs, there seem to be two main implementation
 strategies for languages mixing dynamic and static type checks: either
 adding static checks into a dynamic language implementation, or adding
 support for dynamic types to an implementation that depends on
-static types for efficiently. Racket, for example, optimizes code with
+static types for efficiently. Typed Racket, for example, optimizes code with
 a combination of type inference and type declarations---the Racket
 IDE ``optimizer coach'' goes as far as to suggest to programmers type
 annotations that may improve their program's performance\citep{optimizerCoach2012}. In these implementations, values flowing
@@ -63,8 +63,8 @@ programmers to explicitly declare types that can be checked statically,
 removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
-work here, takes the opposite approach: adding type checking into
-just-in-time compiling virtual machines that do not rely on static
+work here, takes the opposite approach.
+They add run-time type checks that do not rely on static
 type declarations. These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
 perform (potentially repeated) dynamic type checks tends to slow
@@ -82,7 +82,7 @@ As these systems have come to wider attention, the question of their
 implementation overheads has become more prominent.  
 \citet{Takikawa2016} asked ``is sound gradual typing
 dead?'' based on a systematic performance measurement on Typed Racket.
-The key here is their evaluation methodology, where they constructed a
+The key here is their evaluation method, where they constructed a
 number of different permutations of typed and untyped code, and
 evaluated performance along the spectrum.
 \citet{Bauman2017} replied to \citeauthor{Takikawa2016}'s study, but
@@ -111,7 +111,7 @@ using object shapes to encode information about gradual types.
 
 
 \citet{Muehlboeck2017} also replied to \citeauthor{Takikawa2016}, 
-using a similar benchmarking methodology applied to Nom, a language
+using a similar benchmarking method applied to Nom, a language
 with features designed to make gradual types easier to optimize, 
 demonstrating speedups as more type information is added to programs.
 Their approach enables such type-driven optimizations,
@@ -134,17 +134,19 @@ Most recently, \citet{Kuhlenschmidt:2018:preprint} employ an
 ahead of time (\ie traditional, static) compiler for a custom
 language called Grift and demonstrate good performance for code where more than
 half of the program is annotated with types, and reasonable
-performance for code without type annotations. 
+performance for code without type annotations.
 
-
-
-Perhaps the closest to our approach are \citet{Greenman2018}
+Perhaps the closest to our approach are \citet{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
 and \citet{Richards2017}.
-\citeauthor{Greenman2018} describe dynamically checking ``tag-type''
-soundness for Reticulated Python.
-As with our work, \citeauthor{Greenman2018} check only the ``top-level'' type of an
-object against a declaration, although \citeauthor{Greenman2018}'s checks are nominal
-while ours are structural.
+\citeauthor{reticPython2014} describe dynamically checking ``tag-type''
+soundness for Reticulated Python (term coined by \citet{Greenman2018}).
+As with our work, \citeauthor{reticPython2014} check only the ``top-level'' type of an
+object against a declaration.
+\sm{any important difference we need to mention here?}
+\sm{and please make sure this is true!!}
+%
+%  although \citeauthor{reticPython2014}'s checks are nominal
+% while ours are structural.
 % - based on Reticulated Python
   % - Python 3-based implementation (interpretation, no compilation)
 %- soundness notion and supported semantics very similar to ours

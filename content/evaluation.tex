@@ -12,10 +12,11 @@ we first establish the baseline performance of Moth
 compared to Java and JavaScript,
 and then assess the impact of the type checks themselves.
 
-\subsection{Methodology and Setup}
+\subsection{Method and Setup}
 
 To account for the complex warmup behavior
-of modern systems\citep{Barrett:2017:VMW},
+of modern systems\citep{Barrett:2017:VMW} as well as
+the non-determinism caused by \eg garbage collection and cache effects,
 we run each benchmark for \NumIterationsAll iterations in the same
 VM invocation.\footnote{
 For the Higgs VM, we only use \NumIterationsHiggs iterations,
@@ -25,6 +26,8 @@ and leads to more stable measurements.}
 Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
+As a result, we use a large number of data points to compute the average,
+but outliers, caused by \eg garbage collection, remain visible in the plots.
 In this work, we do not consider startup performance,
 because we want to assess the impact of dynamic type checks
 on the best possible performance.
@@ -39,8 +42,11 @@ All experiments were executed on a machine running Ubuntu Linux 16.04.4,
 with Kernel 3.13.
 The machine has two Intel Xeon E5-2620 v3 2.40GHz,
 with 6 cores each, for a total of 24 hyperthreads.
-We used ReBench 0.9.1, Java 1.8.0\_171, Graal 0.33 (\code{a13b888}),
+We used ReBench 0.10.1\citep{ReBench:2018}, Java 1.8.0\_171, Graal 0.33 (\code{a13b888}),
 Node.js 10.4, and Higgs from 9 May 2018 (\code{aa95240}).
+Benchmarks were executed one by one to avoid interference between them.
+The analysis of the results was done with R 3.4.1,
+and plots are generated with ggplot 2.2.1 and tikzDevice 0.11.
 Our experimental setup is available online to enable reproductions.\footnote{
 %% \smtodo{add version info}
 % TODO: for final version add version info
@@ -74,6 +80,9 @@ For JavaScript we chose two implementations,
 Node.js with V8 as well as the Higgs VM.
 The Higgs VM is an interesting point of comparison,
 because \citet{Richards2017} used it in their study.
+The goal of this comparison is to determine whether our approach
+could be applicable to industrial strength language implementations
+without adverse effects on their performance. 
 
 We compare across languages based on the \AWFY benchmarks\citep{Marr2016},
 which are designed to enable a comparison
@@ -136,7 +145,9 @@ We modified Moth to report absent type information and ensured it was complete.
 To assess the performance overhead of type checking,
 we compare the execution of Moth with all checks disabled, \ie, the baseline version from 
 \cref{sec:baseline-perf}, against an execution that has all checks enabled.
-
+We did not measure programs that mix typed and untyped code
+because with our implementation technique a fully typed program is expected to
+have the largest overhead.
 
 \begin{table}
 \caption{Benchmarks selected from literature.}
@@ -160,12 +171,14 @@ SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
   to Moth with type checking.
   The plot depicts the run-time overhead on peak performance over
   the untyped performance. On average, dynamic type checking introduces
-  an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).}
+  an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
+  The visible outliers reflect the noise in today's complex system
+  and correspond \eg to garbage collection and cache effects.}
 	\label{fig:typing-overhead}
 \end{figure}
 
 The results are depicted in \cref{fig:typing-overhead}.
-Overall, we see a peak-performance overhead of 
+Overall, we see an average peak-performance overhead of 
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
 
 % explain maxima
@@ -212,8 +225,9 @@ the instruction cache of the processor.
 \begin{figure}
 	\TypingWarmup{}
 	\caption{Plot of the run time for the first 100 iterations.
-           The gray line is smoothed version, including a confidence interval,
-           to indicate the trend.
+           The gray line is a local polynomial regression fit
+           with a 0.95 confidence interval
+           indicating the trend.
            The first iteration, \ie, mostly interpreted, seems
            to be affected significantly only for Mandelbrot.}
 	\label{fig:typing-warmup}
@@ -224,8 +238,10 @@ and are mainly interested in peak performance,
 \cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
 The run time factor is the result for the typed version over the untyped one.
 Thus, any increase indicates a slow down because of typing.
-The gray line in the background indicates a smoothed version of the curve,
-also indicating a confidence interval.
+The gray line indicates a smoothed version of the curve
+based on local polynomial regression fitting\citep{Cleveland:1992}
+using neighboring data points.
+It also indicates a 0.95 confidence interval.
 
 Focusing on the first iteration,
 where we assume that most code is executed in the interpreter,

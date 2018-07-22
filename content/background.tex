@@ -107,6 +107,13 @@ called Moth\citep{Roberts2017}, by adapting \SOMns\citep{SOMns}.
 %\citeurl{\SOMns.}{SOMns: A Newspeak for Concurrency Research}{Stefan Marr}{}{https://github.com/smarr/SOMns/}
 \SOMns is a Newspeak implementation\citep{Bracha:10:NS} on top of the Truffle framework and the Graal just-in-time compiler,
 which are part of the GraalVM project.
+One key optimization of \SOMns for this work is the use of
+object shapes\citep{woss2014object},
+also known as maps\citep{Self} or hidden classes.
+They represent the structure of an object and the types of its fields.
+In \SOMns, shapes correspond to the class of an object and augment it with
+run-time type information.
+
 Since Newspeak and Grace are related languages,
 \SOMns provides a good foundation for a new Grace implementation,
 allowing us to reach the performance of V8,
