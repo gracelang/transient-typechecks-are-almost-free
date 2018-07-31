@@ -1,0 +1,85 @@
+----------------------- REVIEW 1 ---------------------
+PAPER: 1
+TITLE: Shallow Types for Insightful Programs: Grace is Optional, Performance Is Not
+AUTHORS: Richard Roberts, Stefan Marr, Michael Homer and James Noble
+
+Overall evaluation: 2 (accept)
+
+----------- Overall evaluation -----------
+This paper describes a system that adds gradual, shallow, structural type checking to Grace, an object-oriented language intended for use in computer science education. The work seems like a solid contribution, with a good exploration of the design space, a running implementation, and empirical data using a set of standard benchmarks. It represents a significant improvement on existing implementations of type systems for Grace. The writing is clear. The paper seems definitely appropriate for DLS.
+
+My main concern is that I find the motivation unconvincing: the authors say that since the existing type system implementation for Grace adds significant overhead, this teaches students to remove type declarations for performance reasons. My experience with teaching is that students only worry about this kind of performance hit if we tell them to worry about it. Plus honestly, if this is something they do notice, a much simpler approach would be just to add a bit of overhead to the interpreter when running on programs with no type declarations so that the speed matches. A more convincing motivation would run something like this:
+
+This overhead is of course primarily significant in industrial-strength programming languages intended for demanding applications. However, Grace and the Moth interpreter provide a straightforward environment in which to explore these ideas.  In addition, as a bonus, [insert stuff about students in PL courses here]
+
+How general are the techniques? The authors note work on full structural types as a direction for future work. Could you in addition adapt them for use with nominal typing? (I personally regard nominal typing as superior to structural typing, but this is of course a hotly debated issue. But it seems worth considering the generality question at least.)
+
+Section 5 subsection “optimizations” (lines 821-833) discusses avoiding read checks and only checking types when writing to a variable. For an object whose structure is traversed much more frequently than it is constructed or altered, this would be worthwhile. Why not bite the bullet and do this, changing primitives as need be, and if there are changes to the semantics that make sense anyway, make those too? In other words, if you are the language developers, how important is it to be able to do this with minimal changes to the other parts of the implementation?
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 1
+TITLE: Shallow Types for Insightful Programs: Grace is Optional, Performance Is Not
+AUTHORS: Richard Roberts, Stefan Marr, Michael Homer and James Noble
+
+Overall evaluation: -1 (weak reject)
+
+----------- Overall evaluation -----------
+This paper describes a gradual/optional typing implementation for the Grace teaching/learning language in the Moth framework, with a focus on supporting gradual/optional typing at minimal performance cost in order to avoid students from establishing a relation between using typing and performance loss. This is achieved by minimizing redundancy in typing computations as much as possible, through computing correctness on data structures that are already used for executing the programs (e.g. method dispatch), and further keeping the number of these computations to a minimum by employing caching and drawing transitive conclusions from subtyping relations. The performance evaluation measures the cost of introducing typing based on this proposal into the Grace language, and shows an average performance cost of around 5% slower execution speed, which seems tolerable for the language's setting, thus achieving the motivated goals.
+
+The paper is well-structured and well-written, easy to follow and makes a well-motivated and seemingly sound proposal. I appreciate the honesty in terms of the proposal's discovered weakpoints and corresponding future improvements outline. My only quarrel with the paper is the evaluation, which I think is slightly misleading, but more importantly I feel could be improved significantly with only little effort. Hence I would recommend the paper to undergo another revision, although I find its remaining content to be perfectly fine for publication.
+
+The paper's main focus isn't on introducing gradual/optional typing, but on minimizing its performance cost through an optimized implementation. The evaluation, however, does not address the effectiveness of the optimizations. It shows, that the proposed implementation including all optimizations is usable with reasonable overhead, but that does not necessarily mean that the optimizations are a major contributor to this performance. The paper rather implies that introducing gradual/optional typing has some often unreasonably high performance cost, which related work has shown repeatedly, that is missing here when looking at the finished product. But the paper also claims that it makes several unconventional design choices compared to other languages, so it might just be that even without the proposed optimizations, the cost of introducing gradual/optional typing in this setting would not have as much of an overhead as in other related work. I would recommend the authors to r!
+evise the evaluation such that it does not just summarily compare untyped vs typed with all optimizations, but that it also measures the effectiveness of the proposed optimizations, by including measurements for typed with, e.g., all optimizations disabled.
+
+Moreover, I strongly suggest to avoid showing all performance comparisons in relative terms. I can not see a reason why Figure 1 is not simply a bar chart of absolute numbers, which should look almost identical. I imagine in particular Figure 3 might even show better insights as plots of two lines (typed and untyped) instead of one corridor relative to 1.0, since, e.g., what currently appears as negative spikes might then appear as positive spikes on the second line instead, thereby better visualizing, e.g., offset GC pauses. Only for Figure 2 can I see somewhat of an argument for using a relative plot, as it allows to draw a line and quickly see "all of these got better, all of these got worse". But even then the x-axis should start at 0 instead of 0.75 -- as it stands, on a first glance, GraphSearch appears to execute 90% faster in some cases, which is not the case if the first 0.75 of the scale were not cut off -- and still I believe a simple bar chart of "typed" and "unt!
+yped" absolute times per benchmark would be a better choice, and could also accommodate additional bars for, e.g., "typed but without optimization A" and "typed but without optimization B".
+
+Minor criticisms:
+
+At the end of section 2, the statement "As a result, Moth is mostly compliant to the Grace specification" seems worrisome, but is not explained or further addressed at all. It should at least be stated, why this doesn't impact the paper's proposal and evaluation (I assume that is the case).
+
+I was wondering throughout most of the paper, why typing judgements of variables are tested also on reads; the reasoning is explained, but only late in the paper. I would recommend explaining this earlier.
+
+Figure 1's x-Axis should be labelled "normalized to Java" I believe.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 1
+TITLE: Shallow Types for Insightful Programs: Grace is Optional, Performance Is Not
+AUTHORS: Richard Roberts, Stefan Marr, Michael Homer and James Noble
+
+Overall evaluation: -2 (reject)
+
+----------- Overall evaluation -----------
+This paper presents how gradual types were added to Grace with a particular
+   focus on minimal runtime overhead. The state of the art in adding gradual
+   types with runtime checks to dynamic languages often incurs non-negligible
+   overhead and this paper aims to minimize this overhead using state of the
+   art JIT techniques.
+
+   The paper uses Moth, a Grace interpreter based on the SOMns Newspeak
+   interpreter written using the Truffle framework. Unfortunately, the
+   reference for Moth is a presentation at a workshop and in this paper the
+   authors only mention Moth is "mostly compliant to the Grace
+   specification". At least to me it is unclear what this means, how it could
+   affect the results, and thus calls into question the value of the insights
+   this paper presents.
+
+   The experimental setup of the paper cannot be faulted and it is good to see
+   it available online for reproduction.
+
+   One insight of this paper is that the typechecks can often be removed if the
+   JIT would already have checked the shape of an object anyway, but that
+   overhead can still occur when such checks would have been
+   unnecessary. However, the first half of this insight is not very surprising
+   (and related work mentioned in the paper has previously demonstrated this
+   also). The second have that overhead can still occur is at least
+   questionable form the available data, since the VM inserts type checks on
+   reads. This was done to avoid having to adapt primitive implementations, but
+   the impact it may have had on the results is completely unclear to me.
+
+   Finally, I would have liked more discussion about why the authors chose to
+   have structural and shallow types. I would imagine one could capture types
+   of arguments and results easily in shapes as well, making an implementation
+   that considers them not very different from the one presented.
