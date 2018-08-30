@@ -1,4 +1,4 @@
-Shallow Types for Insightful Programs
+# Shallow Types for Insightful Programs
 
 A manuscript on how we provide shallow low-overhead support for Grace's types.
 
