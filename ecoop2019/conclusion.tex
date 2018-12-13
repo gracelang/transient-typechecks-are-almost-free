@@ -1,0 +1,106 @@
+%!TEX root = ../latex/paper.tex
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+%% Context
+With the wide-spread use of dynamically, optionally, and gradually
+typed languages, efficient techniques for  type checking
+become more important.
+%
+%% goals
+%% approach to support types in a dynamic language
+%% - without significant overhead
+%% - simple to implement
+%
+%
+%
+%
+% This work proposes a new design for checking shallow structural
+%  types at run time.
+%  The main goal of the design was to enable an implementation that
+%  does not introduce significant run time overhead.
+%  A secondary goal was to be able to implement this approach for
+%  existing language implementations with only a small amount of work.
+%
+In this paper, we have demonstrated that optimizing virtual machines enable
+dynamic checks of shallow structural types with relatively little
+overhead, and require only small modifications to an AST interpreter.
+We evaluated this approach with Moth, an implementation of the Grace language
+on top of Truffle and Graal.
+%
+% We propose a new design for checking shallow structural
+%  types at run time.
+%  The main goal of the design was to enable an implementation that
+%  does not introduce significant run time overhead.
+%  A secondary goal was to be able to implement this approach for
+%  existing language implementations with only a small amount of work.
+%
+%
+%% proposed technique
+%% - shallow structural types
+%The proposed approach to shallow types considers only the names of
+%type members. 
+% Thus, it does not consider types on these members.
+% With this shallow design, we enable flexibility in the sense that
+% globally inconsistent programs can still be executed and
+% checked for consistency with their annotations as far as
+% that particular execution goes%
+% --- an attribute that supports an incremental style of development
+% that may be more common among students learning programming---%.
+% Furthermore, it enables precise feedback on type violations
+% without requiring blame tracking,
+% as it is usually needed for approaches to gradual typing
+% at the cost of run-time performance.
+
+%% - type checks, optimization based on object shapes
+In our implementation, types are structural and shallow: a type
+specifies only the names of members provided by objects, and not
+the types of their arguments and results.
+These types are checked on access to variables,
+when assigning to method parameters, and also on return values.
+The information on types is encoded as part of an object's shape,
+which means that shape checks already performed in an optimizing dynamic
+language implementation can be used to check types, too. 
+Being able to tie checks to the shapes in this way is critical for 
+reducing the overhead of dynamic checking.
+%
+%% results
+%% + context (baseline)
+
+Using the \AWFY benchmarks as well as a collection of benchmarks from the
+gradual typing literature, we find that our approach to dynamic type checking
+introduces an overhead of 
+\OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP)
+on peak performance.
+Since Moth reaches the performance of a
+highly optimized JavaScript VM such as V8,
+we believe that these results are a good indication
+for the low overhead of our approach.
+
+%% relevance
+%%   where to go from here?
+
+%% future work
+In specific cases, the overhead is still significant and requires further
+research to be practical. Thus, future research should investigate how the
+number of dynamic type checks can be reduced without causing
+the type feedback to become too imprecise to be useful.
+One approach might increase the necessary changes to a language implementation,
+but avoid checking every variable read.
+Another approach might further leverage Truffle's self-specialization
+to propagate type requirements and avoid unnecessary checks.
+%%  - investigate optimizations
+%%  - might enable a full structural type system, \ie, not shallow
+%%  - verify results of Richards2017 in context of highly optimizing VM
+
+Finally, we hope to apply our approach to full structural types with
+blame that support the gradual guarantee.  For
+\citet{reticPython2014}'s transient semantics, this should primarily
+require finer distinctions in the subtype matrix; monotonic and
+guarded semantics will require more work, including extensions to the
+underlying object model.  This should let us verify that
+\citet{Richards2017}'s results generalize to highly optimizing virtual
+machines, or alternatively, show that other optimizations for precise
+blame need to be investigated.
+

@@ -1,0 +1,108 @@
+%!TEX root = ../latex/paper.tex
+
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{The VM Could Not Already Know That.}
+\label{sec:disc-pathological-case}
+
+% - pathological case
+%   in this case, we introduce a new type check that does not coincide with any
+%   existing checks (shape check on method dispatch, etc)
+%   consequently, we see overhead that can be up to XX\% (cf. sec. XX).
+
+
+One of the key optimizations for our work
+and the work of others\citep{Richards2017,Bauman2017}
+is the use of object shapes
+to encode information about types
+(in our case),
+or type casts and assumptions
+(in the case of gradually typed systems).
+
+The general idea is that a VM will already use object shapes
+for method dispatches, field accesses, and other operations on objects.
+Thus any further use to also imply type information
+can often be optimized away
+when the compiler sees that the same checks are done
+(and therefore can be combined). This is similar to 
+the elimination of other side-effect-free common subexpressions.
+
+This assumption breaks, however, when checks are introduced
+that do not correspond to those that exist already.
+As described in \cref{sec:method},
+our approach introduces checks for reading and writing to variables.
+\Cref{ex:pathological-case} gives an example of a pathological case.
+It is a loop traversing a linked list.
+For this example our approach 
+introduces a check, for the \code{ListElement} type,
+when (1) assigning to and reading from \code{elem} and
+(2) when activating the \code{next} method.
+The checks for reading from \code{elem} and activating the method can be
+combined with the dispatch's check on object shape.
+%
+Unfortunately, the compiler cannot remove the check
+when writing to \code{elem}, because it has no information about
+what value will be returned from \code{next}, and so it needs to preserve the check to be able to trigger an error
+on the assignment.
+For our List benchmark, this check induces an overhead of \OverheadListP.
+% TODO: reconsider after submission:
+% \sm{I am not sure why this does not fold with the .next check.
+% I am sure that it couldn't when we were at the whiteboard,
+% but I don't see it any more}
+
+\begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},escapechar=|,label={ex:pathological-case},float,floatplacement=htb]
+var elem: ListElement := headOfList
+while (...) do {
+  elem := elem.next
+}
+\end{lstlisting}
+
+\paragraph{Optimizations}
+
+% - possible optimization for reads
+% - discuss what the effect of dropping checks on reads would be
+%   -> need to change more of the primitives
+%   -> don't do this a the moment
+%   -> could give performance benefits (experiment?)
+%   -> but would either delay errors (more imprecision)
+%      or require all assignments, also from primitives to be checked
+
+As a simplification, we currently check variable access
+on both reads and writes.
+This approach simplifies the implementation, because we do not need to
+adapt all built-ins, \ie,
+all primitive operations provided by the interpreter.
+One optimization could be to avoid read checks.
+A type violation can normally only occur when writing to a variable,
+but not when reading.
+However, to maintain the semantics, this would require us to adapt
+many primitives; 
+such as operations that activate blocks to check their arguments,
+or that write to variables or fields.
+With our current implementation
+we get errors as soon as user code accesses fields,
+% but not primitive operations,
+which simplifies the implementation.
+
+%   - we can use truffle's approach to specializing ASTs to propagate
+%     type constraints into the code we are using, which means,
+%     all type checks can be omitted for code that promises to obey
+%     type constraints.
+%     Idea: pass expected return type down, don't check it when getting
+%      the return value. instead, us truffle approach of reverting optimizations
+%      by indicating violations with an exception.
+
+Another optimization could be to use Truffle's approach to 
+self-specialization\citep{Wurthinger:2012:SelfOptAST}
+and propagate type information to avoid redundant checks.
+At the moment, Truffle interpreters typically use self-specialization to 
+specialize the AST to avoid boxing of primitive types.
+This is done by speculating that some subtree always returns the expected type.
+If this is not the case, the return value of the subtree is going to be
+propagated via an exception, which is caught and triggers respecialization.
+This idea could possibly be used to encode higher-level type information for
+return values, too.
+This could be used to remove redundant checks in the interpreter
+by simply discovering at run time that whole subexpressions conform to the
+type annotations.
