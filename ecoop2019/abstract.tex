@@ -1,28 +1,20 @@
 \begin{abstract}
 
-%kjx I kent beck-ified it again
-%
-%   \rephrase{Languages with optional explicit dynamic type checking, like
-%   Typescript, Dart, Groovy,}\sm{this is not correct. See
-%   email. needs to be rephrased!} and Grace are increasingly popular
-%   in 
-  Languages with explicit dynamic type checking
-%, like
-%  Typescript, Dart, Groovy,}\sm{this is not correct. See email. needs
-%  to be rephrased!} and Grace 
-  are increasing in popularity in both
-  practical development and programming education.  Unfortunately,
-  current implementations of these languages perform worse than either
-  purely statically or purely dynamically typed languages.  We show
-  how virtual machines can use common optimizations to remove
-  redundancy in dynamic type checking, by adding shallow structural type
-  checks to Moth, a Truffle-based interpreter for Grace.
-% or "for thr Grace programming language."
-  Moth runs programs with dynamic type checks
-  roughly as fast as programs without checks, so developers do not
-  need to disable checks in production code, and
-  educators can teach types without also teaching that types slow
-  programs down.
+  It is widely accepted that the additional run-time checks in a
+  gradually-typed language must cause linear slowdown in the program's
+  execution.
+  %
+  This performance impact discourages the use of type annotations
+  because adding types can significantly worsen performance, despite the
+  benefits of typed code.
+  %
+  We show that in fact the overhead of transient checks can be near zero
+  with appropriate application of standard just-in-time optimisation
+  techniques.
+  %
+  With these techniques programmers need not avoid adding types to their
+  code and a gradually-typed language can have comparable performance to
+  similar static languages.
 
 %% Removing \kjx{redundant} type tests makes programs in these
 %% languages run faster. 
