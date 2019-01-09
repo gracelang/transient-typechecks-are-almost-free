@@ -142,11 +142,23 @@ Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl. \citep{Vitousek2017,Green
 and Richards~\textit{et~al.}~\cite{Richards2017}.
 Vitousek~\textit{et~al.} describe dynamically checking ``tag-type''
 soundness for Reticulated Python (term coined by Greenman
-and Migeed~\cite{Greenman2018}).
+and Migeed~\cite{Greenman2018}), which they term the ``transient'' semantics.
 As with our work, Vitousek~\textit{et~al.} check only the ``top-level'' type of an
 object against a declaration.
 \sm{any important difference we need to mention here?}
 \sm{and please make sure this is true!!}
+\mwh{I've checked with both the papers and the implementation. It
+  seems essentially correct and without much meaningful difference.
+  1) The transient semantics does check field values (but there are
+  no fields in Grace)
+  2) They check the presence of methods by name, but not their
+  signatures, like in Moth
+  3) They also check return values against the type expected in the
+  caller
+  4) They do not check the values inside lists (etc) eagerly, but
+  do check when they are retrieved
+  5) They do a lot of dataflow analysis to remove unnecessary
+  checks statically}
 %
 %  although \citeauthor{reticPython2014}'s checks are nominal
 % while ours are structural.
