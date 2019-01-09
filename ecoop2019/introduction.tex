@@ -3,6 +3,16 @@
 \section{Introduction}
 \label{sec:introduction}
 
+\begin{verse}
+  \textit{``It is a truth universally acknowledged, that a dynamic language
+    in possession of a good user base, must be in want of a type system.''}
+\end{verse}
+\begin{flushright}
+with apologies to Jane Austen.
+\end{flushright}
+  
+
+
 % Despite optional typing becoming increasingly popular in the industry, the systems that offer support for optional typing are not yet fully \emph{alive}. The languages are of course well defined and supported but, in particular, the advantages of the optional typing are out-weighted by their performance costs.
 %
 % Recently, researchers have explored the potential for type checking to be performed together with execution; rather than as an a stand-alone system that occurs separately at run time. For example, Richards et al. extend the Higgs VM to perform TypeScript's structural checks based on information gathered during method execution.
@@ -16,38 +26,66 @@ Dynamic languages are increasingly prominent in the software industry.
 Building on the pioneering work of Self\citep{Self}, 
 much work in academia and industry
 has gone into making them more efficient\citep{Bolz2013,Bolz:2013:IMT,Wurthinger:2017:PPE,Daloze2016,Clifford:2015:MM,Degenbaev:2016:ITG}.
-Just-in-time compilers have taken JavaScript, for example, from a
+Just-in-time compilers have, for example, turned JavaScript from a
 na{\"\i}vely interpreted language barely suitable for browser scripting, 
-to a highly efficient ecosystem used in industry and academia.
+into a highly efficient ecosystem, eagerly adopted
+%in industry and academia.
+by professional programmers for a very wide range of tasks \cite{Pang2018}.
 
-% Types
+% Types  %%KJX later says: doesn't matter.
 % - useful for programmer productivity on large systems
 % - document a program's structures
 % - optional + gradual
 % - allow partial typing
 % - are either removed, or have run-time overhead
+%%KJX
+%% Thanks to these performance gains, dynamic languages are used to build
+%% larger and larger systems, which has lead to which leads to typing
+%% approaches being adopted to support programmer productivity and
+%% document a program's structures.
 
-With these performance gains,
-dynamic languages are used to build larger and larger systems,
-which leads to typing approaches being adopted
-to support programmer productivity and document a program's structures.
-Two important approaches are optional\citep{GiladPluggable2004}
-and gradual typing\citep{Siek2006,Siek2015}.
-These are applied to dynamic languages to reap the benefits of typing, but
-unfortunately also have limitations.
-With optional or pluggable approaches such as 
+A key advantage of these dyanmic langauges is the flexibility offered
+by the lack of a static type system. 
+From the perspective of many computer scientists, software engineers,
+and computational theologists, this advantage has a concomitant
+disadvantage in that programs without types are considered more
+difficult to read, to understand, and analyse than programs with
+types. Gradual Typing aims to remedy this disadvantage, adding types
+to dynamic languages while maintaining their flexibility
+\citep{GiladPluggable2004,Siek2006,Siek2015}. 
+
+There is a spectrum of different approaches to gradual typing
+\cite{kafka18,bensurvey18icfp}.
+At one end, ``pluggable types'' as in Strongtalk \cite{strongtalk} or ``erasure 
+semantics'' as in 
+%% Two important approaches are optional\citep{}
+%% and gradual typing\citep{GiladPluggable2004,Siek2006,Siek2015}.
+%% These are applied to dynamic languages to reap the benefits of typing, but
+%% unfortunately also have limitations.
+%With optional or pluggable approaches such as 
 %\citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June
 %2018}{https://www.typescriptlang.org/}
-TypeScript\citep{typeScriptECOOP,GiladPluggable2004}
+TypeScript\citep{typeScriptECOOP},
 %
-types are erased before the execution,
-limiting the benefit of types to the statically typed parts of programs.
-In contrast, gradual type systems retain types until run time,
-performing the checks dynamically, and
-can give detailed information about type violations via blame 
-tracking\citep{Siek2015,blame2009}.
-Unfortunately, these gradual systems currently impose significant
-run-time overheads
+all types are erased before the execution, limiting the benefit of
+types to the statically typed parts of programs, and preventing
+programs from depending on type checks at run-time.  In the middle,
+``transient'' or ``type-tag'' checks as in Reticulated Python 
+% and ``concrete'' checks as in Thorn
+offer first-order semantics, checking
+whether an object's type constructor or supported methods match
+explicit type declarations, and checking only when data flows through
+those declarations \cite{Siek2007,Bloom2009,concrete15,reticPython2014,Greenman2018}.  At the other end of the spectrum, behavioural
+typechecks as in Typed Racket \cite{typedScheme08,takikawa2012} and Gradualtalk \cite{gradualtalk14} support higher-order semantics, retaining
+types until run 
+time, performing the checks eagerly, and giving detailed information
+about type violations as soon as possible via blame
+tracking \cite{blame2009,blameForAll2011}.
+%
+%
+Unfortunately, any gradual systems with run-time semantics
+(i.e.\ everything more complex than erasure) currently
+imposes significant run-time performance overhead to provide those semantics
 \citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
 
 % our context
@@ -58,17 +96,21 @@ run-time overheads
 
 %With the \citeurl{Grace language,}{The Grace Programming
 %  Language}{}{}{http://gracelang.org/}
+
+
+\kjx{Don't know if we really need this paragraph}
 We are working on Grace\citep{graceOnward12}, a dynamic language in
 the tradition of Smalltalk\citep{bluebook}, Self\citep{Self}, and
 JavaScript that is meant for use in
 education\citep{graceSigcse13}.  While Grace is a dynamic language at
 its core, we want to have the option to teach students about types,
-and so Grace supports type annotations which may be checked either
+and so Grace supports gradual type annotations which may be checked either
 statically or dynamically to give students feedback on whether their
 type annotations are correct.  We do not want students to remove
 types, however, if they discover that types induce a run-time
 overhead.
 
+\kjx{or this one}
 Additionally, we are currently maintaining three different
 implementations to support a variety of educational settings
 (web browsers, .NET, and JVM),
@@ -76,9 +118,14 @@ which means a typing approach for Grace ideally requires
 only small changes to keep these implementations as consistent as
 possible.
 
-In this paper we illustrate that using an optimizing virtual machine allows dynamic
-checks of shallow structural types with low overhead and relatively low
-implementation effort. These checks are inserted na\"ively based on local
+
+In this paper, we focus on the centre of the gradual typing
+spectrum: the transient, first-order, type-tag checks as used in
+Reticulated Python and similar systems. We demonstrate that an
+optimizing virtual machine allows transient type checks ``almost for
+free''\kjx{?} --- that is with a 
+relatively low overhead and a low implementation effort. These checks
+are inserted na\"ively based on local 
 annotations and checked eagerly when control flow reaches them: 
 whenever an annotated method is called or
 an annotated variable is accessed
@@ -91,7 +138,8 @@ resulting in
 a performance profile aligned with untyped code.
 
 We evaluate this approach with Moth,
-a Grace implementation on top of Truffle
+a implementation of the Grace progrmaming language
+we are building on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
 Inspired by \citet{Richards2017} and \citet{Bauman2017},
 our implementation conflates types
@@ -110,8 +158,7 @@ The contributions of this paper are:
 
 \begin{itemize}
 \item demonstrating that VM optimisations enable
-        dynamic checks of shallow structural types with low
-        performance cost
+        transient gradual type checks with low performance cost
 \item an implementation approach that requires
       only small changes to existing abstract-syntax-tree interpreters
 \item an evaluation based on classic benchmarks
