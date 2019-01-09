@@ -44,7 +44,7 @@ by professional programmers for a very wide range of tasks \cite{Pang2018}.
 %% approaches being adopted to support programmer productivity and
 %% document a program's structures.
 
-A key advantage of these dyanmic langauges is the flexibility offered
+A key advantage of these dynamic langauges is the flexibility offered
 by the lack of a static type system. 
 From the perspective of many computer scientists, software engineers,
 and computational theologists, this advantage has a concomitant
@@ -56,7 +56,7 @@ to dynamic languages while maintaining their flexibility
 
 There is a spectrum of different approaches to gradual typing
 \cite{kafka18,bensurvey18icfp}.
-At one end, ``pluggable types'' as in Strongtalk \cite{strongtalk} or ``erasure 
+At one end\,---\,``pluggable types'' as in Strongtalk \cite{strongtalk} or ``erasure
 semantics'' as in 
 %% Two important approaches are optional\citep{}
 %% and gradual typing\citep{GiladPluggable2004,Siek2006,Siek2015}.
@@ -65,7 +65,7 @@ semantics'' as in
 %With optional or pluggable approaches such as 
 %\citeurl{TypeScript,}{TypeScript}{Microsoft}{27 June
 %2018}{https://www.typescriptlang.org/}
-TypeScript\citep{typeScriptECOOP},
+TypeScript\citep{typeScriptECOOP}\,---\,
 %
 all types are erased before the execution, limiting the benefit of
 types to the statically typed parts of programs, and preventing
@@ -82,11 +82,29 @@ time, performing the checks eagerly, and giving detailed information
 about type violations as soon as possible via blame
 tracking \cite{blame2009,blameForAll2011}.
 %
+\mwh{Does a monotonic semantics fit on this spectrum somewhere?}
 %
 Unfortunately, any gradual systems with run-time semantics
 (i.e.\ everything more complex than erasure) currently
 imposes significant run-time performance overhead to provide those semantics
 \citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
+
+The performance cost of run-time checks is problematic in itself,
+but also creates perverse incentives. Rather than the ideal of
+gradually adding types in the process of hardening a developing
+program, the programmer is incentivised to leave the program untyped
+or even to \textit{remove} existing types in search of speed.
+%
+While the Gradual Guarantee~\cite{XXXSiek2015} requires that
+removing a type annotation does not affect the result of the
+program, the performance profile can be drastically shifted by the
+overhead of ill-placed checks.
+%
+For programs with crucial performance constraints, for new
+programmers, and for gradual language designers, juggling this
+overhead can lead to increased complexity, suboptimal
+software-engineering choices, and code that is harder to maintain,
+debug, and analyse.
 
 % our context
 % - dynamic language
@@ -99,6 +117,8 @@ imposes significant run-time performance overhead to provide those semantics
 
 
 \kjx{Don't know if we really need this paragraph}
+\mwh{It seems like a vulnerability more than a strength (and the
+next one more so). I propose the one I've added above to replace it.}
 We are working on Grace\citep{graceOnward12}, a dynamic language in
 the tradition of Smalltalk\citep{bluebook}, Self\citep{Self}, and
 JavaScript that is meant for use in
@@ -123,7 +143,7 @@ In this paper, we focus on the centre of the gradual typing
 spectrum: the transient, first-order, type-tag checks as used in
 Reticulated Python and similar systems. We demonstrate that an
 optimizing virtual machine allows transient type checks ``almost for
-free''\kjx{?} --- that is with a 
+free''\kjx{?} --- that is, with a
 relatively low overhead and a low implementation effort. These checks
 are inserted na\"ively based on local 
 annotations and checked eagerly when control flow reaches them: 
