@@ -1,4 +1,4 @@
-DATA_FILES=$(wildcard ../evaluation/*.bz)
+DATA_FILES=$(wildcard ../evaluation/*.bz2)
 KNITR=$(wildcard ../evaluation/*.Rnw)
 KNITR_TEX=$(KNITR:.Rnw=.tex)
 KNITR_TEX=$(patsubst ../evaluation/%.Rnw,../generated/%.tex,$(KNITR))
@@ -8,6 +8,9 @@ all:
 	bibtex paper
 	pdflatex paper
 	pdflatex paper
+
+../generated:
+	mkdir ../generated
 
 ../generated/%.tex: ../evaluation/%.Rnw ../generated ../evaluation/scripts/*.R $(DATA_FILES)
 	../evaluation/scripts/knit.R $< $@
