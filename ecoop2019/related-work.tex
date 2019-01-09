@@ -17,11 +17,11 @@ over their Smalltalk code (or not); either way the type annotations
 had no impact whatsoever of the semantics of the underlying Smalltalk
 program.
 
-\citet{Siek2006} introduced the term ``gradual typing''
+Siek and Taha~\cite{Siek2006} introduced the term ``gradual typing''
  to describe the logical extension of this scheme: a
 dynamic language with type annotations that could, if necessary, be
-checked at runtime. \citeauthor{Siek2006} build on earlier complementary work extending fully statically typed languages with a ``\texttt{DYNAMIC}''
-type---\citet{AbadiTOPLAS1991} is an
+checked at runtime. Siek and Taha build on earlier complementary work extending fully statically typed languages with a ``\texttt{DYNAMIC}''
+type---Abadi~\textit{et~al.}~'s 1991 TOPLAS paper~\cite{AbadiTOPLAS1991} is an
 important early attempt
 and also surveys previous work. Revived practical adoption of dynamic
 languages generated revived research interest, leading to the
@@ -80,15 +80,15 @@ all.
 
 As these systems have come to wider attention, the question of their
 implementation overheads has become more prominent.  
-\citet{Takikawa2016} asked ``is sound gradual typing
+Takikawa~\textit{et~al.}~\cite{Takikawa2016} asked ``is sound gradual typing
 dead?'' based on a systematic performance measurement on Typed Racket.
 The key here is their evaluation method, where they constructed a
 number of different permutations of typed and untyped code, and
 evaluated performance along the spectrum.
-\citet{Bauman2017} replied to \citeauthor{Takikawa2016}'s study, but
+Bauman~\textit{et~al.}~\cite{Bauman2017} replied to Takikawa~\textit{et~al.}'s study, but
 using Pycket\citep{Pycket2015}, a tracing JIT for Racket, rather
 than the standard Racket VM, although maintaining full gradually typed
-Racket semantics. \citeauthor{Bauman2017} are able to demonstrate most benchmarks
+Racket semantics. Bauman~\textit{et~al.} are able to demonstrate most benchmarks
 with a slowdown of 2x on average over all configurations.
 Note that this is not directly comparable to our system,
 since typed modules do not need to do any checks at run time.
@@ -110,7 +110,8 @@ using object shapes to encode information about gradual types.
 %     case, though they get the benefit of more precise checks
 
 
-\citet{Muehlboeck2017} also replied to \citeauthor{Takikawa2016}, 
+Muehlboeck and Tate~\cite{Muehlboeck2017} also replied to
+Takikawa~\textit{et~al.}, 
 using a similar benchmarking method applied to Nom, a language
 with features designed to make gradual types easier to optimize, 
 demonstrating speedups as more type information is added to programs.
@@ -130,17 +131,19 @@ but relies on a static analysis which can utilize the type information.
 %%%dumpted in anyway since we cite it, we should say something
 %%%even if we are saying nothing
 %%%
-Most recently, \citet{Kuhlenschmidt:2018:preprint} employ an
+Most recently, Kuhlenschmidt~\textit{et~al.}~\cite{Kuhlenschmidt:2018:preprint} employ an
 ahead of time (\ie traditional, static) compiler for a custom
 language called Grift and demonstrate good performance for code where more than
 half of the program is annotated with types, and reasonable
 performance for code without type annotations.
 
-Perhaps the closest to our approach are \citet{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
-and \citet{Richards2017}.
-\citeauthor{reticPython2014} describe dynamically checking ``tag-type''
-soundness for Reticulated Python (term coined by \citet{Greenman2018}).
-As with our work, \citeauthor{reticPython2014} check only the ``top-level'' type of an
+Perhaps the closest to our approach are
+Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
+and Richards~\textit{et~al.}~\cite{Richards2017}.
+Vitousek~\textit{et~al.} describe dynamically checking ``tag-type''
+soundness for Reticulated Python (term coined by Greenman
+and Migeed~\cite{Greenman2018}).
+As with our work, Vitousek~\textit{et~al.} check only the ``top-level'' type of an
 object against a declaration.
 \sm{any important difference we need to mention here?}
 \sm{and please make sure this is true!!}
@@ -161,7 +164,7 @@ We refrain from a performance comparison since
 Reticulated Python is an interpreter without just-in-time compilation
 and thus performance tradeoffs are different.
 
-\citet{Richards2017} take a similar implementation
+Richards~\textit{et~al.}~\cite{Richards2017} take a similar implementation
 approach to our work, demonstrating that key mechanisms such as object shapes
 used by a VM to optimize dynamic languages can be used to eliminate most of
 the overhead of dynamic type checks.
@@ -179,12 +182,12 @@ introduces into a VM with a lower baseline performance can remain hidden,
 while they stand out more prominently on a faster baseline.
 
 Overall, it is unclear whether our results confirm the ones
-reported by \citet{Richards2017},
+reported by Richards~\textit{et~al.}~\cite{Richards2017},
 because our system is simpler.
 It does not introduce the polymorphism
 issues caused by accumulating cast information on object shapes,
 which could be important for performance.
-Considering that \citeauthor{Richards2017} report ca. 4\% overhead
+Considering that Richards~\textit{et~al.} report ca. 4\% overhead
 on the classic Richards benchmark, while we see \OverheadRichardsP,
 further work seems necessary to understand the performance implications of
 their approach for a highly optimizing just-in-time compiler.
