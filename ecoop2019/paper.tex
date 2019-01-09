@@ -1,4 +1,4 @@
-\documentclass[a4paper,UKenglish]{lipics-v2018}
+\documentclass[a4paper,UKenglish,cleveref,autoref]{lipics-v2019}
 
 \usepackage{microtype}
 
@@ -63,8 +63,7 @@
 \collabAuthor{kjx}{orange}{James}
 \collabAuthor{mwh}{purple}{James}
 
-\usepackage[nameinlink]{cleveref}  %LipiCS says don't do this!
-
+\bibliographystyle{plainurl}% the mandatory bibstyle
 
 \title{Transient Typechecks are (Almost) Free}
 %\titlerunning{LipiCS dummy short title}
@@ -88,11 +87,9 @@
 
 \Copyright{Richard Roberts and Stefan Marr and Michael Homer and James Noble}
 
-\subjclass{
-  \ccsdesc[500]{Software and its engineering~Just-in-time compilers}~
-  \ccsdesc[300]{Software and its engineering~Object oriented languages}~
-  \ccsdesc[300]{Software and its engineering~Interpreters}
-}
+\ccsdesc[500]{Software and its engineering~Just-in-time compilers}
+\ccsdesc[300]{Software and its engineering~Object oriented languages}
+\ccsdesc[300]{Software and its engineering~Interpreters}
 
 \keywords{dynamic type checking, gradual types, optional types, Grace,
 Moth, object-oriented programming}
@@ -139,7 +136,6 @@ Moth, object-oriented programming}
 \input{related-work}
 \input{conclusion}
 
-\bibliographystyle{plainnat}  %%should be plainurl?
 \bibliography{references}
 
 \end{document}

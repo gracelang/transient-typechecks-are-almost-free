@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd latex && make && cp paper.pdf ../paper.pdf && cd ..
+cd ecoop2019 && make && cp paper.pdf ../paper.pdf && cd ..
 
