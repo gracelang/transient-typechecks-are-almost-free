@@ -29,7 +29,7 @@ and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 As a result, we use a large number of data points to compute the average,
 but outliers, caused by \eg garbage collection, remain visible in the plots.
 In this work, we do not consider startup performance,
-because we want to assess the impact of dynamic type checks
+because we want to assess the impact of gradual type checks
 on the best possible performance.
 All reported averages use the geometric mean since they aggregate ratios.
 
@@ -113,12 +113,12 @@ Compared to the Higgs VM, which is on these benchmarks
 \OverheadHiggsGMeanX (min. \OverheadHiggsMinX, max. \OverheadHiggsMaxX) slower than Java,
 Moth reaches the performance of Node.js more closely.
 With these results, we argue that Moth is a suitable platform to
-assess the impact of our approach to dynamic type checking,
+assess the impact of our approach to gradual type checking,
 because its performance is close enough to state-of-the-art VMs,
 and run-time overhead is not hidden by slow baseline performance.
 
 
-\subsection{Performance of Dynamic Type Checking}
+\subsection{Performance of Transient Gradual Type Checks}
 
 % - benchmark selection
 %  - dynamic type checking performance determined based on commonly used
@@ -126,7 +126,7 @@ and run-time overhead is not hidden by slow baseline performance.
 % - we are subsetting, need to explain why
 %   - the subset of benchmarks that we managed to port to Grace/Moth
 
-The performance overhead of our dynamic type checking system
+The performance overhead of our transient gradual type checking system
 is assessed based on the \AWFY benchmarks
 as well as benchmarks from the gradual-typing literature.
 The goal was to complement our benchmarks with additional ones that are
@@ -225,7 +225,7 @@ and how the optimizations enable a just-in-time compiler to minimize run-time ov
 	\caption{A boxplot comparing the performance of Moth without type checking
   to Moth with type checking.
   The plot depicts the run-time overhead on peak performance over
-  the untyped performance. On average, dynamic type checking introduces
+  the untyped performance. On average, transient type checking introduces
   an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
   The visible outliers reflect the noise in today's complex system
   and correspond \eg to garbage collection and cache effects.}
