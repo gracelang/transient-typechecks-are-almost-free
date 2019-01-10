@@ -19,7 +19,10 @@
 %\kjx{we wont}
 %
 % motivation = give students low-overhead method to check program
-The core of Grace's static type system is well described elsewhere\citep{JonesECOOP2016}; here we explain how these types can be understood
+The core of Grace's static type system is well described
+elsewhere\citep{JonesECOOP2016}\mwh{This reference doesn't discuss
+typing at all; was it meant to be the brands paper? Or perhaps one
+of Tim's Tinygrace papers?}; here we explain how these types can be understood
 dynamically, from a student's or a programmer's point of view.
 %\kjx{code for: no formalism, sorry.}
 Following from the design goals behind Grace,
@@ -70,7 +73,7 @@ Unfortunately, existing gradual type
 implementations do not meet these goals, particularly regarding
 performance; hence the ongoing debate about whether gradual typing is
 alive, dead, or some state
-inbetween\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
+in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
 % Specifically, they could encourage students to remove types to improve performance.
 % \mwh{This paragraph seems confused to me. They're good, but also they're bad. What is a ``gradual typing system'' here, and how does it relate to ``gradual typing'' and ``type systems'' as separate concepts?}
 % \sm{the above change makes the desirable things about gradual typing more concrete. wrt ``gradual typing'' and ``type systems''. one is a general idea, and a concrete realization is a ``system''. I don't know whether this is how typing people talk. but this is how I see the distinction.
