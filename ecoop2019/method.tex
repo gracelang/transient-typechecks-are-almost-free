@@ -51,7 +51,8 @@ systems, but our context leads to some different choices. First, so
 that students can see concrete examples of type errors, they should be
 able to run their programs even if those programs are not statically type-correct%
 ---\ie Grace's static type checking is optional, and so an
-implementation cannot depend on the correctness of a program's type
+implementation cannot depend on the correctness or mutual
+compatibility of a program's type
 annotations.
 
 Second, while checking Grace's type annotations
@@ -64,7 +65,7 @@ the one the Grace programmer expects when considering a program's type annotatio
 
 Third, adding type
 annotations should not degrade a program's performance, or rather,
-students should not be encouraged to improve performance by removing
+programmers should not be encouraged to improve performance by removing
 type annotations.
 %However, reported errors should conform to the basic expectations one
 %may derive from the type annotations
@@ -159,13 +160,17 @@ straightforward, and easy for students to understand:
 \kjx{suggest adding the next sentence - tho' I'm not sure how the Grace's
   design stuff really works overall}
 %
-In the spectrum of gradual typing, Grace's semantics are essentially the
+In the spectrum of gradual typing, these semantics are essentially the
 transient semantics of Reticulated Python
 \cite{reticPython2014,Greenman2018} ---
 with the minor differences that Grace's semantics
-also check method return values
-and variable assignments and reads (see \$\ref{reticRW}).
-\kjx{can Michael check this?}
+treat field access as method calls, and we check both reads and
+writes of variables
+(see \$\ref{reticRW}).
+\kjx{can Michael check this?}\mwh{Return values are checked on both
+sides. Local variables can be assigned any value, but are otherwise
+checked against their inferred types. Grace does not have fields.
+}
 
 % Together these properties enable a flexible system
 % with minimal overhead
