@@ -323,6 +323,20 @@ possibly triggered by the additional data structures for type information.
 %
 % \end{cnote}
 
+\smtodo{Conclusion}
+
+\begin{note}
+Add this:
+1. peak performance with a “replace type-check by shape-approach” (as known from literature and as we do) does not suffer from this problem in dynamic languages that need shape checks anyway.
+Caveat: there are checks that don’t correspond to shape checks: assignments as in the List benchmark.
+
+2. Interpreter/warmup performance: there we still pay these costs. So, there can still be a non-trivial performance impact of additional type annotations until we reach optimally compiled code.
+
+possibly mention this point again in the conclusion
+\end{note}
+
+
+
 \subsection{Changes to Moth}
 
 Outlined earlier in \cref{sec:method}, a secondary
