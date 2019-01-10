@@ -149,16 +149,19 @@ object against a declaration.
 \sm{and please make sure this is true!!}
 \mwh{I've checked with both the papers and the implementation. It
   seems essentially correct and without much meaningful difference.
-  1) The transient semantics does check field values (but there are
-  no fields in Grace)
-  2) They check the presence of methods by name, but not their
-  signatures, like in Moth
-  3) They also check return values against the type expected in the
-  caller
+  1) Reticulated has an additional static checker, and also
+  statically removes unnecessary checks by a dataflow analysis.
+  The checks are removed to improve performance.
+  2) It does check field values when read, and when assigned to,
+  but only from outside the object. self.x = abc is always
+  unchecked.
+  3) Methods or fields are checked as present by name, but
+  signatures and values are not used until access time (like Moth,
+  except for arity?).
   4) They do not check the values inside lists (etc) eagerly, but
-  do check when they are retrieved
-  5) They do a lot of dataflow analysis to remove unnecessary
-  checks statically}
+  do check when they are retrieved as for other methods (like Moth,
+  I think)
+  }
 %
 %  although \citeauthor{reticPython2014}'s checks are nominal
 % while ours are structural.
