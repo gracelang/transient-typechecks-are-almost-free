@@ -165,11 +165,13 @@ transient semantics of Reticulated Python
 \cite{reticPython2014,Greenman2018} ---
 with the minor differences that Grace's semantics
 treat field access as method calls, and we check both reads and
-writes of variables
+writes of variables, along with return values on the receiver side
 (see \$\ref{reticRW}).
-\kjx{can Michael check this?}\mwh{Return values are checked on both
-sides. Local variables can be assigned any value, but are otherwise
-checked against their inferred types. Grace does not have fields.
+\kjx{can Michael check this?}
+\mwh{I think this is correct and a difference, but I'm not sure
+  exactly what Moth does. I think it should check on both caller and
+  receiver (and they will be collapsed if possible). This phrasing I
+  think is not inaccurate but perhaps imprecise.
 }
 
 % Together these properties enable a flexible system
