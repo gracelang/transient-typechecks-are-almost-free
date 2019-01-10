@@ -1,0 +1,127 @@
+%!TEX root = ../ecoop2019/paper.tex
+
+<<knitr-settings, echo=FALSE, include=FALSE>>=
+# load libraries, the data, and prepare it
+if (Sys.getenv("RSTUDIO") == "1") { 
+  if (Sys.getenv("LOGNAME") == "smarr") {
+    setwd("/Users/smarr/Collab/Richard-Roberts/AliveTyping/evaluation") } }
+
+source("scripts/libraries.R", chdir=TRUE)
+source("scripts/paper.R", chdir=TRUE)
+
+data <- load_data_file("type-stats.data.bz2",
+                       c("Invocation", "Iteration", "Value", "Unit",
+                         "Criterion", "Benchmark", "VM", "Suite", "Extra",
+                         "Warmup", "Cores", "Var"))
+
+data <- data %>%
+  filter(Criterion != "total") %>%
+  select(c(Value, Criterion, Benchmark, VM, Var))
+
+data <- data %>%
+  separate(Var, c("OptTypeCheckNode", "SubtypeTable"), "[:blank:]+") %>%
+  mutate(OptTypeCheckNode = as.logical(str_replace(OptTypeCheckNode, "-Dsom.useOptTypeCheckNode=", ""))) %>%
+  mutate(SubtypeTable = as.logical(str_replace(SubtypeTable, "-Dsom.useSubtypeTable=", ""))) %>%
+  mutate(Exp = if_else(OptTypeCheckNode, if_else(SubtypeTable, "Both", "OptNode"), if_else(SubtypeTable, "SubtypeTable", "Neither")))
+
+data$Exp <- as.factor(data$Exp)
+
+baseline <- data %>%
+  filter(OptTypeCheckNode == FALSE & SubtypeTable == FALSE & Criterion != "NumberOfTypes") %>%
+  select(-c(OptTypeCheckNode, SubtypeTable, Exp)) %>%
+  rename(BaseVal = Value)
+
+opt_data <- data %>%
+  filter(OptTypeCheckNode == TRUE | SubtypeTable == TRUE)
+
+stats <- baseline %>%
+  left_join(data, by = c("Criterion", "Benchmark", "VM")) %>%
+  transform(Ratio = Value / BaseVal)
+
+sum_stats <- stats %>%
+  group_by(Criterion, Exp) %>%
+  summarise(mean_v = mean(Value),
+            min_v = min(Value),
+            max_v = max(Value),
+            gmean_r = geometric.mean(Ratio),
+            min_r = min(Ratio),
+            max_r = max(Ratio)) %>%
+  droplevels()
+
+round_print <- function(x) {
+  num_digits <- floor(log10(x)) + 1
+  if (num_digits > 0) {
+    round_digits <- -num_digits + 3
+  } else {
+    round_digits <- -num_digits + 2
+  }
+  format(round(x, round_digits), big.mark = ",")
+}
+
+format_print <- function(x) {
+  format(round(x), big.mark = ",")
+}
+
+@
+
+\def\TypingStatsTable{%
+<<typing-stats-table, results='asis'>>=
+
+output_sum_stats <- sum_stats
+
+output_sum_stats$Criterion <- revalue(output_sum_stats$Criterion,
+        c("NumberOfSignatureChecks"="is_subtype_of",
+          "NumberOfSubclassChecks"="check_generic"))
+output_sum_stats$Exp <- revalue(output_sum_stats$Exp,
+        c("OptNode" = "Optimized Node",
+          "SubtypeTable" = "Subtype Cache"))
+output_sum_stats$Criterion <- factor(output_sum_stats$Criterion, levels(output_sum_stats$Criterion)[c(2,1)])
+output_sum_stats$Exp <- factor(output_sum_stats$Exp, levels(output_sum_stats$Exp)[c(2,4,3,1)])
+
+# t <- tabular(Justify("l")*Heading("Executed Test")*Criterion*
+#                Justify("l")*Heading("Enabled Optimization")*Exp
+#              ~ Justify("r")*(
+#                Heading("Absolute")*(Heading("mean")*mean_v + Heading("min")*min_v + Heading("max")*max_v) + Heading("Normalized to Neither")*(Heading("geomean")*gmean_r + Heading("min")*min_r + Heading("max")*max_r))*Heading()*round_print, data=output_sum_stats)
+
+t <- tabular(Heading("Type Test")*Criterion*
+               Heading("Enabled Optimization")*Exp
+             ~ Justify("r")*(Heading("mean \\#invocations")*mean_v + Heading("min")*min_v + Heading("max")*max_v)*Heading()*format_print,
+             data=output_sum_stats)
+
+t
+
+# output_sum_stats <- sum_stats %>%
+#   mutate()
+# 
+# round_print(filter(sum_stats, Criterion == "NumberOfSubclassChecks" & Exp == "Neither")$mean_v)
+# round_print(filter(sum_stats, Criterion == "NumberOfSubclassChecks" & Exp == "Neither")$max_v)
+# round_print(filter(sum_stats, Criterion == "NumberOfSubclassChecks" & Exp == "Both")$mean_v)
+# 
+# round_print()
+# 
+# typing_overhead <- droplevels(filter(norm, VM=="MothTyped"))
+# #to_vm_names <- vm_names[levels(typing_overhead$VM)]
+# #typing_overhead$VM <- revalue(typing_overhead$VM, to_vm_names)
+# 
+# p <- ggplot(typing_overhead, aes(reorder(Benchmark, desc(Benchmark)), RuntimeRatio))
+# p <- p +
+#   geom_hline(aes(yintercept=0.8), colour="#cccccc", linetype="dashed") +
+#   geom_hline(aes(yintercept=0.9), colour="#cccccc", linetype="dashed") +
+#   geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +
+#   geom_hline(aes(yintercept=1.1), colour="#cccccc", linetype="dashed") +
+#   geom_hline(aes(yintercept=1.5), colour="#cccccc", linetype="dashed") +
+#   geom_boxplot(outlier.size = 0.5) +
+#   coord_flip(ylim = c(0.80, 2))  # 
+# p <- p + theme_bw() + theme_simple(font_size = 8) +
+#     theme(axis.text.x = element_text(angle= 90, vjust=0.5, hjust=1),
+#           legend.position="none",
+#           strip.placement = "outside",
+#           axis.title.x = element_text(size = 8),
+#           axis.title.y = element_blank(),
+#           plot.margin = unit(c(0,0,0.1,0.1), "cm"))
+# p <- p + ylab("Run-time factor, normalized to Moth (untyped)\n(lower is better)") +  xlab("")
+# p
+@
+}%
+
+

@@ -1,0 +1,109 @@
+---
+title: "Type Stats Eval"
+author: "Stefan Marr"
+date: "1/8/2019"
+output:
+  html_document:
+    md_extensions: +raw_html
+---
+
+```{r prepare-data, echo=TRUE, message=TRUE, warning=TRUE, dev='svg'}
+# load libraries, the data, and prepare it
+if (Sys.getenv("RSTUDIO") == "1") { 
+  if (Sys.getenv("LOGNAME") == "smarr") {
+    setwd("/Users/smarr/Collab/Richard-Roberts/AliveTyping/evaluation") } }
+
+source("scripts/libraries.R", chdir=TRUE)
+htopt <- htmloptions(pad = FALSE)
+
+data <- load_data_file("type-stats.data.bz2", c("Invocation", "Iteration", "Value", "Unit", "Criterion", "Benchmark", "VM", "Suite", "Extra", "Warmup", "Cores", "Var"))
+
+data <- data %>%
+  filter(Criterion != "total") %>%
+  select(c(Value, Criterion, Benchmark, VM, Var))
+
+data <- data %>%
+  separate(Var, c("OptTypeCheckNode", "SubtypeTable"), "[:blank:]+") %>%
+  mutate(OptTypeCheckNode = as.logical(str_replace(OptTypeCheckNode, "-Dsom.useOptTypeCheckNode=", ""))) %>%
+  mutate(SubtypeTable = as.logical(str_replace(SubtypeTable, "-Dsom.useSubtypeTable=", ""))) %>%
+  mutate(Exp = if_else(OptTypeCheckNode, if_else(SubtypeTable, "Both", "OptNode"), if_else(SubtypeTable, "SubtypeTable", "Neither")))
+
+data$Exp <- as.factor(data$Exp)
+```
+
+# Evaluating the impact of the optimizations on type checks
+
+## Goals
+
+Assess the impact of the two optimizations:
+
+ - how many type checks are avoided by the optimizations
+ - what's the impact on subclass checks or signature checks
+ 
+General statistics:
+
+ - how many types are encountered for the benchmarks
+ 
+
+## Effectiveness of Optimizations
+
+```{r opt-effectiveness, echo=TRUE, results='asis'}
+baseline <- data %>%
+  filter(OptTypeCheckNode == FALSE & SubtypeTable == FALSE & Criterion != "NumberOfTypes") %>%
+  select(-c(OptTypeCheckNode, SubtypeTable, Exp)) %>%
+  rename(BaseVal = Value)
+
+opt_data <- data %>%
+  filter(OptTypeCheckNode == TRUE | SubtypeTable == TRUE)
+
+stats <- baseline %>%
+  left_join(opt_data, by = c("Criterion", "Benchmark", "VM")) %>%
+  transform(Ratio = Value / BaseVal)
+
+sum_stats <- stats %>%
+  group_by(Criterion, Exp) %>%
+  summarise(gmean = geometric.mean(Ratio),
+            min = min(Ratio),
+            max = max(Ratio)) %>%
+  droplevels()
+
+cat("<style>td { padding: 2px }</style>")
+t <- tabular(Justify("l")*Heading()*Criterion*Justify("l")*Heading("Optimization Enabled")*Exp ~ Justify("r")*(gmean + min + max)*Heading()*identity, data=sum_stats)
+html(t)
+```
+
+
+<!--
+# stats %>%
+#   group_by(Benchmark, OptTypeCheckNode, SubtypeTable) %>%
+#   spread(Criterion, Value)
+# 
+# stats %>%
+#   # group_by(Benchmark, OptTypeCheckNode, SubtypeTable) %>%
+#   spread(OptTypeCheckNode, Value)
+-->
+
+
+## General Statistics
+
+```{r general-stats, echo=TRUE, results='asis'}
+
+general_stats <- data %>%
+  filter(Criterion == "NumberOfTypes") %>%
+  group_by(Benchmark) %>%
+  summarise(NumTypes = mean(Value))
+
+t <- tabular(Justify("l")*Heading()*Benchmark ~
+               Justify("r")*Format(sprintf("%.0f"))*(
+                 (Heading("Number of Types")*NumTypes)*Heading()*identity), data=general_stats)
+table_options(justification="c ")
+html(t)
+```
+
+## All Data
+
+```{r all-data, echo=FALSE, results='asis'}
+stats <- droplevels(stats)
+t <- tabular(Benchmark * Criterion * Heading("Opt. Enabled") * Exp ~ (Heading("#")*Value + Heading("#/#NoOpt")* Ratio)*Heading()*identity, data = stats)
+html(t)
+```

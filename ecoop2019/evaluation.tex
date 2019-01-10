@@ -1,4 +1,4 @@
-%!TEX root = ../latex/paper.tex
+%!TEX root = paper.tex
 
 \section{Evaluation}
 \label{sec:evaluation}
@@ -152,18 +152,73 @@ have the largest overhead.
 \begin{table}
 \caption{Benchmarks selected from literature.}
 \label{tab:gradual-benchmarks}
-\begin{tabular}{l l r}
-Fannkuch & \cite{Vitousek2017,Greenman2018} \\
-Float & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-Go & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-NBody & \cite{Kuhlenschmidt:2018:preprint,Vitousek2017,Greenman2018} & used \cite{Marr2016} \\
-Queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} & used \cite{Marr2016} \\
-PyStone & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
-Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
-SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-\end{tabular}
+\begin{center}
+  \begin{tabular}{l l r}
+    Fannkuch & \cite{Vitousek2017,Greenman2018} \\
+    Float & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+    Go & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+    NBody & \cite{Kuhlenschmidt:2018:preprint,Vitousek2017,Greenman2018} & used \cite{Marr2016} \\
+    Queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} & used \cite{Marr2016} \\
+    PyStone & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+    Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
+    Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
+    SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+  \end{tabular}  
+\end{center}
 \end{table}
+
+\subsubsection{Effectiveness of Optimizations}
+\smtodo{revise in the context of the previous sections. perhaps reduce redundancy/verbosity}
+
+Before analyzing the impact on performance,
+we look at the effectiveness of the two used optimizations, i.e.,
+our optimized type checking node, which replaces complex type tests
+with checks for object shapes, and our matrix to cache sub-typing information.
+
+\Cref{tab:type-statistics} gives an overview of the number of type tests done
+by the benchmarks during execution.
+We distinguish two operations \code{check\_generic} and \code{is\_subtype\_of},
+which correspond to the operations in \cref{ex:typenode:generic} and \cref{ex:type:satisfied}.
+Thus, \code{check\_generic} is the test called when ever a full type check has to
+be performed, and \code{is\_subtype\_of} is part of it to determine the relationship
+between two types.
+As such, we expect \code{check\_generic} to used most often.
+The second column of \cref{tab:type-statistics} indicates
+which optimization is applied,
+and the following columns show the mean,
+minimum, and maximum number of invocations of the tests.
+
+The baseline without optimizations are the rows with the results
+for neither of the optimization being enabled.
+Depending on the benchmark, we see that the type tests are done tenth of million
+to hundred of million times for a single iteration of a benchmark.
+
+Our optimizations reduce the number of type test invocations dramatically.
+As a result, the check for the subtyping relationship is done only once for 
+a specific type and the a possible super type.
+Similarly, the generic type check is replaced by a shape check
+and thus minimizes the number of expensive type checks
+to the number of lexical locations that verify types
+combined with the number of shapes a specific lexical location sees at run time.
+In the following section, we show the corresponding impact on performance
+and how the optimizations enable a just-in-time compiler to minimize run-time overhead.
+
+\begin{table}
+  \caption{Type Test Statistics over all Benchmarks.
+  It shows how many of the type tests can be avoided based on our two optimizations.
+  With the use of an optimized node that replaces type checks with simple object shape checks,
+  \code{check\_generic} is invoked only for the first time that a lexical location
+  sees a specific object shape, which eliminates run-time type checks almost completely.
+  Using our subtype matrix that caches type-check results,
+  invocations of \code{is\_subtype\_of} are further reduced by an order of magnitude}
+  \label{tab:type-statistics}
+
+  \begin{center}
+    \TypingStatsTable{}  
+  \end{center}
+\end{table}
+
+\subsubsection{Impact on Performance}
 
 \begin{figure}
 	\TypingOverhead{}

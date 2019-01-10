@@ -10,6 +10,8 @@ load_and_install_if_necessary <- function(package_name) {
 
 load_and_install_if_necessary("plyr")
 load_and_install_if_necessary("dplyr")
+load_and_install_if_necessary("tidyr")
+load_and_install_if_necessary("stringr")
 load_and_install_if_necessary("ggplot2")
 load_and_install_if_necessary("psych")   # uses only geometric.mean
 load_and_install_if_necessary("tables")
