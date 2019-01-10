@@ -1,11 +1,11 @@
-%!TEX root = ../latex/paper.tex
+%!TEX root = paper.tex
 
 \section{Gradual Type Checks in Grace}
 \label{sec:method}
 
 % evaluation cases
 
-% high flexibility, no need for global constitency 
+% high flexibility, no need for global consistency 
 
 
 % design goals behind Grace / Moth
@@ -490,7 +490,7 @@ There are two aspects to our implementation that are critical for a minimal over
  
 %Here we discuss each of the aspects in more detail.
 
-\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the type checking node that support type checking},float,floatplacement=htbp,columns=flexible]
+\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the type checking node that support type checking},float,floatplacement=htbp,columns=flexible,morekeywords={global}]
 global record: Matrix
 
 class TypeCheckNode(Node):
