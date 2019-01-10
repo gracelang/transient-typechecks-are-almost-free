@@ -44,7 +44,7 @@ by professional programmers for a very wide range of tasks \cite{Pang2018}.
 %% approaches being adopted to support programmer productivity and
 %% document a program's structures.
 
-A key advantage of these dynamic langauges is the flexibility offered
+A key advantage of these dynamic languages is the flexibility offered
 by the lack of a static type system. 
 From the perspective of many computer scientists, software engineers,
 and computational theologists, this advantage has a concomitant
@@ -156,18 +156,18 @@ an annotated variable is accessed
 we check types dynamically and
 terminate the program with a type error if the check fails.
 Despite this simplistic approach, a just-in-time compiler can
-elminate the redundant checks---%
+eliminate the redundant checks---%
 removing almost all of the checking overhead,
 resulting in
 a performance profile aligned with untyped code.
 
-We evaluate this approach with Moth,
-a implementation of the Grace progrmaming language
-we are building on top of Truffle
+We evaluate our approach by adding our transient checks to Moth,
+an implementation of the Grace programming language
+built on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
 Inspired by Richards~\textit{et~al.}~\cite{Richards2017} and
 Bauman~\textit{et~al.}~\cite{Bauman2017},
-our implementation conflates types
+our approach conflates types
 with information about the dynamic object structure 
 (maps\citep{Self} or object shapes\citep{woss2014object}), 
 which allows the just-in-time compiler
