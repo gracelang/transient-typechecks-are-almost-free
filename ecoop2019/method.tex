@@ -1,6 +1,6 @@
 %!TEX root = ../latex/paper.tex
 
-\section{Dynamic Type Checks in Grace}
+\section{Gradual Type Checks in Grace}
 \label{sec:method}
 
 % evaluation cases
@@ -19,11 +19,12 @@
 %\kjx{we wont}
 %
 % motivation = give students low-overhead method to check program
-The core of Grace's static type system is well described
-elsewhere\citep{JonesECOOP2016}\mwh{This reference doesn't discuss
+The static core of Grace's type system is well described
+elsewhere\citep{TimJonesThesis}\mwh{This reference doesn't discuss
 typing at all; was it meant to be the brands paper? Or perhaps one
-of Tim's Tinygrace papers?}; here we explain how these types can be understood
-dynamically, from a student's or a programmer's point of view.
+of Tim's Tinygrace papers?}\kjx{Tim's thesis}; here we explain how
+these types can be understood 
+dynamically, from a student or a novice programmer's point of view.
 %\kjx{code for: no formalism, sorry.}
 Following from the design goals behind Grace,
 our motivation for this work
@@ -48,7 +49,7 @@ only a small set of changes to facilitate integration in existing systems.
 These goals are shared with much of the other work on gradual type
 systems, but our context leads to some different choices. First, so
 that students can see concrete examples of type errors, they should be
-able to run their programs even if those programs are not type-correct%
+able to run their programs even if those programs are not statically type-correct%
 ---\ie Grace's static type checking is optional, and so an
 implementation cannot depend on the correctness of a program's type
 annotations.
@@ -65,9 +66,9 @@ Third, adding type
 annotations should not degrade a program's performance, or rather,
 students should not be encouraged to improve performance by removing
 type annotations.
-However, reported errors should conform to the basic expectations one
-may derive from the type annotations
-and a strict interpretation of their shallow semantics.
+%However, reported errors should conform to the basic expectations one
+%may derive from the type annotations
+%and a strict interpretation of their shallow semantics.
 
 Unfortunately, existing gradual type
 implementations do not meet these goals, particularly regarding
@@ -114,6 +115,7 @@ in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards201
 % (which leads to significant overhead in previous work).
 
 
+\kjx{kill the following heading?}
 \subsection{Design}
 
 
@@ -131,13 +133,39 @@ in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards201
 % Message sending
 % As we described in \cref{ssec:grace}, Grace is message-sending-based language.
 
-Our type checks for Grace are designed to be simple,
+%
+
+\kjx{adjusted the order through here}
+
+Grace is structurally typed\citep{graceOnward12}:
+an object implements a type whenever it
+implements all the methods required by a 
+type, rather than requiring classes or objects to declare types explicitly.
+Methods match when they have the same name and arity.
+A type thus expresses the requests
+an object can respond to, for example whether a particular accessor is
+available,  rather than a nominal location in an explicit inheritance
+hierarchy.
+
+
+Our gradual type checks for Grace are designed to be simple,
 straightforward, and easy for students to understand:
 \begin{itemize}
-  \item types are shallow interfaces
-  \item optional type annotations are checked at run time
+  \item types are sets of methods (first-order interfaces)
+  \item all gradual type annotations are checked at run time
   \item failing run-time type checks terminate execution
 \end{itemize}
+%
+\kjx{suggest adding the next sentence - tho' I'm not sure how the Grace's
+  design stuff really works overall}
+%
+In the spectrum of gradual typing, Grace's semantics are essentially the
+transient semantics of Reticulated Python
+\cite{reticPython2014,Greenman2018} ---
+with the minor differences that Grace's semantics
+also check method return values
+and variable assignments and reads (see \$\ref{reticRW}).
+\kjx{can Michael check this?}
 
 % Together these properties enable a flexible system
 % with minimal overhead
@@ -146,22 +174,13 @@ straightforward, and easy for students to understand:
 % documented through their annotations
 % while avoiding the burden of fully typing their program.
 
-We illustrate how the type checks work in practice
+
+
+
+We illustrate how the gradual type checks work in practice
 in the context of an exercise where a student is developing
 a program to record information about vehicles.
-%
-Grace is structurally typed\citep{graceOnward12}:
-an object implements a type whenever it
-implements all the methods required by a 
-type rather than requiring types to be declared
-explicitly.
-In this context, methods match when they have the same name and arity.
-A type expresses the requests
-an object can respond to, for example whether a particular accessor is
-available,  rather than a location in an explicit inheritance
-hierarchy.
-
-For example, our student can begin developing their vehicle
+Our student can begin developing their vehicle
 application by defining an object intended to represent a car
 (\cref{lst:car-reg}, \cref{ex:object}) and write a method that, given
 the car object, prints out its registration number (\cref{ex:method}).
@@ -208,6 +227,8 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 %\paragraph{Flexibility.}
 %\paragraph{Semnatics}
 
+\kjx{isn't most of this covered by the earlier para above now? -- so
+  can we delete this one? please!?}
 While Grace's static type system supports full static type
 checking\citep{graceOnward12}, Grace's specification requires dynamic
 type tests to be \emph{shallow}, that is, they check only for the
@@ -218,11 +239,15 @@ of a program, for the reason originally outlined by
 Boyland~\cite{Boyland2014}, thus maintaining a version of the gradual
 guarantee.  The resulting semantics are \del{more-or-less}\sm{we really need to say something stronger here or drop this} equivalent to
 type-tag soundness\citep{reticPython2014,Vitousek2017,Greenman2018}.
+\kjx{now saying ``equivalent'', punting fine details to the related work section - but
+  I suggest we kill this para}.
 %% SM: someone should really take a really close look at these and identify the
 %%     differences. And I don't want to do that.
 % ---the difference being that
 % where type-tag soundness supports shallow \emph{nominal} type checks,
 % we support shallow \emph{structural} type checks.
+%%KJX: my comment above is plan WRONG - Retic is structural too.
+%% main differences are method returns, object assignments.
 
 % The notion of our type system being shallow means 
 % that members of a type are untyped.
@@ -271,7 +296,7 @@ check considers only that the vehicle has a \code{registerTo} method,
 but not the required argument type of that method.
 At \cref{ex:invoke-register-to} the student can attempt to register a
 government car to a person: only when the method is invoked
-(\cref{ex:government-car:registerTo}) the dynamic type test on the
+(\cref{ex:government-car:registerTo}) the gradual type test on the
 argument will fail (the object that is passed in is not a
 \code{Department}) even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
@@ -380,7 +405,7 @@ governmentCar.registerTo( |\label{ex:invoke-register-to}|
 %This section gives an overview of a possible implementation
 %based on an abstract-syntax-tree (AST) interpreter.
 
-We have implemented shallow dynamic structural type checks 
+We have implemented gradual type checks 
 by extending the Moth abstract-syntax-tree (AST) interpreter for
 Grace (\cref{ssec:moth}).
 %
@@ -404,7 +429,7 @@ Our approach needs to check types of values at run-time:
 
 % \kjxdone{why both reading and writing?  answer - doesn't matter?}
 
-One of the goals for our approach to dynamic typing was to keep
+One of the goals for our approach to gradual typing was to keep
 the necessary changes to an existing implementation small,
 while enabling optimization in highly efficient language runtimes.
 %

@@ -23,14 +23,20 @@ dynamic language with type annotations that could, if necessary, be
 checked at runtime. Siek and Taha build on earlier complementary work extending fully statically typed languages with a ``\texttt{DYNAMIC}''
 type---Abadi~\textit{et~al.}~'s 1991 TOPLAS paper~\cite{AbadiTOPLAS1991} is an
 important early attempt
-and also surveys previous work. Revived practical adoption of dynamic
-languages generated revived research interest, leading to the
-formulation of the ``gradual guarantee''\citep{Siek2006,Siek2015} to characterize sound
-gradual type systems: removing type annotations should not change the
-semantics of a correct program, drawing on Boyland's critical
-insight that, of course, such a guarantee must by its nature forbid
-code that can depend on the presence or absence of type declarations 
-elsewhere in the program\citep{Boyland2014}. 
+and also surveys previous work.
+
+Revived practical adoption of dynamic languages generated revived
+research interest, leading to the formulation of the ``gradual
+guarantee''\citep{Siek2006,XXXSiek2015} to characterize sound gradual
+type systems: removing type annotations should not change the
+semantics of a correct program, drawing on Boyland's critical insight
+that, of course, such a guarantee must by its nature forbid code that
+can depend on the presence or absence of type declarations elsewhere
+in the program\citep{Boyland2014}.  As Siek et~al.\ explain, by
+choosing to check only the ``top-most type constructor'', the
+semantics we present in this paper should meet the refined gradual
+guarantee \cite{XXXSiek2015}.
+
 
 Type errors in gradual, or other dynamically checked, type systems will
 often be triggered by the type declarations, but often those
@@ -45,7 +51,26 @@ the point in the program where the system makes an
 assumption about dynamically typed objects, so can identify the root
 cause should the assumption fail.  Different semantics for blame
 detect these faults slightly differently, and impose more or less
-implementation overhead\citep{reticPython2014,monotonic2015,Vitousek2017}.
+implementation
+overhead\citep{reticPython2014,monotonic2015,Vitousek2017}.
+
+
+\kjx{The diversity of semantics and langauge designs incorprating
+  gradual typing has been captured recently via surveys
+  incorporating formal models of different design options.
+  Chung et~al.\ present an object-oriented model covering optional
+  semantics (erasure),  transient semantics, concrete (from Thorn
+  \cite{Bloom2009}), and behavioural semantics (from Typed Racket), and
+  give a series of programs to clarify the semantics of a
+  particular language.   
+  Greenman et~al.\ take a more functional approach, again modelling
+  erasure, transient (``first order''), and behavioural (``higher
+  order'') semantics \cite{bensurvey18icfp}, and also present
+  performance information based on Typed Racket.
+  Wilson et~al.\ take a rather different approach, employing
+  questionnaires to investigate the semantics programmers expect of a
+  gradual typing system  \cite{shriramdls18}.
+  }
 
 As with language designs, there seem to be two main implementation
 strategies for languages mixing dynamic and static type checks: either
@@ -63,7 +88,7 @@ programmers to explicitly declare types that can be checked statically,
 removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
-work here, takes the opposite approach.
+work here, take the opposite approach.
 They add run-time type checks that do not rely on static
 type declarations. These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
@@ -78,7 +103,7 @@ all.
 % \cite{typeScriptECOOP,typeScriptTyping}, Dart \cite{dartbook}, and Grace
 % \cite{graceOnward12} follow this general approach.
 
-As these systems have come to wider attention, the question of their
+As gradual typing systems have come to wider attention, the question of their
 implementation overheads has become more prominent.  
 Takikawa~\textit{et~al.}~\cite{Takikawa2016} asked ``is sound gradual typing
 dead?'' based on a systematic performance measurement on Typed Racket.
@@ -111,12 +136,13 @@ using object shapes to encode information about gradual types.
 
 
 Muehlboeck and Tate~\cite{Muehlboeck2017} also replied to
-Takikawa~\textit{et~al.}, 
-using a similar benchmarking method applied to Nom, a language
-with features designed to make gradual types easier to optimize, 
-demonstrating speedups as more type information is added to programs.
-Their approach enables such type-driven optimizations,
-but relies on a static analysis which can utilize the type information.
+Takikawa~\textit{et~al.}, using a similar benchmarking method applied
+to Nom, a language with features designed to make gradual types easier
+to optimize, demonstrating speedups as more type information is added
+to programs.  Their approach enables such type-driven optimizations,
+but relies on a static analysis which can utilize the type
+information, and the underlying types are nominal, rather than
+structural.
 
 
 % \rrtodo{Are we nearly equal Greenman,
@@ -137,6 +163,7 @@ language called Grift and demonstrate good performance for code where more than
 half of the program is annotated with types, and reasonable
 performance for code without type annotations.
 
+\label{reticRW}
 Perhaps the closest to our approach are
 Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
 and Richards~\textit{et~al.}~\cite{Richards2017}.
@@ -161,7 +188,10 @@ object against a declaration.
   4) They do not check the values inside lists (etc) eagerly, but
   do check when they are retrieved as for other methods (like Moth,
   I think)
-  }
+}
+\kjx{don't think Retic checks return values --- some this is now
+  earlier, check for retricRW refs}
+
 %
 %  although \citeauthor{reticPython2014}'s checks are nominal
 % while ours are structural.
@@ -175,7 +205,7 @@ object against a declaration.
 %   focused on identifying more precisely which types of type annotations
 %   might relate to performance issues
 %   - thus, we only tested N configurations per benchmark\sm{N should be a macro}
-We refrain from a performance comparison since
+We refrain from a direct performance comparison since
 Reticulated Python is an interpreter without just-in-time compilation
 and thus performance tradeoffs are different.
 
@@ -185,7 +215,7 @@ used by a VM to optimize dynamic languages can be used to eliminate most of
 the overhead of dynamic type checks.
 Unlike our work, Richards
 implement ``full'' gradual typing with blame tracking, rather than
-shallow structural checks, and do so on top of an adapted Higgs
+the simpler transient checks, and do so on top of an adapted Higgs
 VM.
 The Higgs VM implements a baseline just-in-time compiler based on
 basic-block versioning\citep{Chevalier-Boisvert:2016:ITS}.

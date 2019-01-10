@@ -4,9 +4,10 @@
 \label{sec:conclusion}
 
 %% Context
-With the wide-spread use of dynamically, optionally, and gradually
-typed languages, efficient techniques for  type checking
-become more important.
+As gradually typed languages become more common,
+and both static and dynamically typed languages are
+extended with gradual features,
+efficient techniques for gradual type checking become more important.
 %
 %% goals
 %% approach to support types in a dynamic language
@@ -24,8 +25,8 @@ become more important.
 %  existing language implementations with only a small amount of work.
 %
 In this paper, we have demonstrated that optimizing virtual machines enable
-dynamic checks of shallow structural types with relatively little
-overhead, and require only small modifications to an AST interpreter.
+transient gradual type checks with relatively little
+overhead, and with only small modifications to an AST interpreter.
 We evaluated this approach with Moth, an implementation of the Grace language
 on top of Truffle and Graal.
 %
@@ -84,7 +85,7 @@ for the low overhead of our approach.
 %% future work
 In specific cases, the overhead is still significant and requires further
 research to be practical. Thus, future research should investigate how the
-number of dynamic type checks can be reduced without causing
+number of gradual type checks can be reduced without causing
 the type feedback to become too imprecise to be useful.
 One approach might increase the necessary changes to a language implementation,
 but avoid checking every variable read.
@@ -94,12 +95,11 @@ to propagate type requirements and avoid unnecessary checks.
 %%  - might enable a full structural type system, \ie, not shallow
 %%  - verify results of Richards2017 in context of highly optimizing VM
 
-Finally, we hope to apply our approach to full structural types with
-blame that support the gradual guarantee.  For
-Vitousek~\textit{et~al.}~\cite{reticPython2014}'s transient semantics, this should primarily
-require finer distinctions in the subtype matrix; monotonic and
-guarded semantics will require more work, including extensions to the
-underlying object model.  This should let us verify that
+Finally, we hope to apply our approach to other parts of the spectrum
+of gradual typing, eventually reaching 
+full structural types with
+blame that support the gradual guarantee.  
+This should let us verify that
 Richards~\textit{et~al.}~\cite{Richards2017}'s results generalize to highly optimizing virtual
 machines, or alternatively, show that other optimizations for precise
 blame need to be investigated.

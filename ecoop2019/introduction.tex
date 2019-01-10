@@ -52,14 +52,14 @@ disadvantage in that programs without types are considered more
 difficult to read, to understand, and analyse than programs with
 types. Gradual Typing aims to remedy this disadvantage, adding types
 to dynamic languages while maintaining their flexibility
-\citep{GiladPluggable2004,Siek2006,Siek2015}. 
+\citep{GiladPluggable2004,Siek2006,XXXSiek2015}. 
 
 There is a spectrum of different approaches to gradual typing
 \cite{kafka18,bensurvey18icfp}.
 At one end\,---\,``pluggable types'' as in Strongtalk \cite{strongtalk} or ``erasure
 semantics'' as in 
 %% Two important approaches are optional\citep{}
-%% and gradual typing\citep{GiladPluggable2004,Siek2006,Siek2015}.
+%% and gradual typing\citep{GiladPluggable2004,Siek2006,XXXSiek2015}.
 %% These are applied to dynamic languages to reap the benefits of typing, but
 %% unfortunately also have limitations.
 %With optional or pluggable approaches such as 
@@ -83,6 +83,8 @@ about type violations as soon as possible via blame
 tracking \cite{blame2009,blameForAll2011}.
 %
 \mwh{Does a monotonic semantics fit on this spectrum somewhere?}
+\kjx{Not in the greenman/fellenstein spectrum, but I guess I'd put it
+  after concrete and before behavioural. Does it matter?}
 %
 Unfortunately, any gradual systems with run-time semantics
 (i.e.\ everything more complex than erasure) currently
@@ -118,7 +120,9 @@ debug, and analyse.
 
 \kjx{Don't know if we really need this paragraph}
 \mwh{It seems like a vulnerability more than a strength (and the
-next one more so). I propose the one I've added above to replace it.}
+  next one more so). I propose the one I've added above to replace it.}
+\kjx{Looks OK now. seems similar to the start of section 3 --- perhpas
+  that's OK?}
 We are working on Grace\citep{graceOnward12}, a dynamic language in
 the tradition of Smalltalk\citep{bluebook}, Self\citep{Self}, and
 JavaScript that is meant for use in
