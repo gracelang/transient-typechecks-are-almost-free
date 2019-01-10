@@ -27,24 +27,25 @@ discusses the technical background for our implementation.
 % \end{cnote}
 %\kjx{done}
 
-We are designing Grace, an object-oriented, imperative, educational programming
+Grace is an object-oriented, imperative, educational programming
 language, with a focus on introductory programming
-courses, but also for more advanced study and research\citep{graceOnward12,graceSigcse13}.
+courses, but also intended for more advanced study and research\citep{graceOnward12,graceSigcse13}.
+%
 While Grace's syntax draws
 from the so-called ``curly bracket'' tradition of C, Java, and
-JavaScript (with a side order of Pascal) the structure of the language
-is in many ways closer to Smalltalk (thus Self and Ruby): 
+JavaScript, the structure of the language
+is in many ways closer to Smalltalk:
 all computation is via dynamically dispatched  ``method requests''
-where the object receiving the request decides which code to run;
-method names
-have multiple parts; blocks (lambdas) are used for control flow; and
+where the object receiving the request decides which code to run,
+and
+%
 returns within lambdas are ``non-local'', returning to the method
 activation in which the block is instantiated\citep{bluebook}.  In
 other ways, Grace is closer to JavaScript than Smalltalk: Grace
 objects can be created from object literals, rather than by
 instantiating classes\citep{Black2007-emeraldHOPL,JonesECOOP2016} and
 objects and classes can be deeply nested within each 
-other\citep{betabook}.  
+other\citep{betabook}.
 
 Critically, Grace's declarations and methods' arguments
 and results can be annotated with types, and those types can be  checked
@@ -54,27 +55,6 @@ type annotations should not affect the semantics of a correct
 program\citep{Siek2015}) and gradual (the type system
 includes a distinguished ``Unknown'' type, which matches any other type
 and is the implicit type for untyped program parts.).
-
-As an educational language\citep{panel}, absolute performance of an
-implementation is less important than the performance profile---the
-way language features affect performance.  Increasing absolute
-performance by several orders of magnitude could let students run
-larger examples---analyzing billions rather than millions of data
-points, wayfinding within a city rather than a village, or raytracing
-higher resolution images a little quicker.  On the other hand, issues
-with a language's performance profile could mean the students will
-``learn the wrong things''.  If e.g.\ a languages' built-in cons lists
-were faster than arrays or hash-tables, students cannot learn the
-performance benefits of more complex data structures. In the case of
-Grace, the existing implementations that use type information
-have the unfortunate property that
-adding type declarations to a program makes that program run slower---teaching students that \emph{removing} type declarations is an
-effective optimization technique.
-Furthermore, this property is shared
-by other optionally typed languages including
-Dart's checked mode\citep{dartbook},
-Reticulated Python\citep{reticPython2014,Greenman2018},
-and SafeTypeScript\citep{Richards2017}.
 
 %  \ugh{Groovy\citep{Muehlboeck2017}}\sm{This is still not true. Muehlboeck2017 doesn't say anything about groovy. At least I can't find the word Groovy in the text with my pdf reader.
 % And, my understanding is that Groovy uses type information only for code generation. If it can generate more precise Java bytecode, it will do so. The documentation doesn't talk about any form of dynamic type checking.} and 
