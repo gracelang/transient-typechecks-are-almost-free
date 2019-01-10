@@ -466,10 +466,11 @@ There are two aspects to our implementation that are critical for a minimal over
 %Here we discuss each of the aspects in more detail.
 
 \begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the type checking node that support type checking},float,floatplacement=htbp,columns=flexible]
+global record: Matrix
+
 class TypeCheckNode(Node):
 
   expected: Type
-  record: Matrix
 
   @Spec(static_guard=expected.check(obj))
   def check(obj: Number): |\label{ex:typenode:number}|
