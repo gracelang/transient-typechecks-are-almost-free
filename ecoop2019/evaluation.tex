@@ -63,6 +63,7 @@ Removed for double blind review
 
 
 \begin{figure}
+  \centering
 	\AwfyBaseline{}
 	\caption{Comparison of Java 1.8, Node.js 10.4, Higgs VM, and Moth.
   The boxplot depicts the peak-performance results for the \AWFY benchmarks,
@@ -240,7 +241,14 @@ to minimize run-time overhead.
 
 \subsubsection{Impact on Performance}
 
-\begin{figure}
+The overall results comparing Moth with all optimizations
+with the version that does not do any type checks
+are depicted in \cref{fig:typing-overhead}.
+We see an average peak-performance overhead of 
+\OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
+
+\begin{figure}[htb]
+  \centering
 	\TypingOverhead{}
 	\caption{A boxplot comparing the performance of Moth
   with and without type checking.
@@ -248,13 +256,11 @@ to minimize run-time overhead.
   the untyped performance. On average, transient type checking introduces
   an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
   The visible outliers reflect the noise in today's complex system
-  and correspond \eg to garbage collection and cache effects.}
+  and correspond \eg to garbage collection and cache effects.
+  Note that the axis is logarithmic to avoid distorting the proportions
+  of relative speedups and slowdowns.}
 	\label{fig:typing-overhead}
 \end{figure}
-
-The results are depicted in \cref{fig:typing-overhead}.
-Overall, we see an average peak-performance overhead of 
-\OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
 
 % explain maxima
 
@@ -298,7 +304,7 @@ the instruction cache of the processor.
 % \kjx{unfortuantely all the best citations give more detailed
   % benchmarking methodologies (Georges, Kalibera) that we don't follow.}
 
-\begin{figure}
+\begin{figure}[htb]
 	\TypingWarmup{}
 	\caption{Plot of the run time for the first 100 iterations.
            The gray line is a local polynomial regression fit
