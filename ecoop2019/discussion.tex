@@ -122,10 +122,11 @@ we may not be measuring that implementation correctly.  Moth is built
 on the Truffle and Graal toolchain, so we expect external validity
 there at least --- we expect the results would transfer to other Graal
 VMs doing similar AST-based optimisations.  We have less external
-validity regarding kinds of VMs (such as specialised VMs for
+validity regarding other kinds of VMs (such as VMs specialised to 
 particular languages, or VMs built via meta-tracing rather than AST
-self-optimisation) but insofar as we rely on common techniques, we
-expect our results should be transferable.
+self-optimisation). 
+Nevertheless, we expect our results should be transferable
+as we rely on common techniques.
 
 Finally, because we are working in Grace, it is less obvious that our
 results generalise to other gradually typed-languages. We have worked
@@ -134,7 +135,7 @@ that are not common in other gradually-typed object-oriented
 languages, but as Grace lacks a large corpus of programs the
 benchmarks are necessarily artificial, and it is not clear how the
 results would transfer to the kinds of programs actually written in
-practice. The advantage of Grace (and Moth) here for the research is
+practice. The advantage of Grace (and Moth) for this research is
 that their relative simplicity means we have been able to build an
-implementation with competitive performance with significantly less
+implementation that features competitive performance with significantly less
 effort than would be required for larger and more complex languages.
