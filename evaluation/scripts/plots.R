@@ -7,6 +7,8 @@ theme_simple <- function(font_size = 12) {
           axis.line            = element_line(colour = "gray"),
           plot.title           = element_text(size = font_size),
           legend.text          = element_text(size = font_size),
+          legend.title         = element_blank(),
+          legend.background    = element_blank(),
           panel.background     = element_blank(), #element_rect(fill = NA, colour = NA),
           panel.grid.major     = element_blank(),
           panel.grid.minor     = element_blank(),
