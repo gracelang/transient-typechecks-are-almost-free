@@ -171,25 +171,25 @@ and Migeed~\cite{Greenman2018}), which they term the ``transient'' semantics.
 As with our work, Vitousek~\textit{et~al.} check
 only the ``top-level'' type of an
 object against a declaration.
-\sm{any important difference we need to mention here?}
-\sm{and please make sure this is true!!}
-\mwh{I've checked with both the papers and the implementation. It
-  seems essentially correct and without much meaningful difference.
-  1) Reticulated has an additional static checker, and also
-  statically removes unnecessary checks by a dataflow analysis.
-  The checks are removed to improve performance.
-  2) It does check field values when read, and when assigned to,
-  but only from outside the object. self.x = abc is always
-  unchecked.
-  3) Methods or fields are checked as present by name, but
-  signatures and values are not used until access time (like Moth,
-  except for arity?).
-  4) They do not check the values inside lists (etc) eagerly, but
-  do check when they are retrieved as for other methods (like Moth,
-  I think)
-}
-\kjx{don't think Retic checks return values --- some this is now
-  earlier, check for retricRW refs}
+%\sm{any important difference we need to mention here?}
+%\sm{and please make sure this is true!!}
+%\mwh{I've checked with both the papers and the implementation. It
+%  seems essentially correct and without much meaningful difference.
+%  1) Reticulated has an additional static checker, and also
+%  statically removes unnecessary checks by a dataflow analysis.
+%  The checks are removed to improve performance.
+%  2) It does check field values when read, and when assigned to,
+%  but only from outside the object. self.x = abc is always
+%  unchecked.
+%  3) Methods or fields are checked as present by name, but
+%  signatures and values are not used until access time (like Moth,
+%  except for arity?).
+%  4) They do not check the values inside lists (etc) eagerly, but
+%  do check when they are retrieved as for other methods (like Moth,
+%  I think)
+%}
+%\kjx{don't think Retic checks return values --- some this is now
+%  earlier, check for retricRW refs}
 
 %
 %  although \citeauthor{reticPython2014}'s checks are nominal

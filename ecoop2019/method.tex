@@ -21,9 +21,6 @@
 % motivation = give students low-overhead method to check program
 The static core of Grace's type system is well described
 elsewhere\citep{TimJonesThesis};%
-\mwh{This reference doesn't discuss
-typing at all; was it meant to be the brands paper? Or perhaps one
-of Tim's Tinygrace papers?}\kjx{Tim's thesis}
 ~here we explain how
 these types can be understood 
 dynamically, from the Grace programmer's point of view.
@@ -168,7 +165,7 @@ transient semantics of Reticulated Python
 with the minor differences that Grace's semantics
 treat field access as method calls, and we check both reads and
 writes of variables, along with return values on the receiver side
-(see \$\ref{reticRW}).
+(see \S\ref{reticRW}).
 \kjx{can Michael check this?}
 \mwh{I think this is correct and a difference, but I'm not sure
   exactly what Moth does. I think it should check on both caller and
@@ -303,7 +300,7 @@ both \code{personal\-Car} and \code{governmentCar} can be assigned to
 \code{Vehicle} because that check considers only that the
 vehicle has a \code{registerTo} method,
 but not the required argument type of that method.
-At \cref{ex:invoke-register-to} the developers 
+At \cref{ex:invoke-register-to} the developer
 attempts to register a government car to a person:%
 ~only when the method is invoked (\cref{ex:government-car:registerTo})
 will the gradual type test on the argument fail
@@ -311,6 +308,7 @@ will the gradual type test on the argument fail
 even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
+\mwh{Should this/somewhere explain \textit{why} that is? It sounds a bit like just describing a flaw.}
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
