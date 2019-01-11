@@ -28,6 +28,7 @@ and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
 As a result, we use a large number of data points to compute the average,
 but outliers, caused by \eg garbage collection, remain visible in the plots.
+\smtodo{revisit this sentence once done:}
 In this work, we do not consider startup performance,
 because we want to assess the impact of gradual type checks
 on the best possible performance.
@@ -38,6 +39,8 @@ All reported averages use the geometric mean since they aggregate ratios.
 %  - 24 hyperthreads
 %  - Intel Xeon E5-2620 v3 2.40GHz
 % Graal 0.33 Feb. 2018
+\smtodo{update these details when we have time... not a rejection criterion,
+but needs to be correct in the final version}
 All experiments were executed on a machine running Ubuntu Linux 16.04.4,
 with Kernel 3.13.
 The machine has two Intel Xeon E5-2620 v3 2.40GHz,
@@ -50,7 +53,7 @@ and plots are generated with ggplot 2.2.1 and tikzDevice 0.11.
 Our experimental setup is available online to enable reproductions.\footnote{
 %% \smtodo{add version info}
 % TODO: for final version add version info
-  Removed for blinding
+Removed for double blind review
 %\url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}
 }
 
@@ -96,9 +99,11 @@ features with first-class functions.
 Consequently, these benchmarks are not necessarily a predictor
 for application performance,
 but can give a good indication for basic mechanisms such as type checking.
-Furthermore, in an educational setting,
-we assume that students will focus on using these basic language features
-as they learn a new language.
+%% SM: removed the educational bit, from the emails I gather that this is not a
+%%     desired story line any longer
+% Furthermore, in an educational setting,
+% we assume that students will focus on using these basic language features
+% as they learn a new language.
 % - arguing that Moth has state of the art performance on the given benchmarks
 % - this is a reasonable foundation to make performance claims
 %   that can generalize to state-of-the-art custom VMs such as V8
