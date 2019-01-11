@@ -283,7 +283,9 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 % that our shallow approach to types
 % allows for more flexible use 
 % without requiring type parameters, \ie, generics.
-For example, in \cref{ex:complex}, the student
+An important aspect of our design is that it allows students to see 
+concrete examples of type errors. 
+In \cref{ex:complex}, the student
 creates two cars objects
 (\cref{ex:personal-car,ex:government-car}),
 that conform to
@@ -306,15 +308,11 @@ check considers only that the vehicle has a \code{registerTo} method,
 but not the required argument type of that method.
 At \cref{ex:invoke-register-to} the student can attempt to register a
 government car to a person: only when the method is invoked
-(\cref{ex:government-car:registerTo}) the gradual type test on the
-argument will fail (the object that is passed in is not a
+(\cref{ex:government-car:registerTo}) will the gradual type test on the
+argument fail (the object that is passed in is not a
 \code{Department}) even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
-The intention here is to ensure that the run-time values
-match the given types in a strict and eager sense,
-which is the intuition we derive from types having a constraining meaning
-on values.
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
