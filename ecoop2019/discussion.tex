@@ -115,26 +115,26 @@ This work is subject to many of the threats to validity common to
 evaluations of experimental language implementations.  Our underlying
 implementation may contain undetected bugs that affect the semantics
 or performance of the gradual typing checks, affecting construct
-validity --- we may not have implement what we think we have. Given
-that our benchmarking harness run on the same implementation are
+validity --- we may not have implemented what we think we have. Given
+that, our benchmarking harness run on the same implementation is
 subject to the same risks, thus also affecting internal validity ---
-we may not be measuring that implementation correctly.  Moth is build
+we may not be measuring that implementation correctly.  Moth is built
 on the Truffle and Graal toolchain, so we expect external validity
 there at least --- we expect the results would transfer to other Graal
 VMs doing similar AST-based optimisations.  We have less external
 validity regarding kinds of VMs (such as specialised VMs for
-particular languages, or VMs build via meta-tracing rather than AST
+particular languages, or VMs built via meta-tracing rather than AST
 self-optimisation) but insofar as we rely on common techniques, we
 expect our results should be transferable.
 
 Finally, because we are working in Grace, it is less obvious that our
-results generalise to other gradually typed-languages. we have worked
+results generalise to other gradually typed-languages. We have worked
 to ensure e.g.\ our benchmarks do not depend on any features of Grace
 that are not common in other gradually-typed object-oriented
 languages, but as Grace lacks a large corpus of programs the
 benchmarks are necessarily artificial, and it is not clear how the
 results would transfer to the kinds of programs actually written in
-practice. The advantage of Grace (and Moth) here for the research, is
+practice. The advantage of Grace (and Moth) here for the research is
 that their relative simplicity means we have been able to build an
 implementation with competitive performance with significantly less
-effort than would be require for larger and more complex languages.
+effort than would be required for larger and more complex languages.
