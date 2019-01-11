@@ -50,9 +50,9 @@ other\citep{betabook}.
 Critically, Grace's declarations and methods' arguments
 and results can be annotated with types, and those types can be  checked
 either statically or dynamically. This means the type system is
-intrinsically gradual:
+intrinsically gradual:%
 %
-type annotations should not affect the semantics of a correct
+~type annotations should not affect the semantics of a correct
 program\citep{XXXSiek2015}, and the type system
 includes a distinguished ``Unknown'' type which matches any other type
 and is the implicit type for untyped program parts.
@@ -83,8 +83,7 @@ reduce the necessary work dramatically,
 because they allow language implementers to leverage existing VMs
 and their support for just-in-time compilation and garbage collection.
 
-To leverage this infrastructure, we developed an interpreter for Grace,
-called Moth\citep{Roberts2017}, by adapting \SOMns\citep{SOMns}.
+Moth\citep{Roberts2017} adapts \SOMns\citep{SOMns} to leverage this infrastructure for Grace.
 %\citeurl{\SOMns.}{SOMns: A Newspeak for Concurrency Research}{Stefan Marr}{}{https://github.com/smarr/SOMns/}
 \SOMns is a Newspeak implementation\citep{Bracha:10:NS} on top of the Truffle framework and the Graal just-in-time compiler,
 which are part of the GraalVM project.
@@ -95,15 +94,19 @@ They represent the structure of an object and the types of its fields.
 In \SOMns, shapes correspond to the class of an object and augment it with
 run-time type information.
 
-Since Newspeak and Grace are related languages,
-\SOMns provides a good foundation for a new Grace implementation,
-allowing us to reach the performance of V8,
+% Since Newspeak and Grace are related languages,
+% \SOMns provides a good foundation for a new Grace implementation,
+Moth is mostly compliant to the Grace specification.
+With Moth's implementation,
+\SOMns was changed to parse Grace code,
+with slight adaption to self-optimizing abstract-syntax-tree nodes
+to conform to Grace's semantics.
+Despite these changes Moth
+preserves the peak performance of \SOMns,
+which reaches that of V8,
 Google's JavaScript implementation
-(cf. \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016})
-with only moderate effort.
-\SOMns was changed to parse Grace code, and 
-\SOMns' self-optimizing abstract-syntax-tree nodes were only slightly adapted to conform to Grace's semantics.
-As a result, Moth is mostly compliant to the Grace specification.
+(cf. \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
+
 
 % \ugh{One exception is that it still supports the \code{nil} value of
   % Newspeak.}\kjx{who cares}
