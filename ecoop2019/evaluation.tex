@@ -50,7 +50,9 @@ and plots are generated with ggplot 2.2.1 and tikzDevice 0.11.
 Our experimental setup is available online to enable reproductions.\footnote{
 %% \smtodo{add version info}
 % TODO: for final version add version info
-\url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}}
+  Removed for blinding
+%\url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}
+}
 
 
 \subsection{\AWFY?}
@@ -88,7 +90,7 @@ We compare across languages based on the \AWFY benchmarks\citep{Marr2016},
 which are designed to enable a comparison
 of the effectiveness of compilers across different languages.
 To this end, they use only a common set of core language elements.
-While this reduces the performance relevant differences between languages,
+While this reduces the performance-relevant differences between languages,
 the set of core language elements covers only common object-oriented language
 features with first-class functions.
 Consequently, these benchmarks are not necessarily a predictor
@@ -108,7 +110,7 @@ We see that Node.js (V8) is about
 \OverheadNodeGMeanX (min. \OverheadNodeMinX, max. \OverheadNodeMaxX)
 slower than Java.
 Moth is about \OverheadMothGMeanX (min. \OverheadMothMinX, max. \OverheadMothMaxX) slower than Java.
-As such, its on average \OverheadMothNodeGMeanP (min. \OverheadMothNodeMinP, max. \OverheadMothNodeMaxX) slower than Node.js.
+As such, it is on average \OverheadMothNodeGMeanP (min. \OverheadMothNodeMinP, max. \OverheadMothNodeMaxX) slower than Node.js.
 Compared to the Higgs VM, which is on these benchmarks
 \OverheadHiggsGMeanX (min. \OverheadHiggsMinX, max. \OverheadHiggsMaxX) slower than Java,
 Moth reaches the performance of Node.js more closely.
@@ -190,8 +192,8 @@ which optimization is applied,
 and the following columns show the mean,
 minimum, and maximum number of invocations of the tests.
 
-The baseline without optimizations are the rows with the results
-for neither of the optimization being enabled.
+The baselines without optimizations are the rows with the results
+for neither of the optimizations being enabled.
 Depending on the benchmark,
 we see that the type tests
 are done tens of millions
@@ -200,7 +202,7 @@ for a single iteration of a benchmark.
 
 Our optimizations reduce the number of type test invocations dramatically.
 As a result, the check for the subtyping relationship is done only once for 
-a specific type and the a possible super type.
+a specific type and a possible super type.
 Similarly, the generic type check is replaced by a shape check
 and thus minimizes the number of expensive type checks
 to the number of lexical locations that verify types

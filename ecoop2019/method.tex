@@ -408,7 +408,7 @@ governmentCar.registerTo( |\label{ex:invoke-register-to}|
 %This section gives an overview of a possible implementation
 %based on an abstract-syntax-tree (AST) interpreter.
 
-We have our implemented gradual type checks 
+We have implemented our gradual type checks 
 by extending Moth, 
 an abstract-syntax-tree (AST) interpreter for
 Grace (\cref{ssec:moth}).
@@ -485,10 +485,10 @@ class Type:
 
 \smtodo{would be nice to measure all of these optimizations...}
 
-There are two aspects to our implementation that are critical for a minimal overhead solution:
+There are two aspects to our implementation that are critical for a minimal-overhead solution:
 
 \begin{itemize}
-  \item specialized executions of the type checking node, along with guards to protect these specialized version, and
+  \item specialized executions of the type checking node, along with guards to protect these specialized versions, and
   \item a matrix to cache sub-typing relationships to eliminate redundant executions.
 \end{itemize}
  
