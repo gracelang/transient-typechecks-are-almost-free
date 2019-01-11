@@ -313,12 +313,11 @@ where we assume that most code is executed in the interpreter,
 the overhead appears minimal.
 Only the Mandelbrot benchmark shows a noticeable slowdown.
 However, benchmarks such as Float, PyStone, and GraphSearch show various spikes.
-\rr{I restructured the remainder of this paragraph. Does it still make sense?}
 Since spikes appear in both directions (speedups and slowdowns),
-we assume that they indicates a shift;
-such as garbage collection pauses
-possibly triggered by the additional data structures for type information.
-paired with heap configurations.
+we assume that they indicate a shift,
+for instance, of garbage collection pauses,
+which may happen because of different heap configurations
+triggered by the additional data structures for type information.
 
 
 % discuss optimization techniques?
