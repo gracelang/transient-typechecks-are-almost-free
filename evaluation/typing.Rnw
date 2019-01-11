@@ -1,4 +1,4 @@
-%!TEX root = ../paper.tex
+%!TEX root = ../ecoop2019/paper.tex
 
 <<knitr-settings, echo=FALSE, include=FALSE>>=
 # load libraries, the data, and prepare it
@@ -10,10 +10,11 @@ source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
 # bench <- readRDS("acme.rds.bz2")
-data_0 <- select(load_data_file("010-f8d6ca79-moth.data.bz2"),
-                 c("Value", "Unit", "Benchmark", "VM", "Iteration"))
-data_warmup <- filter(data_0, Iteration <= warmup_low)
-data_0 <- filter(data_0, Iteration >= warmup_low & Iteration < warmup_high)
+data_0 <- load_data_file("023-a3e099e1-full-run.data.bz2") %>%
+  select(c("Value", "Unit", "Benchmark", "VM", "Iteration")) %>%
+  filter(VM == "Moth (both)" | VM == "Moth (untyped)")
+data_warmup <- filter(data_0, Iteration <= warmup_low_fast)
+data_0 <- filter(data_0, Iteration >= warmup_low_fast & Iteration < warmup_high)
 
 
 #data <- rbind(data_1, data_2)
@@ -21,15 +22,15 @@ data_0 <- filter(data_0, Iteration >= warmup_low & Iteration < warmup_high)
 data <- droplevels(data_0)
 data_warmup <- droplevels(data_warmup)
 
-# levels(droplevels(filter(data, VM == "MothTyped"))$Benchmark)
+# levels(droplevels(filter(data, VM == "Moth (both)"))$Benchmark)
 
 moth <- data %>%
-  filter(VM == "Moth") %>%
+  filter(VM == "Moth (untyped)") %>%
   group_by(Benchmark) %>%
   summarise(RuntimeMean = mean(Value))
 
 moth_warmup <- data_warmup %>%
-  filter(VM == "Moth") %>%
+  filter(VM == "Moth (untyped)") %>%
   group_by(Benchmark) %>%
   summarise(RuntimeMean = mean(Value))
 
@@ -44,8 +45,8 @@ norm_warmup <- data_warmup %>%
   transform(RuntimeRatio = Value / RuntimeMean)
 
 norm_warmup <- data_warmup %>%
-  filter(VM=="MothTyped") %>%
-  left_join(data_warmup %>% filter(VM=="Moth"), by = c("Benchmark", "Iteration", "Unit")) %>%
+  filter(VM=="Moth (both)") %>%
+  left_join(data_warmup %>% filter(VM=="Moth (untyped)"), by = c("Benchmark", "Iteration", "Unit")) %>%
   group_by(Benchmark) %>%
   transform(RuntimeRatio = Value.x / Value.y)
 
@@ -71,7 +72,7 @@ vm_stats <- stats %>%
 
 \def\TypingOverhead{%
 <<typing-overhead, fig.height=3.6, fig.width=3.3>>=
-typing_overhead <- droplevels(filter(norm, VM=="MothTyped"))
+typing_overhead <- droplevels(filter(norm, VM=="Moth (both)"))
 #to_vm_names <- vm_names[levels(typing_overhead$VM)]
 #typing_overhead$VM <- revalue(typing_overhead$VM, to_vm_names)
 
@@ -115,21 +116,21 @@ p + theme_bw() + theme(
 @
 }%
 
-\newcommand{\OverheadTypingGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="MothTyped")$geomean)}x\xspace}
-\newcommand{\OverheadTypingMinX}{\Sexpr{X1(filter(vm_stats, VM=="MothTyped")$min)}x\xspace}
-\newcommand{\OverheadTypingMaxX}{\Sexpr{X1(filter(vm_stats, VM=="MothTyped")$max)}x\xspace}
+\newcommand{\OverheadTypingGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Moth (both)")$geomean)}x\xspace}
+\newcommand{\OverheadTypingMinX}{\Sexpr{X1(filter(vm_stats, VM=="Moth (both)")$min)}x\xspace}
+\newcommand{\OverheadTypingMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Moth (both)")$max)}x\xspace}
 
-\newcommand{\OverheadTypingGMeanP}{\Sexpr{per(filter(vm_stats, VM=="MothTyped")$geomean)}\%\xspace}
-\newcommand{\OverheadTypingMinP}{\Sexpr{per(filter(vm_stats, VM=="MothTyped")$min)}\%\xspace}
-\newcommand{\OverheadTypingMaxP}{\Sexpr{per(filter(vm_stats, VM=="MothTyped")$max)}\%\xspace}
+\newcommand{\OverheadTypingGMeanP}{\Sexpr{per(filter(vm_stats, VM=="Moth (both)")$geomean)}\%\xspace}
+\newcommand{\OverheadTypingMinP}{\Sexpr{per(filter(vm_stats, VM=="Moth (both)")$min)}\%\xspace}
+\newcommand{\OverheadTypingMaxP}{\Sexpr{per(filter(vm_stats, VM=="Moth (both)")$max)}\%\xspace}
 
-\newcommand{\OverheadListP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "List")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadListP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "List")$RuntimeFactor)}\%\xspace}
 
-\newcommand{\OverheadPermuteP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "Permute")$RuntimeFactor)}\%\xspace}
-\newcommand{\OverheadGraphSearchP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "GraphSearch")$RuntimeFactor)}\%\xspace}
-\newcommand{\OverheadStorageP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "Storage")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadPermuteP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "Permute")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadGraphSearchP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "GraphSearch")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadStorageP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "Storage")$RuntimeFactor)}\%\xspace}
 
-\newcommand{\OverheadRichardsP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "Richards")$RuntimeFactor)}\%\xspace}
-\newcommand{\OverheadCDP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "CD")$RuntimeFactor)}\%\xspace}
-\newcommand{\OverheadSnakeP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "Snake")$RuntimeFactor)}\%\xspace}
-\newcommand{\OverheadTowersP}{\Sexpr{per(filter(stats, VM=="MothTyped" & Benchmark == "Towers")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadRichardsP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "Richards")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadCDP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "CD")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadSnakeP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "Snake")$RuntimeFactor)}\%\xspace}
+\newcommand{\OverheadTowersP}{\Sexpr{per(filter(stats, VM=="Moth (both)" & Benchmark == "Towers")$RuntimeFactor)}\%\xspace}

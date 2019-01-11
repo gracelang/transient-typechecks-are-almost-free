@@ -14,7 +14,8 @@ if (Sys.getenv("RSTUDIO") != "1") {
 }
 
 ## Determine by inspection of warmup-plot.Rmd
-warmup_low <- 350
+warmup_low <- 25
+warmup_low_fast <- 350
 warmup_high <- 990
 
 vm_names <- c(
@@ -29,7 +30,7 @@ vm_names <- c(
   "SOMns-Enterprise"      = "SOMns GraalVM",
   
   "Higgs"      = "Higgs",
-  "Moth"      = "Moth",
+  "Moth (untyped)"  = "Moth",
   "MothTyped" = "Fully Typed")
 
 vms_all <- names(vm_names)
