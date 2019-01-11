@@ -383,9 +383,24 @@ performance of unit tests, which has an important impact on developer productivi
 
 \begin{figure}
 	\TypeCost{}
-	\caption{PERF  IMPACT OF TYPES. TODO!}
+  \caption{Transient Typechecks are (Almost) Free.
+    Two microbenchmarks demonstrating the common scenario that the addition
+    of type annotations in our system does not have an impact on peak performance.
+    The two microbenchmarks are measured in 6 variants, stepwise increasing the number
+    of method arguments that have type annotations.
+    Moth (neither), \ie, Moth without our two optimizations sees a linear increase in run time.
+    Note that the y axis has a logarithmic scale to preserve details for the optimal case.
+    Moth (both) and Moth (untyped) have on both benchmarks essentially the same performance
+    independent of the number of method arguments with type annotations.}
 	\label{fig:type-cost-micro}
 \end{figure}
+
+\Cref{fig:type-cost-micro} shows the common scenario that additional type annotations
+in our system do not incur an run-time overhead.
+The used benchmarks Check and Nest have at their core methods with 5 parameters.
+The Check benchmark calls the same method 10 times in a row, \ie, it has 10 call sites.
+The Nest benchmark has 10 methods with identical signatures,
+which recurse from the first one to the last one.
 
 
 \smtodo{Conclusion}
