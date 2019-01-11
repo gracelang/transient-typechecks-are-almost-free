@@ -191,7 +191,7 @@ with checks for object shapes, and our matrix to cache sub-typing information.
 by the benchmarks during execution.
 We distinguish two operations \code{check\_generic} and \code{is\_subtype\_of},
 which correspond to the operations in
- \cref{ex:typenode:generic} and \cref{ex:type:satisfied} of \Cref{ex:type}.
+ \cref{ex:typenode:generic} and \cref{ex:type:satisfied} of \cref{ex:type}.
 Thus, \code{check\_generic} is the test called
 whenever a full type check has to be performed,
 and \code{is\_subtype\_of} is the part of the check that
@@ -352,10 +352,34 @@ triggered by the additional data structures for type information.
 % \end{cnote}
 
 \begin{figure}
+  \centering
 	\OptimizationOverview{}
-	\caption{PERF  IMPACT OF OPTIMIZATIONS. TODO!}
+  \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
+  The boxplot shows the performance of Moth normalized to the untyped version, \ie,
+  without any type checks.
+  The performance of Moth with both optimization and Moth
+  with only the node for optimized type checks are identical.
+  The subtype check cache improves performance over the unoptimized version,
+  but does not contribute to the peak performance.
+  }
 	\label{fig:perf-impact-optimization}
 \end{figure}
+
+\Cref{fig:perf-impact-optimization} shows how Moth performance on average over
+all benchmarks, depending on the activated optimizations.
+As seen before, the untyped version is faster by \OverheadTypingGMeanP.
+Moth with both optimizations enabled as well as
+Moth with the optimized type-check node (cf. \cref{ex:type})
+reach the same performance.
+This indicates that the subtype cache matrix is not strictly necessary for
+the peak performance.
+However, we can see that the subtype cache matrix improves performance
+by an order of magnitude over the Moth version without any type check optimizations.
+This shows that it is a relevant and useful optimization.
+Combined with the numbers of \cref{tab:type-statistics},
+this optimization is going to be relevant for the very first execution of code.
+A typical scenario of interest for developers would be for instance the
+performance of unit tests, which has an important impact on developer productivity.
 
 \begin{figure}
 	\TypeCost{}
