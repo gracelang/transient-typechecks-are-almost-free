@@ -145,11 +145,31 @@ or were available in different versions.
 While not always behaviorally equivalent,
 we chose the \AWFY versions since we already used them to
 establish the performance baseline.
-The list of selected benchmarks is given in \cref{tab:gradual-benchmarks}.
+The selected benchmarks as well as the papers in which they were used are shown in
+\cref{tab:gradual-benchmarks}.
 
-The benchmarks were modified to have complete type information
-(we added an additional check to Moth that
-reports absent type information to ensure each benchmark was complete).
+\begin{table}[htb]
+  \caption{Benchmarks selected from literature.}
+  \label{tab:gradual-benchmarks}
+  \begin{center}
+    \begin{tabular}{l l r}
+      Fannkuch & \cite{Vitousek2017,Greenman2018} \\
+      Float & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+      Go & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+      NBody & \cite{Kuhlenschmidt:2018:preprint,Vitousek2017,Greenman2018} & used \cite{Marr2016} \\
+      Queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} & used \cite{Marr2016} \\
+      PyStone & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+      Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
+      Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
+      SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
+    \end{tabular}  
+  \end{center}
+\end{table}
+
+The benchmarks were modified to have complete type information.
+To ensure correctness and completeness of these experiments,
+we added an additional check to Moth that
+reports absent type information to ensure each benchmark is completely typed.
 To assess the performance overhead of type checking,
 we compare the execution of Moth with all checks disabled, \ie, the baseline version from 
 \cref{sec:baseline-perf}, against an execution that has all checks enabled.
@@ -157,23 +177,6 @@ We did not measure programs that mix typed and untyped code
 because with our implementation technique a fully typed program is expected to
 have the largest overhead.
 
-\begin{table}
-\caption{Benchmarks selected from literature.}
-\label{tab:gradual-benchmarks}
-\begin{center}
-  \begin{tabular}{l l r}
-    Fannkuch & \cite{Vitousek2017,Greenman2018} \\
-    Float & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-    Go & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-    NBody & \cite{Kuhlenschmidt:2018:preprint,Vitousek2017,Greenman2018} & used \cite{Marr2016} \\
-    Queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} & used \cite{Marr2016} \\
-    PyStone & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-    Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
-    Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
-    SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-  \end{tabular}  
-\end{center}
-\end{table}
 
 \subsubsection{Effectiveness of Optimizations}
 \smtodo{revise in the context of the previous sections. perhaps reduce redundancy/verbosity}
@@ -195,7 +198,23 @@ determines the relationship between two types.
 The second column of \cref{tab:type-statistics} indicates
 which optimization is applied,
 and the following columns show the mean,
-minimum, and maximum number of invocations of the tests.
+minimum, and maximum number of invocations of the tests
+over all benchmarks.
+
+\begin{table}[htb]
+  \caption{Type Test Statistics over all Benchmarks.
+  It shows how many of the type tests can be avoided based on our two optimizations.
+  With the use of an optimized node that replaces type checks with simple object shape checks,
+  \code{check\_generic} is invoked only for the first time that a lexical location
+  sees a specific object shape, which eliminates run-time type checks almost completely.
+  Using our subtype matrix that caches type-check results,
+  invocations of \code{is\_subtype\_of} are further reduced by an order of magnitude.}
+  \label{tab:type-statistics}
+
+  \begin{center}
+    \TypingStatsTable{}  
+  \end{center}
+\end{table}
 
 The baselines without optimizations are the rows with the results
 for neither of the optimizations being enabled.
@@ -218,21 +237,6 @@ In the following section,
 we show the corresponding impact on performance
 and how the optimizations enable a just-in-time compiler
 to minimize run-time overhead.
-
-\begin{table}
-  \caption{Type Test Statistics over all Benchmarks.
-  It shows how many of the type tests can be avoided based on our two optimizations.
-  With the use of an optimized node that replaces type checks with simple object shape checks,
-  \code{check\_generic} is invoked only for the first time that a lexical location
-  sees a specific object shape, which eliminates run-time type checks almost completely.
-  Using our subtype matrix that caches type-check results,
-  invocations of \code{is\_subtype\_of} are further reduced by an order of magnitude}
-  \label{tab:type-statistics}
-
-  \begin{center}
-    \TypingStatsTable{}  
-  \end{center}
-\end{table}
 
 \subsubsection{Impact on Performance}
 
