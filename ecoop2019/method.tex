@@ -234,20 +234,21 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 %\paragraph{Flexibility.}
 %\paragraph{Semnatics}
 
-\kjx{isn't most of this covered by the earlier para above now? -- so
-  can we delete this one? please!?}
-While Grace's static type system supports full static type
-checking\citep{graceOnward12}, Grace's specification requires dynamic
-type tests to be \emph{shallow}, that is, they check only for the
-presence and arity of methods in an object, rather than also checking
-conformance of argument and result types.  This is to ensure that the
-presence or absence of type annotations does not affect the execution
-of a program, for the reason originally outlined by
-Boyland~\cite{Boyland2014}, thus maintaining a version of the gradual
-guarantee.  The resulting semantics are \del{more-or-less}\sm{we really need to say something stronger here or drop this} equivalent to
-type-tag soundness\citep{reticPython2014,Vitousek2017,Greenman2018}.
-\kjx{now saying ``equivalent'', punting fine details to the related work section - but
-  I suggest we kill this para}.
+% \kjx{isn't most of this covered by the earlier para above now? -- so
+%   can we delete this one? please!?}
+% While Grace's static type system supports full static type
+% checking\citep{graceOnward12}, Grace's specification requires dynamic
+% type tests to be \emph{shallow}, that is, they check only for the
+% presence and arity of methods in an object, rather than also checking
+% conformance of argument and result types.  This is to ensure that the
+% presence or absence of type annotations does not affect the execution
+% of a program, for the reason originally outlined by
+% Boyland~\cite{Boyland2014}, thus maintaining a version of the gradual
+% guarantee.  The resulting semantics are \del{more-or-less}\sm{we really need to say something stronger here or drop this} equivalent to
+% type-tag soundness\citep{reticPython2014,Vitousek2017,Greenman2018}.
+% \kjx{now saying ``equivalent'', punting fine details to the related work section - but
+%   I suggest we kill this para}.
+
 %% SM: someone should really take a really close look at these and identify the
 %%     differences. And I don't want to do that.
 % ---the difference being that
