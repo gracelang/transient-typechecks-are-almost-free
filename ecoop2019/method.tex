@@ -21,15 +21,15 @@
 % motivation = give students low-overhead method to check program
 The static core of Grace's type system is well described
 elsewhere\citep{TimJonesThesis};%
-% \mwh{This reference doesn't discuss
-% typing at all; was it meant to be the brands paper? Or perhaps one
-% of Tim's Tinygrace papers?}\kjx{Tim's thesis}
+\mwh{This reference doesn't discuss
+typing at all; was it meant to be the brands paper? Or perhaps one
+of Tim's Tinygrace papers?}\kjx{Tim's thesis}
 ~here we explain how
 these types can be understood 
-dynamically, from a student or a novice programmer's point of view.
+dynamically, from the Grace programmer's point of view.
 %\kjx{code for: no formalism, sorry.}
-Following from the design goals behind Grace,
-our motivation for this work
+% Following from the design goals behind Grace,
+Our motivation for this work
 is to provide a flexible system 
 to check consistency between an execution of a program
 and its type annotations,
@@ -48,27 +48,28 @@ only a small set of changes to facilitate integration in existing systems.
 %
 
 
-These goals are shared with much of the other work on gradual type
-systems, but our context leads to some different choices. First, so
-that students can see concrete examples of type errors, they should be
-able to run their programs even if those programs are not statically type-correct%
----\ie Grace's static type checking is optional, and so an
-implementation cannot depend on the correctness or mutual
-compatibility of a program's type
-annotations.
-
-Second, while checking Grace's type annotations
-statically may be optional, checking them dynamically should
-not be: any value that flows into a variable, argument, or result
+These goals are shared with
+much of the other work on gradual type systems,
+but our context leads to some different choices.
+First,
+while checking Grace's type annotations statically may be optional,
+checking them dynamically should not be:%
+~any value that flows into a variable, argument, or result
 annotated with a type must conform to that type annotation.
-This means the focus is not to devise a sound typing approach,
+This means our focus is not to devise a sound typing approach,
 but rather an approach that ensures that the observed execution matches
 the one the Grace programmer expects when considering a program's type annotations.
-
-Third, adding type
-annotations should not degrade a program's performance, or rather,
-programmers should not be encouraged to improve performance by removing
-type annotations.
+Second, 
+adding type annotations should not degrade a program's performance,
+or rather, programmers should not be encouraged to
+improve performance by removing type annotations.
+And third, 
+we allow the programmer to execute a program even when not statically type-correct.\footnote{Grace's static type checking is optional, and so an
+implementation cannot depend on the correctness or mutual
+compatibility of a program's type
+annotations.}
+Allowing such execution is useful to students,
+where they can see concrete examples of dynamic type errors.
 %However, reported errors should conform to the basic expectations one
 %may derive from the type annotations
 %and a strict interpretation of their shallow semantics.
@@ -138,21 +139,20 @@ in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards201
 
 %
 
-\kjx{adjusted the order through here}
+% \kjx{adjusted the order through here}
 
-Grace is structurally typed\citep{graceOnward12}:
+In our system,
+as with Grace\citep{graceOnward12},
 an object implements a type whenever it
-implements all the methods required by a 
-type, rather than requiring classes or objects to declare types explicitly.
+implements all the methods required by a type,
+rather than requiring classes or objects to declare types explicitly.
 Methods match when they have the same name and arity.
-A type thus expresses the requests
-an object can respond to, for example whether a particular accessor is
-available,  rather than a nominal location in an explicit inheritance
-hierarchy.
-
+A type thus expresses the requests an object can respond to,
+for example whether a particular accessor is available,
+rather than a nominal location in an explicit inheritance hierarchy.
 
 Our gradual type checks for Grace are designed to be simple,
-straightforward, and easy for students to understand:
+straightforward, and easy to understand:
 \begin{itemize}
   \item types are sets of methods (first-order interfaces)
   \item all gradual type annotations are checked at run time
@@ -183,18 +183,15 @@ writes of variables, along with return values on the receiver side
 % documented through their annotations
 % while avoiding the burden of fully typing their program.
 
-
-
-
-We illustrate how the gradual type checks work in practice
-in the context of an exercise where a student is developing
-a program to record information about vehicles.
-Our student can begin developing their vehicle
+Finally,
+we now illustrate how the gradual type checks work in practice
+in the context of a simple program to record information about vehicles.
+Suppose the programmer starts developing this vehicle
 application by defining an object intended to represent a car
-(\cref{lst:car-reg}, \cref{ex:object}) and write a method that, given
+(\cref{lst:car-reg}, \cref{ex:object}) and writes a method that, given
 the car object, prints out its registration number (\cref{ex:method}).
 
-\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},float,label=lst:car-reg,escapechar=|,columns=flexible]
+\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},float,label=lst:car-reg,escapechar=|,columns=flexible,float,floatplacement=H]
 def car = object {|\label{ex:object}|
     var registration is public := "JO3553"
 }
@@ -204,21 +201,22 @@ method printRegistration(v) {|\label{ex:method}|
 }
 \end{lstlisting}
 
-Next, the student could decide to ensure that any object passed to the
+Next, the programmer adds a check to ensure that any object passed to the
 \code{printRegistration} method will respond to the
-\code{registration} request.  To get this support, the student first
-defines the structural type \code{Vehicle}\citep{theCleanVehicle}
-naming just that method (\cref{ex:vehicle},
-\cref{ex:adding-type:vehicle}), and then annotates the
-\code{printRegistration} method's argument with that type
-(\cref{ex:vehicle}, \cref{ex:adding-type}). This ensures the student
-will be alerted as soon as a value that does not conform to this
-expected type is passed into the \code{printRegistration} method,
-rather than crashing somewhere in the middle of the
-implementation of the \code{print} method.
+\code{registration} request; 
+they define the structural type \code{Vehicle}\citep{theCleanVehicle}
+naming just that method (\cref{ex:vehicle}, \cref{ex:adding-type:vehicle}), 
+and then annotates the \code{printRegistration} method's
+argument with that type (\cref{ex:vehicle}, \cref{ex:adding-type}).
+The annotation ensures that a type error will be thrown if an object,
+passed to the \code{printRegistration} method,
+cannot respond to the ``registration'' message.
+Furthermore, as type errors constituent termination, 
+a crash somewhere in the middle of the
+implementation of the \code{print} method
+will now be avoided.
 
-
-\begin{lstlisting}[label={ex:vehicle},caption={Adding a type annotation to a method parameter.},escapechar=|,columns=flexible]
+\begin{lstlisting}[label={ex:vehicle},caption={Adding a type annotation to a method parameter.},escapechar=|,columns=flexible,float,floatplacement=H]
 type Vehicle = interface { |\label{ex:adding-type:vehicle}|
     registration    
 }
@@ -227,6 +225,7 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
     print "Registration: {v.registration}"
 }
 \end{lstlisting}
+
 
 % \sm{you already said the following}
 % By adding the type annotation to the program,
@@ -283,13 +282,10 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 % that our shallow approach to types
 % allows for more flexible use 
 % without requiring type parameters, \ie, generics.
-An important aspect of our design is that it allows students to see 
-concrete examples of type errors. 
-In \cref{ex:complex}, the student
-creates two cars objects
+In \cref{ex:complex}, 
+the programmer continues development and creates two cars objects 
 (\cref{ex:personal-car,ex:government-car}),
-that conform to
-an expanded \code{Vehicle} type (\cref{ex:new-vehicle}).
+that conform to an expanded \code{Vehicle} type (\cref{ex:new-vehicle}).
 Note that each version of the \code{registerTo} method
 declares a different type for its parameter
 (\cref{ex:personal-car:registerTo,ex:government-car:registerTo}).
@@ -302,15 +298,17 @@ declares a different type for its parameter
 % while preserving the guarantee that any value found to be
 % inconsistent with the annotation will result in
 % a termination by a typing error.
-When the student runs this program, both \code{personal\-Car} and
-\code{governmentCar} can be assigned to \code{Vehicle} because that
-check considers only that the vehicle has a \code{registerTo} method,
+When the programmer executes this program,
+both \code{personal\-Car} and \code{governmentCar} can be assigned to
+\code{Vehicle} because that check considers only that the
+vehicle has a \code{registerTo} method,
 but not the required argument type of that method.
-At \cref{ex:invoke-register-to} the student can attempt to register a
-government car to a person: only when the method is invoked
-(\cref{ex:government-car:registerTo}) will the gradual type test on the
-argument fail (the object that is passed in is not a
-\code{Department}) even though the body of the \code{registerTo} method
+At \cref{ex:invoke-register-to} the developers 
+attempts to register a government car to a person:%
+~only when the method is invoked (\cref{ex:government-car:registerTo})
+will the gradual type test on the argument fail
+(the object that is passed in is not a \code{Department})
+even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
 annotation requires of the argument.
 
@@ -330,9 +328,8 @@ annotation requires of the argument.
 % The student may be satisfied that a particular test passes successfully, and
 % is then free to address the inconsistency in later development.
 
-
 \begin{lstlisting}[caption={A program in development with inconsistent
-    types.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible]
+    types.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
 type Vehicle = interface { |\label{ex:new-vehicle}|
     registration
     registerTo(_)
@@ -468,7 +465,7 @@ An object satisfies a type if all members required by the type are provided
 by that object (\cref{ex:type:satisfied}).
 
 
-\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible]
+\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
 class Type:
   def init(members):
     self._members = members
