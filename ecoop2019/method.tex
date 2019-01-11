@@ -33,7 +33,7 @@ our motivation for this work
 is to provide a flexible system 
 to check consistency between an execution of a program
 and its type annotations,
-without significant impact on run-time performance.
+without significantly impacting run-time performance.
 A secondary goal is to have a design that can be implemented with
 only a small set of changes to facilitate integration in existing systems.
 %
@@ -413,8 +413,9 @@ governmentCar.registerTo( |\label{ex:invoke-register-to}|
 %This section gives an overview of a possible implementation
 %based on an abstract-syntax-tree (AST) interpreter.
 
-We have implemented gradual type checks 
-by extending the Moth abstract-syntax-tree (AST) interpreter for
+We have our implemented gradual type checks 
+by extending Moth, 
+an abstract-syntax-tree (AST) interpreter for
 Grace (\cref{ssec:moth}).
 %
 % We developed our implementation as an extension to Moth.
@@ -464,7 +465,7 @@ object conforms to that type.
 % Grace \code{interface} expressions, and also help
 % to support Grace's pattern matching facilities \cite{gracePatternsDLS12}.
 An object satisfies a type if all members required by the type are provided
-by the object (\cref{ex:type:satisfied}).
+by that object (\cref{ex:type:satisfied}).
 
 
 \begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible]
@@ -568,7 +569,7 @@ with a simple reference comparison.
 If the shapes are the same, we can assume the type check passed successfully.
 Note that shapes are not equivalent to types.
 However, shapes imply the set of members of an object, and thus,
-do imply whether an object fulfills a type.
+do imply whether an object fulfills one of our structural types.
 
 The other performance-critical aspect to our implementation
 is the use of a matrix to cache sub-typing relationships.
