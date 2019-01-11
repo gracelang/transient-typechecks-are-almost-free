@@ -110,10 +110,10 @@ dead?'' based on a systematic performance measurement on Typed Racket.
 The key here is their evaluation method, where they constructed a
 number of different permutations of typed and untyped code, and
 evaluated performance along the spectrum.
-Bauman~\textit{et~al.}~\cite{Bauman2017} replied to Takikawa~\textit{et~al.}'s study, but
-using Pycket\citep{Pycket2015}, a tracing JIT for Racket, rather
-than the standard Racket VM, although maintaining full gradually typed
-Racket semantics. Bauman~\textit{et~al.} are able to demonstrate most benchmarks
+Bauman~\textit{et~al.}~\cite{Bauman2017} replied to Takikawa~\textit{et~al.}'s study, in which they used Pycket\citep{Pycket2015} (a tracing JIT for Racket)
+rather than the standard Racket VM,
+but maintained full gradually-typed Racket semantics.
+Bauman~\textit{et~al.} are able to demonstrate most benchmarks
 with a slowdown of 2x on average over all configurations.
 Note that this is not directly comparable to our system,
 since typed modules do not need to do any checks at run time.
@@ -133,8 +133,6 @@ using object shapes to encode information about gradual types.
 %     to perform checks based on their contracts
 %     however, they can not reduce it to a simple pointer comparison as in our
 %     case, though they get the benefit of more precise checks
-
-
 Muehlboeck and Tate~\cite{Muehlboeck2017} also replied to
 Takikawa~\textit{et~al.}, using a similar benchmarking method applied
 to Nom, a language with features designed to make gradual types easier
@@ -167,10 +165,11 @@ performance for code without type annotations.
 Perhaps the closest to our approach are
 Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
 and Richards~\textit{et~al.}~\cite{Richards2017}.
-Vitousek~\textit{et~al.} describe dynamically checking ``tag-type''
-soundness for Reticulated Python (term coined by Greenman
+Vitousek~\textit{et~al.}~describe dynamically checking ``tag-type''
+soundness for Reticulated Python (a term coined by Greenman
 and Migeed~\cite{Greenman2018}), which they term the ``transient'' semantics.
-As with our work, Vitousek~\textit{et~al.} check only the ``top-level'' type of an
+As with our work, Vitousek~\textit{et~al.} check
+only the ``top-level'' type of an
 object against a declaration.
 \sm{any important difference we need to mention here?}
 \sm{and please make sure this is true!!}
