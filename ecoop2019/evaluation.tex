@@ -140,8 +140,9 @@ we chose the \AWFY versions since we already used them to
 establish the performance baseline.
 The list of selected benchmarks is given in \cref{tab:gradual-benchmarks}.
 
-The benchmarks were modified to have complete type information.
-We modified Moth to report absent type information and ensured it was complete.
+The benchmarks were modified to have complete type information
+(we added an additional check to Moth that
+reports absent type information to ensure each benchmark was complete).
 To assess the performance overhead of type checking,
 we compare the execution of Moth with all checks disabled, \ie, the baseline version from 
 \cref{sec:baseline-perf}, against an execution that has all checks enabled.
@@ -178,11 +179,12 @@ with checks for object shapes, and our matrix to cache sub-typing information.
 \Cref{tab:type-statistics} gives an overview of the number of type tests done
 by the benchmarks during execution.
 We distinguish two operations \code{check\_generic} and \code{is\_subtype\_of},
-which correspond to the operations in \cref{ex:typenode:generic} and \cref{ex:type:satisfied}.
-Thus, \code{check\_generic} is the test called when ever a full type check has to
-be performed, and \code{is\_subtype\_of} is part of it to determine the relationship
-between two types.
-As such, we expect \code{check\_generic} to used most often.
+which correspond to the operations in
+ \cref{ex:typenode:generic} and \cref{ex:type:satisfied} of \Cref{ex:type}.
+Thus, \code{check\_generic} is the test called
+whenever a full type check has to be performed,
+and \code{is\_subtype\_of} is the part of the check that
+determines the relationship between two types.
 The second column of \cref{tab:type-statistics} indicates
 which optimization is applied,
 and the following columns show the mean,
@@ -190,8 +192,11 @@ minimum, and maximum number of invocations of the tests.
 
 The baseline without optimizations are the rows with the results
 for neither of the optimization being enabled.
-Depending on the benchmark, we see that the type tests are done tenth of million
-to hundred of million times for a single iteration of a benchmark.
+Depending on the benchmark,
+we see that the type tests
+are done tens of millions
+to hundreds of millions times
+for a single iteration of a benchmark.
 
 Our optimizations reduce the number of type test invocations dramatically.
 As a result, the check for the subtyping relationship is done only once for 
@@ -199,9 +204,13 @@ a specific type and the a possible super type.
 Similarly, the generic type check is replaced by a shape check
 and thus minimizes the number of expensive type checks
 to the number of lexical locations that verify types
-combined with the number of shapes a specific lexical location sees at run time.
-In the following section, we show the corresponding impact on performance
-and how the optimizations enable a just-in-time compiler to minimize run-time overhead.
+combined with the number of shapes a specific lexical
+location sees at run time.
+
+In the following section,
+we show the corresponding impact on performance
+and how the optimizations enable a just-in-time compiler
+to minimize run-time overhead.
 
 \begin{table}
   \caption{Type Test Statistics over all Benchmarks.
@@ -222,8 +231,8 @@ and how the optimizations enable a just-in-time compiler to minimize run-time ov
 
 \begin{figure}
 	\TypingOverhead{}
-	\caption{A boxplot comparing the performance of Moth without type checking
-  to Moth with type checking.
+	\caption{A boxplot comparing the performance of Moth
+  with and without type checking.
   The plot depicts the run-time overhead on peak performance over
   the untyped performance. On average, transient type checking introduces
   an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
@@ -238,10 +247,11 @@ Overall, we see an average peak-performance overhead of
 
 % explain maxima
 
-The benchmark with the highest overhead of \OverheadListP is List,
-which traverses a linked list and has to check the list elements individually
-in a way that introduces checks that do not coincide with any shape checks
-on the relevant objects that are performed in the unchecked version.
+The benchmark with the highest overhead of \OverheadListP is List.
+The benchmark traverses a linked list and
+has to check the list elements individually.
+Unfortunately, the structure of this list introduces checks
+that do not coincide with shape checks on the relevant objects.
 We consider this benchmark a pathological case and discuss it
 in detail in \cref{sec:disc-pathological-case}.
 
@@ -250,7 +260,7 @@ Richards (\OverheadRichardsP), CD (\OverheadCDP),
 Snake (\OverheadSnakeP), and Towers (\OverheadTowersP).
 Richards has one major component, also a linked list traversal,
 similar to List.
-Snake and Towers primarily access  arrays in a way that introduces checks
+Snake and Towers primarily access arrays in a way that introduces checks
 that do not coincide with behavior in the unchecked version.
 
 % explain minima
