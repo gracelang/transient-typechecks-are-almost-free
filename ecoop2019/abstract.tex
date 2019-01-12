@@ -1,0 +1,43 @@
+\begin{abstract}
+  It is widely accepted that the additional run-time checks in a
+  gradually-typed language must cause a linear slowdown in the program's
+  execution.
+  %
+  This performance impact discourages the use of type annotations
+  because adding types can significantly worsen performance, despite the
+  benefits of typed code.
+  %
+  We show that in fact the overhead of transient checks can be near zero
+  with appropriate application of standard just-in-time optimization
+  techniques.
+  %
+  With these techniques programmers need not avoid adding types to their
+  code and a gradually-typed language can have run-time performance
+  comparable to state-of-the-art dynamic language implementations.
+
+%% Removing \kjx{redundant} type tests makes programs in these
+%% languages run faster. 
+% We add shallow-structural type checking
+% to an existing interpreter Grace, 
+%that enables developers to check 
+%that executions of their program are well-typed. % WTF else would you
+%need 'em
+%
+% Grace is designed primarily for education and, consequently,
+% the performance profile of its execution is important
+% to enable both teachers and students to explore different concepts.
+%
+% Following from Grace's design goals,
+% our focus is to provide flexible checking
+% with minimal overhead to execution.
+% We achieve flexibility through our shallow-structural design and,
+% for our implementation, 
+% we achieve minimal overhead by
+% taking advantage of common JIT VM techniques 
+% that can remove much of the overhead of dynamic type checking;
+% allowing programs with explicit dynamic checks 
+% to run at roughly the same speed as programs without those checks.
+% Overall, adopting common JIT techniques can make these languages
+% more effective in practice.
+
+\end{abstract}
