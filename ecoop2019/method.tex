@@ -281,7 +281,7 @@ method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
 % allows for more flexible use 
 % without requiring type parameters, \ie, generics.
 In \cref{ex:complex}, 
-the programmer continues development and creates two cars objects 
+the programmer continues development and creates two car objects 
 (\cref{ex:personal-car,ex:government-car}),
 that conform to an expanded \code{Vehicle} type (\cref{ex:new-vehicle}).
 Note that each version of the \code{registerTo} method
@@ -297,20 +297,21 @@ declares a different type for its parameter
 % inconsistent with the annotation will result in
 % a termination by a typing error.
 When the programmer executes this program,
-both \code{personal\-Car} and \code{governmentCar} conform to the type
-\code{Vehicle} because that type considers only the ability to respond
-to the \code{registration} \code{registerTo} messages
-(and not the argument types of that messages).
+both \code{personal\-Car} and \code{governmentCar} can be assigned to
+\code{Vehicle} because that check considers only that the vehicle has
+a \code{registerTo} method, but not the required argument type of that
+method.
+%
 At \cref{ex:invoke-register-to} the developer
 attempts to register a government car to a person:%
-~only when the method is invoked (\cref{ex:government-car:registerTo})
+~only when the method is \textit{invoked} (\cref{ex:government-car:registerTo})
 will the gradual type test on the argument fail
 (the object that is passed in is not a \code{Department}).
-The ability to execute statically invalid programs,
-is valuable because 
-it enables developers to test
-partially implemented programs and also
-lets students see concrete examples of dynamic type errors.
+%The ability to execute statically invalid programs,
+%is valuable because 
+%it enables developers to test
+%partially implemented programs and also
+%lets students see concrete examples of dynamic type errors.
 %\mwh{Should this/somewhere explain \textit{why} that is? It sounds a bit like just describing a flaw.} \rr{Added a further sentence, do you think its suitable?}
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
