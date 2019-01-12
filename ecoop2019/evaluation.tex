@@ -180,9 +180,10 @@ have the largest overhead.
 
 \paragraph*{Peak Performance}
 
-The overall results comparing Moth with all optimizations
-with the version that does not do any type checks
-are depicted in \cref{fig:typing-overhead}.
+\cref{fig:typing-overhead} depicts
+the overall results comparing Moth,
+with all optimizations,
+against the untyped version.
 We see an average peak-performance overhead of 
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
 
@@ -302,7 +303,7 @@ over all benchmarks.
 
 \begin{table}[htb]
   \caption{Type Test Statistics over all Benchmarks.
-  It shows how many of the type tests can be avoided based on our two optimizations.
+  This table shows how many of the type tests can be avoided based on our two optimizations.
   With the use of an optimized node that replaces type checks with simple object shape checks,
   \code{check\_generic} is invoked only for the first time that a lexical location
   sees a specific object shape, which eliminates run-time type checks almost completely.
@@ -349,7 +350,7 @@ by an order of magnitude over the Moth version without any type check optimizati
 This shows that it is a relevant and useful optimization.
 Combined with the numbers of \cref{tab:type-statistics},
 this optimization is going to be relevant for the very first execution of code.
-A typical scenario of interest for developers would be for instance the
+A typical scenario of interest for developers would be, for instance, the
 performance of unit tests, which has an major impact on developer productivity.
 
 \begin{figure}[htb]
@@ -358,7 +359,7 @@ performance of unit tests, which has an major impact on developer productivity.
   \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
   The boxplot shows the performance of Moth normalized to the untyped version, \ie,
   without any type checks.
-  The performance of Moth with both optimization and Moth
+  The performance of Moth with both optimizations and Moth
   with only the node for optimized type checks are identical.
   The subtype check cache improves performance over the unoptimized version,
   but does not contribute to the peak performance.
@@ -386,9 +387,9 @@ number of method activations, and only the shape of the activation stack differs
 
 Each benchmark exists in 6 variants, going from no type annotations
 over annotating only the first method parameter to annotating all 5 of the parameters.
-Furthermore, we present the results for the first iteration as well as iteration 100.
+Furthermore, we present the results for the first iteration as well as the hundredth iteration.
 The first iteration is executed at least partially in the interpreter,
-while iteration 100 executes compiled.
+while the hundredth iteration executes compiled.
 
 \Cref{fig:type-cost-micro} shows that such a common scenario of methods being 
 gradually annotated with types
@@ -402,14 +403,14 @@ For this case, we see that the performance overhead grows linearly.
 For Moth (both) and Moth (untyped) we see for the first iteration that
 the band of confidence intervals diverges, indicating that the additional type
 checks have an impact on startup performance.
-However, for iteration 100, the confidence intervals overlap
+However, for the hundredth iteration, the confidence intervals overlap
 for the optimized Moth as well as the one that does not perform typechecks.
-This means, the that Moth does not suffer from a general linear overhead for adding
-type checks.
+This means that Moth does not suffer from
+a general linear overhead for adding type checks.
 Instead, most type checks do not have an impact on peak performance.
 However, as previously argued for the List benchmark,
-this is only the case for checks that can be subsumed by shape checks that
-were performed already before adding type checks.
+this is only the case for checks that can be subsumed by shape checks
+(shape checks are performed whether or not type checks are presents).
 
 \begin{figure}
   \begin{subfigure}[t]{0.5\textwidth}
@@ -430,12 +431,13 @@ were performed already before adding type checks.
     The two microbenchmarks are measured in 6 variants, stepwise increasing the number
     of method arguments that have type annotations.
     Furthermore, we show the result for the first benchmark iteration and the
-    one hundreds.
+    one hundredth.
     Moth (neither), \ie, Moth without our two optimizations sees a linear increase in run time.
     For the first iteration, we see some difference between Moth (both) and Moth (untyped).
-    For iteration 100 however, the compiler eliminated the overhead of type checks
-    and both Moth variants have essentially the same performance
-    independent of the number of method arguments with type annotations.}
+    By the hundredth iteration, however, the compiler has eliminated
+    the overhead of the type checks
+    and both Moth variants essentially have the same performance
+    (independent of the number of method arguments with type annotations).}
 	\label{fig:type-cost-micro}
 \end{figure}
 
