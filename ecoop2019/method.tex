@@ -203,11 +203,11 @@ Next, the programmer adds a check to ensure that any object passed to the
 \code{registration} request; 
 they define the structural type \code{Vehicle}\citep{theCleanVehicle}
 naming just that method (\cref{ex:vehicle}, \cref{ex:adding-type:vehicle}), 
-and then annotates the \code{printRegistration} method's
+and annotate the \code{printRegistration} method's
 argument with that type (\cref{ex:vehicle}, \cref{ex:adding-type}).
 The annotation ensures that a type error will be thrown if an object,
 passed to the \code{printRegistration} method,
-cannot respond to the ``registration'' message.
+cannot respond to the \code{registration} message.
 Furthermore, as type errors constituent termination, 
 a crash somewhere in the middle of the
 implementation of the \code{print} method
@@ -296,10 +296,10 @@ declares a different type for its parameter
 % inconsistent with the annotation will result in
 % a termination by a typing error.
 When the programmer executes this program,
-both \code{personal\-Car} and \code{governmentCar} can be assigned to
-\code{Vehicle} because that check considers only that the
-vehicle has a \code{registerTo} method,
-but not the required argument type of that method.
+both \code{personal\-Car} and \code{governmentCar} conform to the type
+\code{Vehicle} because that type considers only the ability to respond
+to the \code{registration} \code{registerTo} messages
+(and not the argument types of that messages).
 At \cref{ex:invoke-register-to} the developer
 attempts to register a government car to a person:%
 ~only when the method is invoked (\cref{ex:government-car:registerTo})
