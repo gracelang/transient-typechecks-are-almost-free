@@ -7,6 +7,7 @@
   \textit{``It is a truth universally acknowledged, that a dynamic language
     in possession of a good user base, must be in want of a type system.''}
 \end{verse}
+\vspace*{-6ex}
 \begin{flushright}
 with apologies to Jane Austen.
 \end{flushright}
@@ -145,10 +146,28 @@ debug, and analyse.
 
 In this paper, we focus on the centre of the gradual typing
 spectrum: the transient, first-order, type-tag checks as used in
-Reticulated Python and similar systems. We demonstrate that an
-optimizing virtual machine allows transient type checks ``almost for
-free''\kjx{?} --- that is, with a
-relatively low overhead and a low implementation effort. These checks
+Reticulated Python and similar systems. 
+Several studies have found
+that these type checks have a negative impact on programs'
+performance.
+Chung, Li, Nardelli and Vitek, for example, found that 
+``\textit{The transient approach checks types at uses, so the act of
+  adding types to a program introduces more casts and may slow the
+  program down (even in fully typed code).}'' and say 
+``\textit{"transient semantics\ldots is a worst case scenario\ldots,
+  there is a cast at almost every call"}'' \cite{kafka18}.
+Greenman and Felleisen find that the slowdown is predictable, as
+transient checking ``\textit{imposes a run-time checking overhead that
+  is directly proportional to the number of [type annotations] in
+  the program"}'' \cite{bensurvey18icfp}, and 
+Greenman and Migeed, found a ``\textit{clear trend
+that adding type annotations adds performance overhead. The increase
+is typically linear.}'' \cite{Greenman2018}.  
+
+In this paper, we demonstrate that an
+optimizing virtual machine makes transient type checks ``almost
+free.''
+These checks
 are inserted na\"ively based on local 
 annotations and checked eagerly when control flow reaches them: 
 whenever an annotated method is called or
@@ -156,12 +175,12 @@ an annotated variable is accessed
 we check types dynamically and
 terminate the program with a type error if the check fails.
 Despite this simplistic approach, a just-in-time compiler can
-eliminate the redundant checks---%
+eliminate redundant checks---%
 removing almost all of the checking overhead,
 resulting in
 a performance profile aligned with untyped code.
 
-We evaluate our approach by adding our transient checks to Moth,
+We evaluate our approach by adding transient checks to Moth,
 an implementation of the Grace programming language
 built on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
