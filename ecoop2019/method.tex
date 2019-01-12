@@ -138,10 +138,9 @@ in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards201
 
 % \kjx{adjusted the order through here}
 
-In our system,
-as with Grace\citep{graceOnward12},
+In Grace\citep{graceOnward12},
 an object implements a type whenever it
-implements all the methods required by a type,
+implements all the methods required by that type,
 rather than requiring classes or objects to declare types explicitly.
 Methods match when they have the same name and arity.
 A type thus expresses the requests an object can respond to,
@@ -166,12 +165,12 @@ with the minor differences that Grace's semantics
 treat field access as method calls, and we check both reads and
 writes of variables, along with return values on the receiver side
 (see \S\ref{reticRW}).
-\kjx{can Michael check this?}
-\mwh{I think this is correct and a difference, but I'm not sure
-  exactly what Moth does. I think it should check on both caller and
-  receiver (and they will be collapsed if possible). This phrasing I
-  think is not inaccurate but perhaps imprecise.
-}
+%% \kjx{can Michael check this?}
+%% \mwh{I think this is correct and a difference, but I'm not sure
+%%   exactly what Moth does. I think it should check on both caller and
+%%   receiver (and they will be collapsed if possible). This phrasing I
+%%   think is not inaccurate but perhaps imprecise.
+%% }
 
 % Together these properties enable a flexible system
 % with minimal overhead
@@ -179,14 +178,6 @@ writes of variables, along with return values on the receiver side
 % execute with values that have the capabilities
 % documented through their annotations
 % while avoiding the burden of fully typing their program.
-
-Finally,
-we now illustrate how the gradual type checks work in practice
-in the context of a simple program to record information about vehicles.
-Suppose the programmer starts developing this vehicle
-application by defining an object intended to represent a car
-(\cref{lst:car-reg}, \cref{ex:object}) and writes a method that, given
-the car object, prints out its registration number (\cref{ex:method}).
 
 \begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},float,label=lst:car-reg,escapechar=|,columns=flexible,float,floatplacement=H]
 def car = object {|\label{ex:object}|
@@ -198,8 +189,18 @@ method printRegistration(v) {|\label{ex:method}|
 }
 \end{lstlisting}
 
-Next, the programmer adds a check to ensure that any object passed to the
-\code{printRegistration} method will respond to the
+
+
+Finally,
+we now illustrate how the gradual type checks work in practice
+in the context of a simple program to record information about vehicles.
+Suppose the programmer starts developing this vehicle
+application by defining an object intended to represent a car
+(\cref{lst:car-reg}, \cref{ex:object}) and writes a method that, given
+the car object, prints out its registration number (\cref{ex:method}).
+%
+Next, the programmer adds a check to ensure any object passed to the
+\code{print\-Reg\-is\-tra\-tion} method will respond to the
 \code{registration} request; 
 they define the structural type \code{Vehicle}\citep{theCleanVehicle}
 naming just that method (\cref{ex:vehicle}, \cref{ex:adding-type:vehicle}), 
@@ -304,16 +305,13 @@ At \cref{ex:invoke-register-to} the developer
 attempts to register a government car to a person:%
 ~only when the method is invoked (\cref{ex:government-car:registerTo})
 will the gradual type test on the argument fail
-(the object that is passed in is not a \code{Department})
-even though the body of the \code{registerTo} method
-does not rely on the \code{code} method that the \code{Department}
-annotation requires of the argument. 
+(the object that is passed in is not a \code{Department}).
 The ability to execute statically invalid programs,
-as described above, is valuable because 
+is valuable because 
 it enables developers to test
 partially implemented programs and also
 lets students see concrete examples of dynamic type errors.
-\mwh{Should this/somewhere explain \textit{why} that is? It sounds a bit like just describing a flaw.} \rr{Added a further sentence, do you think its suitable?}
+%\mwh{Should this/somewhere explain \textit{why} that is? It sounds a bit like just describing a flaw.} \rr{Added a further sentence, do you think its suitable?}
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
@@ -430,7 +428,7 @@ Our approach needs to check types of values at run-time:
 
 \begin{itemize}
 \item the values of arguments are checked after a method is requested, 
-      but before the body of the message is executed,
+      but before the body of the method is executed,
 \item the value returned by a method is checked after its body is executed, and
 \item the values of variables are checked
       whenever written or read by user code.
@@ -447,8 +445,8 @@ checks to the relevant AST nodes: the expected types for the argument
 and return values can be included with the node for requesting a
 method, and the expected type for a variable can be attached to the
 nodes for reading from and writing to that variable.  In practice, we
-encapsulate the logic of the check within a new type-checking AST
-node.  Moth's front end was adapted to parse and record type
+encapsulate the logic of the check within a new class of AST
+nodes, specially to support gradual type checking.  Moth's front end was adapted to parse and record type
 annotations and attach instances of this checking node as children of the
 existing method, variable read, and variable write nodes.
 
@@ -488,13 +486,12 @@ class Type:
 \subsection{Optimization}
 \label{ssec:optimization}
 
-\smtodo{would be nice to measure all of these optimizations...}
-
 There are two aspects to our implementation that are critical for a minimal-overhead solution:
 
 \begin{itemize}
   \item specialized executions of the type checking node, along with guards to protect these specialized versions, and
-  \item a matrix to cache sub-typing relationships to eliminate redundant executions.
+  \item a matrix to cache sub-typing relationships to eliminate
+    redundant exhaustive subtype tests.
 \end{itemize}
  
 %Here we discuss each of the aspects in more detail.
@@ -564,11 +561,11 @@ which checks that the object satisfies the expected type.
 If that is the case, it reads the shape of the object (cf. \cref{ssec:moth}) at specialization time,
 and caches it for later comparisons.
 Thus, during normal execution,
-we only need to read the shape of the object and then compare it to the cached one
+we only need to read the shape of the object and then compare it to the cached shape
 with a simple reference comparison.
 If the shapes are the same, we can assume the type check passed successfully.
-Note that shapes are not equivalent to types.
-However, shapes imply the set of members of an object, and thus,
+Note that shapes are not equivalent to types,
+however, shapes imply the set of members of an object, and thus,
 do imply whether an object fulfills one of our structural types.
 
 The other performance-critical aspect to our implementation
@@ -590,17 +587,17 @@ set of members is expressed by a previously-created type and, if so,
 we avoid creating the new instance and provide the existing one instead.
 
 
-Together the self-specializing type check node and the matrix-based record
+Together the self-specializing type check node and the cache matrix 
 ensure that our implementation eliminates redundancy, and
 consequently, we are able to minimize the run-time overhead of our system. 
 
-
-\smtodo{Yeah, then the insight here is that we can’t communicate
-  “purity”. And generally, I think the insight with many kinds of
-  language implementations is that these methods we may want to be
-  “visibly pure”/idempotent rarely are provably so.
-  \ldots Instead, the problem is avoided by being explicit about when
-  values are valid.} 
+%%let's nor worry about that now.  another whole paper at least
+%% \smtodo{Yeah, then the insight here is that we can’t communicate
+%%   “purity”. And generally, I think the insight with many kinds of
+%%   language implementations is that these methods we may want to be
+%%   “visibly pure”/idempotent rarely are provably so.
+%%   \ldots Instead, the problem is avoided by being explicit about when
+%%   values are valid.} 
 
 
 % The Graal compiler 
