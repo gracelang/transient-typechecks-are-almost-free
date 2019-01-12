@@ -2,32 +2,14 @@
 
 \clearpage
 
-\section{Background}
+\section{Gradual Types in Grace}
 \label{sec:background}
 
-This section details our motivation and
-discusses the technical background for our implementation.
-
-
-% \subsection{Stronger Typing for Dynamically Typed Languages}
-%
-% \kjx{No idea why we need this subsection}
-%
-% \begin{cnote}
-% - the dynamic typing discussion as in the outline
-% \end{cnote}
+This section introduces Grace, and 
+motivates supporting transient gradual typing in the language.
 
 \subsection{The Grace Programming Language}
 \label{ssec:grace}
-
-% DONE \sm{feels a little verbose, if we are short on space, I'd try to be more concise in the first paragraph}
-
-% \begin{cnote}
-%   integrate:
-%   The notion of message sending suggests that one object can request that another reacts to a message,
-%   in which case the receiver of that message can decide how to respond.
-% \end{cnote}
-%\kjx{done}
 
 Grace is an object-oriented, imperative, educational programming
 language, with a focus on introductory programming
@@ -56,116 +38,263 @@ intrinsically gradual:%
 %
 ~type annotations should not affect the semantics of a correct
 program\citep{XXXSiek2015}, and the type system
-includes a distinguished ``Unknown'' type which matches any other type
+includes a distinguished ``\code{Unknown}'' type which matches any other type
 and is the implicit type for untyped program parts.
 
-%  \ugh{Groovy\citep{Muehlboeck2017}}\sm{This is still not true. Muehlboeck2017 doesn't say anything about groovy. At least I can't find the word Groovy in the text with my pdf reader.
-% And, my understanding is that Groovy uses type information only for code generation. If it can generate more precise Java bytecode, it will do so. The documentation doesn't talk about any form of dynamic type checking.} and 
+The static core of Grace's type system is well described
+elsewhere\citep{TimJonesThesis};%
+~here we explain how
+these types can be understood 
+dynamically, from the Grace programmer's point of view.
+Grace's types are structural \citep{graceOnward12},
+that is, an object implements a type whenever it
+implements all the methods required by that type,
+rather than requiring classes or objects to declare types explicitly.
+Methods match when they have the same name and arity.
+A type thus expresses the requests an object can respond to,
+for example whether a particular accessor is available,
+rather than a nominal location in an explicit inheritance hierarchy.
+
+Grace then checks the types of values at run-time:
+%
+\begin{itemize}
+\item the values of arguments are checked after a method is requested, 
+      but before the body of the method is executed;
+\item the value returned by a method is checked after its body is executed; and
+\item the values of variables are checked
+      whenever written or read by user code.
+\end{itemize}
+%
+%
+%% Our gradual type checks for Grace are designed to be simple,
+%% straightforward, and easy to understand:
+%% \begin{itemize}
+%%   \item types are sets of methods (first-order structural typew)
+%%   \item all gradual type annotations are checked at run time
+%%   \item failing run-time type checks terminate execution
+%% \end{itemize}
+%
+%
+In the spectrum of gradual typing, these semantics are essentially the
+transient semantics of Reticulated Python
+\cite{reticPython2014,Greenman2018} ---
+with the minor differences that Grace's semantics
+treat field access as method calls, and we check both reads and
+writes of variables, along with return values on the receiver side
+(see \S\ref{reticRW}).
 
 
-% \citep{Muehlboeck2017}.\sm{I am not sure that, as it is phrased, is actually true.
-% TypeScript does not have types at run time, they are completely
-% erased, Dart}\kjx{true of dart 1 checked mode}\sm{I read over Groovy, doesn't seem to do dynamic type checking, but uses types for code generation}
-% \sm{how about: A prominent example is Dart 1, which uses dynamic type checking in its checked development mode.}
-
-% \begin{cnote}
-% Nom\citep{Muehlboeck2017}
-% all the gradual systems
-% \end{cnote}
-
-\subsection{Moth: Grace on Graal and Truffle}
-\label{ssec:moth}
-
-Implementing dynamic languages as state-of-the-art virtual machines
-can require enormous engineering efforts.
-Meta-compilation approaches\citep{Marr:2015:MTPE}
-such as RPython\citep{Bolz:2009:TMP,Bolz:2013:IMT}
-and GraalVM\citep{Wurthinger2013,Wurthinger:2017:PPE}
-reduce the necessary work dramatically,
-because they allow language implementers to leverage existing VMs
-and their support for just-in-time compilation and garbage collection.
-
-Moth\citep{Roberts2017} adapts \SOMns\citep{SOMns} to leverage this infrastructure for Grace.
-%\citeurl{\SOMns.}{SOMns: A Newspeak for Concurrency Research}{Stefan Marr}{}{https://github.com/smarr/SOMns/}
-\SOMns is a Newspeak implementation\citep{Bracha:10:NS} on top of the Truffle framework and the Graal just-in-time compiler,
-which are part of the GraalVM project.
-One key optimization of \SOMns for this work is the use of
-object shapes\citep{woss2014object},
-also known as maps\citep{Self} or hidden classes.
-They represent the structure of an object and the types of its fields.
-In \SOMns, shapes correspond to the class of an object and augment it with
-run-time type information.
-%
-% Since Newspeak and Grace are related languages,
-% \SOMns provides a good foundation for a new Grace implementation,
-%%
-%% KJX - let's not buy into this fight
-%% Moth is mostly compliant to the Grace specification.
-%
-With Moth's implementation,
-\SOMns was changed to parse Grace code,
-adapting a few of the self-optimizing abstract-syntax-tree nodes
-to conform to Grace's semantics.
-Despite these changes Moth
-preserves the peak performance of \SOMns,
-which reaches that of V8,
-Google's JavaScript implementation
-(cf. \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
+\subsection{Why Gradual Typing?}
 
 
-% \ugh{One exception is that it still supports the \code{nil} value of
-  % Newspeak.}\kjx{who cares}
+Our primary motivation for this work
+is to provide a flexible system 
+to check consistency between an execution of a program
+and its type annotations.
+%% KJX removed cos performance is in the second list below
+%% without significantly impacting run-time performance.
+ A key part of the design philosophy of Grace is that the language should not force
+ students to annotate programs with types until they are ready, so that
+ teachers can choose whether to introduce types, early, late, or even
+ not at all. 
 
-% \sm{we could say many more things here, not sure we need to though, depends a bit on what we need/rely on in late text}
-% \kjx{so we fix it later}
-%
-% \kjx{do we need to talk any more about SOMns here?}
+A secondary goal is to have a design that can be implemented with
+only a small set of changes to facilitate integration in existing systems.
 
-% While not everyone has time to create their own fully-fledged virtual, recent efforts such as PyPy \rrnote{CITE Tratt} or Truffle and Graal \cite{Wurthinger2013} are brining the power of VMs to researchers and hobbyists.
 
-% As shown by Marr et al. \cite{Marr2016}, the peak performance of benchmarks is comparable to monolithic VM's like V8 and Crystal.
+Both of these goals are shared with
+much of the other work on gradual type systems,
+but our context leads to some different choices.
+First,
+while checking Grace's type annotations statically may be optional,
+checking them dynamically should not be:%
+~any value that flows into a variable, argument, or result
+annotated with a type must conform to that type annotation.
+%% This means our focus is not to devise a sound typing approach,
+%% but rather an approach that ensures that the observed execution matches
+%% the one the Grace programmer expects when considering a program's type annotations.
+Second, 
+adding type annotations should not degrade a program's performance,
+or rather, programmers should not be encouraged to
+improve performance by removing type annotations.
+And third, 
+we allow the programmer to execute a program even when not statically type-correct.
+Allowing such execution is useful to students,
+where they can see concrete examples of dynamic type errors.
+This is possible because Grace's static type checking is optional,
+which means that an
+implementation cannot depend on the correctness or mutual
+compatibility of a program's type
+annotations.
 
-% \subsection{Gradual Typing}
+
+Unfortunately, existing gradual type
+implementations do not meet these goals, particularly regarding
+performance; hence the ongoing debate about whether gradual typing is
+alive, dead, or some state
+in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
+
+
+\subsection{Using Grace's Gradual Types}
+
+%\rr{We should consider a more complex example for the camera ready (so that it's not stretched too thin for the comment on avoiding checking the argument types.)}
+Finally,
+we now illustrate how the gradual type checks work in practice
+in the context of a simple program to record information about vehicles.
+Suppose the programmer starts developing this vehicle
+application by defining an object intended to represent a car
+(\cref{lst:car-reg}, \cref{ex:object}) and writes a method that, given
+the car object, prints out its registration number (\cref{ex:method}).
 %
-% \sm{not sure this belongs here. it depends on how the paper is framed,
-% but my impression was that we don't want to say it is gradual, so,
-% this belongs perhaps better into the related work section for discussion
-% after the results}
-% \kjx{don't think it does}
+
+\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},float=h,label=lst:car-reg,escapechar=|,columns=flexible]
+def car = object {|\label{ex:object}|
+    var registration is public := "JO3553"
+}
+
+method printRegistration(v) {|\label{ex:method}|
+    print "Registration: {v.registration}"
+}
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[label={ex:vehicle},caption={Adding a type annotation to a method parameter.},escapechar=|,columns=flexible,float,floatplacement=H]
+type Vehicle = interface { |\label{ex:adding-type:vehicle}|
+    registration    
+}
+
+method printRegistration(v: Vehicle) { |\label{ex:adding-type}|
+    print "Registration: {v.registration}"
+}
+\end{lstlisting}
+
+Next, the programmer adds a check to ensure any object passed to the
+\code{print\-Reg\-is\-tra\-tion} method will respond to the
+\code{registration} request; 
+they define the structural type \code{Vehicle}\citep{theCleanVehicle}
+naming just that method (\cref{ex:vehicle}, \cref{ex:adding-type:vehicle}), 
+and annotate the \code{printRegistration} method's
+argument with that type (\cref{ex:vehicle}, \cref{ex:adding-type}).
+The annotation ensures that a type error will be thrown if an object,
+passed to the \code{printRegistration} method,
+cannot respond to the \code{registration} message.
+Furthermore, as type errors constituent termination, 
+a crash somewhere in the middle of the
+implementation of the \code{print} method
+will now be avoided.
+
+
+% \sm{you already said the following}
+% By adding the type annotation to the program,
+% the student can now be sure the \code{getReg} method
+% will only be invoked when its arguments can respond to this message.
+
+%\paragraph{Flexibility.}
+%\paragraph{Semnatics}
+
+% \kjx{isn't most of this covered by the earlier para above now? -- so
+%   can we delete this one? please!?}
+% While Grace's static type system supports full static type
+% checking\citep{graceOnward12}, Grace's specification requires dynamic
+% type tests to be \emph{shallow}, that is, they check only for the
+% presence and arity of methods in an object, rather than also checking
+% conformance of argument and result types.  This is to ensure that the
+% presence or absence of type annotations does not affect the execution
+% of a program, for the reason originally outlined by
+% Boyland~\cite{Boyland2014}, thus maintaining a version of the gradual
+% guarantee.  The resulting semantics are \del{more-or-less}\sm{we really need to say something stronger here or drop this} equivalent to
+% type-tag soundness\citep{reticPython2014,Vitousek2017,Greenman2018}.
+% \kjx{now saying ``equivalent'', punting fine details to the related work section - but
+%   I suggest we kill this para}.
+
+%% SM: someone should really take a really close look at these and identify the
+%%     differences. And I don't want to do that.
+% ---the difference being that
+% where type-tag soundness supports shallow \emph{nominal} type checks,
+% we support shallow \emph{structural} type checks.
+%%KJX: my comment above is plan WRONG - Retic is structural too.
+%% main differences are method returns, object assignments.
+
+% The notion of our type system being shallow means 
+% that members of a type are untyped.
+% In particular, our design does not have information on parameter types
+% and return types for types' members.
+% This design implies that blame tracking is not needed,\mwh{Um.}
+% because the types are less detailed than in other systems.\mwh{I would hope that a competent reviewer would't fall for this\ldots}\sm{ok, what can we do about this? what's the precise issue here?
+% The idea is that we do not need blame, because we do not have the type casts
+% from blame-supported gradual systems.
+% The difference is, I think that there is nothing we can not check immediately,
+% and error as soon as there is a type.
+% I believe the examples are usually higher-order functions/blocks.
+% We only check the arity. So, there is no type cast wrapping necessary,
+% when we pass it into a method that would expect another type of block arguments.
+% (because passing in should not error, the error should only happen when
+% the block is used in these systems, right?)}
+% One reason for this design is that it avoids the overhead incurred
+% by tracking type assumptions for precise blame attribution.
+
+
+
+% Another aspect of this design is
+% that our shallow approach to types
+% allows for more flexible use 
+% without requiring type parameters, \ie, generics.
+In \cref{ex:complex}, 
+the programmer continues development and creates two car objects 
+(\cref{ex:personal-car,ex:government-car}),
+that conform to an expanded \code{Vehicle} type (\cref{ex:new-vehicle}).
+
+
+
+\begin{lstlisting}[caption={A program in development with inconsistent
+    types.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
+type Vehicle = interface { |\label{ex:new-vehicle}|
+    registration
+    registerTo(_)
+}
+
+type Person = interface { name }
+type Department = interface { code }
+
+var personalCar : Vehicle := |\label{ex:personal-car}|
+  object {
+    var registration is public := "DLS018"
+    method registerTo(p: Person) {|\label{ex:personal-car:registerTo}|
+      print "{p.name} registers {self}"
+    } 
+  }
+
+var governmentCar : Vehicle := |\label{ex:government-car}|
+  object {
+    var registration is public := "FKD218"
+    method registerTo(d: Department) { |\label{ex:government-car:registerTo}|
+      print "some department {self}"
+    }
+  }
+
+governmentCar.registerTo( |\label{ex:invoke-register-to}|
+  object {
+    var name is public := "Richard"
+  }
+)
+\end{lstlisting}
+
+
+Note that each version of the \code{registerTo} method
+declares a different type for its parameter
+(\cref{ex:personal-car:registerTo,ex:government-car:registerTo}).
 %
-% Coined by \citet{Siek2006}, later added the gradual ``guarantee''\citep{XXXSiek2015}.
+When the programmer executes this program,
+both \code{personal\-Car} and \code{governmentCar} can be assigned to
+a variable declared as \code{Vehicle} because checking that assignment considers only that the vehicle has
+a \code{registerTo} method, but not the required argument type of that
+method.
 %
-% \paragraph{Languages}
-%
-% \sm{not sure what is supposed to be discussed here.
-% Seems to detailed, seems to to be long into the beginning of the paper}
-%
-% \begin{itemize}
-%     \item Grace \cite{Boyland2014}
-%     \item Typed Racket \cite{Takikawa2016}
-%     \item Dart \cite{Heinze2016, Mezzetti2016}
-%     \item Pycket (using some kind of PyPy-like design) \cite{Bauman2017}
-%     \item Grift (seems to be the name of a compiler) \cite{Kuhlenschmidt:2018:preprint}
-%     \item TypeScript on HiggsVM \cite{Richards2017}
-%     \item Reticulated Python \cite{Vitousek2017, Greenman2018}
-% \end{itemize}
-%
-% \paragraph{Different types of type systems}
-%
-% \sm{Also rather for related work, I think}
-%
-% \begin{itemize}
-%     \item Nominal \cite{Muehlboeck2017}
-%     \item Structural \cite{Richards2017} (and Grace, \cite{Boyland2014})
-%     \item Tag (RPython) \cite{Greenman2018}
-% \end{itemize}
-%
-% \paragraph{Other papers}
-%
-% \sm{no idea what this is about}
-% \kjx{just random recent stuff}
-% \begin{itemize}
-%     \item \cite{Bloom2009}
-%     \item \cite{Castagna2017}
-%     \item \cite{Stulova2016}
-% \end{itemize}
+At \cref{ex:invoke-register-to} the developer
+attempts to register a government car to a person:%
+~only when the method is \textit{invoked} (\cref{ex:government-car:registerTo})
+will the gradual type test on the argument fail
+(the object that is passed in is not a \code{Department} because it lacks a
+\code{code} method).
+
