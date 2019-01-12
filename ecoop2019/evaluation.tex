@@ -178,68 +178,7 @@ We did not measure programs that mix typed and untyped code
 because with our implementation technique a fully typed program is expected to
 have the largest overhead.
 
-
-\subsubsection{Effectiveness of Optimizations}
-\smtodo{revise in the context of the previous sections. perhaps reduce redundancy/verbosity}
-
-Before analyzing the impact on performance,
-we look at the effectiveness of the two used optimizations, i.e.,
-our optimized type checking node, which replaces complex type tests
-with checks for object shapes, and our matrix to cache sub-typing information.
-
-\Cref{tab:type-statistics} gives an overview of the number of type tests done
-by the benchmarks during execution.
-We distinguish two operations \code{check\_generic} and \code{is\_subtype\_of},
-which correspond to the operations in
- \cref{ex:typenode:generic} and \cref{ex:type:satisfied} of \cref{ex:type}.
-Thus, \code{check\_generic} is the test called
-whenever a full type check has to be performed,
-and \code{is\_subtype\_of} is the part of the check that
-determines the relationship between two types.
-The second column of \cref{tab:type-statistics} indicates
-which optimization is applied,
-and the following columns show the mean,
-minimum, and maximum number of invocations of the tests
-over all benchmarks.
-
-\begin{table}[htb]
-  \caption{Type Test Statistics over all Benchmarks.
-  It shows how many of the type tests can be avoided based on our two optimizations.
-  With the use of an optimized node that replaces type checks with simple object shape checks,
-  \code{check\_generic} is invoked only for the first time that a lexical location
-  sees a specific object shape, which eliminates run-time type checks almost completely.
-  Using our subtype matrix that caches type-check results,
-  invocations of \code{is\_subtype\_of} are further reduced by an order of magnitude.}
-  \label{tab:type-statistics}
-
-  \begin{center}
-    \TypingStatsTable{}  
-  \end{center}
-\end{table}
-
-The baselines without optimizations are the rows with the results
-for neither of the optimizations being enabled.
-Depending on the benchmark,
-we see that the type tests
-are done tens of millions
-to hundreds of millions times
-for a single iteration of a benchmark.
-
-Our optimizations reduce the number of type test invocations dramatically.
-As a result, the check for the subtyping relationship is done only once for 
-a specific type and a possible super type.
-Similarly, the generic type check is replaced by a shape check
-and thus minimizes the number of expensive type checks
-to the number of lexical locations that verify types
-combined with the number of shapes a specific lexical
-location sees at run time.
-
-In the following section,
-we show the corresponding impact on performance
-and how the optimizations enable a just-in-time compiler
-to minimize run-time overhead.
-
-\subsubsection{Impact on Performance}
+\paragraph*{Peak Performance}
 
 The overall results comparing Moth with all optimizations
 with the version that does not do any type checks
@@ -296,15 +235,25 @@ Another reason could simply be that the extra checks shift the boundaries
 of compilation units.
 In such cases, checks might not be eliminated completely,
 but the shifted boundary between compilation units might mean that
-objects do not need to be materialized and thus do not need to be allocated,
-or simply that the generated native code interacts better with
+the generated native code interacts better with
 the instruction cache of the processor.
 % Such shifts in performance of about 10\%
 % are somewhat common for highly optimizing just-in-time compilers.\mwh{cite?}
 % \kjx{unfortuantely all the best citations give more detailed
   % benchmarking methodologies (Georges, Kalibera) that we don't follow.}
 
+\paragraph*{Warmup Performance}
+
+\Cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
+The run-time factor is the result for the typed version over the untyped one.
+Thus, any increase indicates a slow down because of typing.
+The gray line indicates a smoothed version of the curve
+based on local polynomial regression fitting\citep{Cleveland:1992}
+using neighboring data points.
+It also indicates a 0.95 confidence interval.
+
 \begin{figure}[htb]
+  \centering
 	\TypingWarmup{}
 	\caption{Plot of the run time for the first 100 iterations.
            The gray line is a local polynomial regression fit
@@ -315,57 +264,79 @@ the instruction cache of the processor.
 	\label{fig:typing-warmup}
 \end{figure}
 
-While we did not focus on the warmup performance,
-and are mainly interested in peak performance,
-\cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
-The run time factor is the result for the typed version over the untyped one.
-Thus, any increase indicates a slow down because of typing.
-The gray line indicates a smoothed version of the curve
-based on local polynomial regression fitting\citep{Cleveland:1992}
-using neighboring data points.
-It also indicates a 0.95 confidence interval.
-
-Focusing on the first iteration,
+Looking only at the first iteration,
 where we assume that most code is executed in the interpreter,
 the overhead appears minimal.
 Only the Mandelbrot benchmark shows a noticeable slowdown.
-However, benchmarks such as Float, PyStone, and GraphSearch show various spikes.
+However, benchmarks such as Float, PyStone, and Queens show various spikes.
 Since spikes appear in both directions (speedups and slowdowns),
 we assume that they indicate a shift,
 for instance, of garbage collection pauses,
 which may happen because of different heap configurations
 triggered by the additional data structures for type information.
 
+\subsection{Effectiveness of Optimizations}
 
-% discuss optimization techniques?
-% discuss specializations?
+To characterize the concrete impact of our two optimizations, i.e.,
+the optimized type checking node, which replaces complex type tests
+with checks for object shapes, and our matrix to cache sub-typing information,
+we look at the number of type checks performed by the benchmarks,
+as well as the impact on peak performance.
 
+\paragraph*{Impact on Performed Type Tests}
 
-% \begin{cnote}
-%   - which experiments?
-%
-%   - fully types
-%   - no types
-%   - no types on fields
-%   - all run on moth
-%
-% \end{cnote}
+\Cref{tab:type-statistics} gives an overview of the number of type tests done
+by the benchmarks during execution.
+We distinguish two operations \code{check\_generic} and \code{is\_subtype\_of},
+which correspond to the operations in
+ \cref{ex:typenode:generic} and \cref{ex:type:satisfied} of \cref{ex:type}.
+Thus, \code{check\_generic} is the test called
+whenever a full type check has to be performed,
+and \code{is\_subtype\_of} is the part of the check that
+determines the relationship between two types.
+The second column of \cref{tab:type-statistics} indicates
+which optimization is applied,
+and the following columns show the mean,
+minimum, and maximum number of invocations of the tests
+over all benchmarks.
 
-\begin{figure}
-  \centering
-	\OptimizationOverview{}
-  \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
-  The boxplot shows the performance of Moth normalized to the untyped version, \ie,
-  without any type checks.
-  The performance of Moth with both optimization and Moth
-  with only the node for optimized type checks are identical.
-  The subtype check cache improves performance over the unoptimized version,
-  but does not contribute to the peak performance.
-  }
-	\label{fig:perf-impact-optimization}
-\end{figure}
+\begin{table}[htb]
+  \caption{Type Test Statistics over all Benchmarks.
+  It shows how many of the type tests can be avoided based on our two optimizations.
+  With the use of an optimized node that replaces type checks with simple object shape checks,
+  \code{check\_generic} is invoked only for the first time that a lexical location
+  sees a specific object shape, which eliminates run-time type checks almost completely.
+  Using our subtype matrix that caches type-check results,
+  invocations of \code{is\_subtype\_of} are further reduced by an order of magnitude.}
+  \label{tab:type-statistics}
 
-\Cref{fig:perf-impact-optimization} shows how Moth performance on average over
+  \begin{center}
+    \TypingStatsTable{}  
+  \end{center}
+\end{table}
+
+The baselines without optimizations are the rows with the results
+for neither of the optimizations being enabled.
+Depending on the benchmark,
+we see that the type tests
+are done tens of millions
+to hundreds of millions times
+for a single iteration of a benchmark.
+
+Our optimizations reduce the number of type test invocations dramatically.
+As a result, the check for the subtyping relationship is done only once for 
+a specific type and a possible super type.
+Similarly, the generic type check is replaced by a shape check
+and thus minimizes the number of expensive type checks
+to the number of lexical locations that verify types
+combined with the number of shapes a specific lexical
+location sees at run time.
+
+\paragraph*{Impact on Performance}
+
+\Cref{fig:perf-impact-optimization} shows how our optimizations contribute
+to the peak performance.
+It depicts Moth's average peak performance over
 all benchmarks, depending on the activated optimizations.
 As seen before, the untyped version is faster by \OverheadTypingGMeanP.
 Moth with both optimizations enabled as well as
@@ -379,7 +350,63 @@ This shows that it is a relevant and useful optimization.
 Combined with the numbers of \cref{tab:type-statistics},
 this optimization is going to be relevant for the very first execution of code.
 A typical scenario of interest for developers would be for instance the
-performance of unit tests, which has an important impact on developer productivity.
+performance of unit tests, which has an major impact on developer productivity.
+
+\begin{figure}[htb]
+  \centering
+	\OptimizationOverview{}
+  \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
+  The boxplot shows the performance of Moth normalized to the untyped version, \ie,
+  without any type checks.
+  The performance of Moth with both optimization and Moth
+  with only the node for optimized type checks are identical.
+  The subtype check cache improves performance over the unoptimized version,
+  but does not contribute to the peak performance.
+  }
+	\label{fig:perf-impact-optimization}
+\end{figure}
+
+
+\subsection{Transient Typechecks are (Almost) Free}
+
+As discussed earlier, in many existing gradually typed systems,
+one would expect a linear increase of the performance overhead
+with the increasing number of type annotations.
+
+In this section, we show that this is not necessarily the case on our system.
+For this purpose, we use two microbenchmarks Check and Nest,
+which have at their core method calls with 5 parameters.
+The Check benchmark calls the same method 10 times in a row, \ie, it has 10 call sites.
+The Nest benchmark has 10 methods with identical signatures,
+which recurse from the first one to the last one.
+Thus, there are still 10 method calls, but they are nested in each other.
+In both benchmarks, each method increments a counter,
+which is checked at the end of the execution to verify that both do the same
+number of method activations, and only the shape of the activation stack differs.
+
+Each benchmark exists in 6 variants, going from no type annotations
+over annotating only the first method parameter to annotating all 5 of the parameters.
+
+\Cref{fig:type-cost-micro} shows such a common scenario of methods being 
+gradually annotated with types
+does not incur an run-time overhead in our system.
+The plot shows the median of the run time for each benchmark configuration.
+Furthermore, it indicates a band with the median absolute deviation to
+see the range of which the measurements vary.
+The green line, Moth (neither), corresponds to our Moth with type checking
+but without any optimizations.
+For this case, we see that the performance overhead grows linearly.
+Note that the y axis is on a logarithmic scale,
+which we chose to ensure that some details remain legible for the faster
+variants.
+
+For Moth (both) and Moth (untyped), the bands of median absolute deviation overlap
+for the optimized Moth as well as the one that does not perform typechecks.
+This means, the that Moth does not suffer from a linear overhead for all of its
+type checks.
+However, as previously argued for the List benchmark,
+this is only the case for checks that can be subsumed by shape checks that
+were performed already before adding type checks.
 
 \begin{figure}
 	\TypeCost{}
@@ -395,12 +422,6 @@ performance of unit tests, which has an important impact on developer productivi
 	\label{fig:type-cost-micro}
 \end{figure}
 
-\Cref{fig:type-cost-micro} shows the common scenario that additional type annotations
-in our system do not incur an run-time overhead.
-The used benchmarks Check and Nest have at their core methods with 5 parameters.
-The Check benchmark calls the same method 10 times in a row, \ie, it has 10 call sites.
-The Nest benchmark has 10 methods with identical signatures,
-which recurse from the first one to the last one.
 
 
 \smtodo{Conclusion}

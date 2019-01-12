@@ -99,7 +99,7 @@ p
 }%
 
 \def\TypingWarmup{%
-<<typing-overhead-warmup, fig.height=6, fig.width=5.5>>=
+<<typing-overhead-warmup, fig.height=5, fig.width=5.5>>=
 p <- ggplot(droplevels(norm_warmup) %>% filter(Iteration < 100), aes(x=Iteration, y=RuntimeRatio)) +
   geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +
   geom_smooth(method = "loess", colour = "#888888") +
@@ -113,6 +113,7 @@ p + theme_simple(font_size = 8) + theme(
   panel.spacing.y = unit(0, "mm"),
   strip.switch.pad.wrap = unit(0, "mm"),
   axis.title.x = element_text(size = 8),
+  plot.margin = unit(c(0,0.1,0.1,0.1), "cm"),
   panel.border = element_blank()) +
   ylab("Run-time factor, normalized to untyped (lower is better)") +  xlab("Iterations in same VM")
 @
