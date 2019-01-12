@@ -1,5 +1,7 @@
 %!TEX root = ../latex/paper.tex
 
+\clearpage
+
 \section{Background}
 \label{sec:background}
 
@@ -93,13 +95,16 @@ also known as maps\citep{Self} or hidden classes.
 They represent the structure of an object and the types of its fields.
 In \SOMns, shapes correspond to the class of an object and augment it with
 run-time type information.
-
+%
 % Since Newspeak and Grace are related languages,
 % \SOMns provides a good foundation for a new Grace implementation,
-Moth is mostly compliant to the Grace specification.
+%%
+%% KJX - let's not buy into this fight
+%% Moth is mostly compliant to the Grace specification.
+%
 With Moth's implementation,
 \SOMns was changed to parse Grace code,
-with slight adaption to self-optimizing abstract-syntax-tree nodes
+adapting a few of the self-optimizing abstract-syntax-tree nodes
 to conform to Grace's semantics.
 Despite these changes Moth
 preserves the peak performance of \SOMns,
