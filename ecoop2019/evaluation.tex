@@ -28,10 +28,9 @@ and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
 As a result, we use a large number of data points to compute the average,
 but outliers, caused by \eg garbage collection, remain visible in the plots.
-\smtodo{revisit this sentence once done:}
-In this work, we do not consider startup performance,
-because we want to assess the impact of gradual type checks
-on the best possible performance.
+% In this work, we do not consider startup performance,
+% because we want to assess the impact of gradual type checks
+% on the best possible performance.
 All reported averages use the geometric mean since they aggregate ratios.
 
 % Yuria
@@ -39,8 +38,9 @@ All reported averages use the geometric mean since they aggregate ratios.
 %  - 24 hyperthreads
 %  - Intel Xeon E5-2620 v3 2.40GHz
 % Graal 0.33 Feb. 2018
-\smtodo{update these details when we have time... not a rejection criterion,
-but needs to be correct in the final version}
+% 
+% TODO: update these details when we have time... not a rejection criterion,
+% but needs to be correct in the final version
 All experiments were executed on a machine running Ubuntu Linux 16.04.4,
 with Kernel 3.13.
 The machine has two Intel Xeon E5-2620 v3 2.40GHz,
@@ -440,22 +440,6 @@ this is only the case for checks that can be subsumed by shape checks
     (independent of the number of method arguments with type annotations).}
 	\label{fig:type-cost-micro}
 \end{figure}
-
-
-
-\smtodo{Conclusion}
-
-\begin{note}
-Add this:
-1. peak performance with a “replace type-check by shape-approach” (as known from literature and as we do) does not suffer from this problem in dynamic languages that need shape checks anyway.
-Caveat: there are checks that don’t correspond to shape checks: assignments as in the List benchmark.
-
-2. Interpreter/warmup performance: there we still pay these costs. So, there can still be a non-trivial performance impact of additional type annotations until we reach optimally compiled code.
-
-possibly mention this point again in the conclusion
-\end{note}
-
-
 
 \subsection{Changes to Moth}
 

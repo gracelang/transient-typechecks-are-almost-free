@@ -74,10 +74,31 @@ gradual typing literature, we find that our approach to dynamic type checking
 introduces an overhead of 
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP)
 on peak performance.
+In addition the results from further microbenchmarks,
+we take this as a strong indication that transient gradual types do not
+need to imply a linear overhead compared to untyped programs.
+However, we also see that interpreter and startup performance is indeed
+reduced by additional type annotations.
+
+% \begin{note}
+%   Add this:
+%   1. peak performance with a “replace type-check
+%    by shape-approach” (as known from literature and as we do) does not suffer 
+%    from this problem in dynamic languages that need shape checks anyway.
+%   Caveat: there are checks that don’t correspond to shape checks: 
+%    assignments as in the List benchmark.
+  
+%   2. Interpreter/warmup performance: there we still pay these costs.
+%    So, there can still be a non-trivial performance impact of additional
+%    type annotations until we reach optimally compiled code.
+  
+%   possibly mention this point again in the conclusion
+%   \end{note}
+
 Since Moth reaches the performance of a
 highly optimized JavaScript VM such as V8,
 we believe that these results are a good indication
-for the low overhead of our approach.
+for the low peak-performance overhead of our approach.
 
 %% relevance
 %%   where to go from here?
