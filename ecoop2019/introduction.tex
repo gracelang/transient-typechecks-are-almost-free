@@ -1,4 +1,4 @@
-%!TEX root = ../latex/paper.tex
+%!TEX root = paper.tex
 
 \section{Introduction}
 \label{sec:introduction}
@@ -48,9 +48,9 @@ by professional programmers for a very wide range of tasks \cite{Pang2018}.
 A key advantage of these dynamic languages is the flexibility offered
 by the lack of a static type system. 
 From the perspective of many computer scientists, software engineers,
-and computational theologists, this advantage has a concomitant
+and \ugh{computational theologists}\sm{can we drop this?}, this advantage has a concomitant
 disadvantage in that programs without types are considered more
-difficult to read, to understand, and to analyse than programs with
+difficult to read, to understand, and to analyze than programs with
 types. Gradual Typing aims to remedy this disadvantage, adding types
 to dynamic languages while maintaining their flexibility
 \citep{GiladPluggable2004,Siek2006,XXXSiek2015}. 
@@ -70,7 +70,7 @@ TypeScript\citep{typeScriptECOOP}\,---\,
 %
 all types are erased before the execution, limiting the benefit of
 types to the statically typed parts of programs, and preventing
-programs from depending on type checks at run-time.  In the middle,
+programs from depending on type checks at run time.  In the middle,
 ``transient'' or ``type-tag'' checks as in Reticulated Python 
 % and ``concrete'' checks as in Thorn
 offer first-order semantics, checking
@@ -81,7 +81,7 @@ those declarations
 Reticulated Python also supports an alternative ``monotonic'' semantics
 which mutates an object to narrow its concrete type when it is passed
 into a more specific type context.
-At the other end of the spectrum, behavioural
+At the other end of the spectrum, behavioral
 typechecks as in Typed Racket \cite{typedScheme08,takikawa2012} and Gradualtalk \cite{gradualtalk14} support higher-order semantics, retaining
 types until run 
 time, performing the checks eagerly, and giving detailed information
@@ -100,7 +100,7 @@ imposes significant run-time performance overhead to provide those semantics
 The performance cost of run-time checks is problematic in itself,
 but also creates perverse incentives. Rather than the ideal of
 gradually adding types in the process of hardening a developing
-program, the programmer is incentivised to leave the program untyped
+program, the programmer is incentivized to leave the program untyped
 or even to \textit{remove} existing types in search of speed.
 %
 While the Gradual Guarantee~\cite{XXXSiek2015} requires that
@@ -112,7 +112,7 @@ For programs with crucial performance constraints, for new
 programmers, and for gradual language designers, juggling this
 overhead can lead to increased complexity, suboptimal
 software-engineering choices, and code that is harder to maintain,
-debug, and analyse.
+debug, and analyze.
 
 % our context
 % - dynamic language
@@ -209,7 +209,7 @@ that results from type checking is eliminated.
 The contributions of this paper are:
 
 \begin{itemize}
-\item demonstrating that VM optimisations enable
+\item demonstrating that VM optimizations enable
         transient gradual type checks with low performance cost
 \item an implementation approach that requires
       only small changes to existing abstract-syntax-tree interpreters
