@@ -18,11 +18,11 @@ To account for the complex warmup behavior
 of modern systems\citep{Barrett:2017:VMW} as well as
 the non-determinism caused by \eg garbage collection and cache effects,
 we run each benchmark for \NumIterationsAll iterations in the same
-VM invocation.\footnote{
+VM invocation\footnote{
 For the Higgs VM, we only use \NumIterationsHiggs iterations,
 because of its lower performance.
-This is sufficient since its compilation approach induces less variation
-and leads to more stable measurements.}
+This is sufficient since Higgs's compilation approach induces less variation
+and leads to more stable measurements.}.
 Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
