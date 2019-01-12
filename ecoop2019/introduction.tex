@@ -164,23 +164,26 @@ Greenman and Migeed, found a ``\textit{clear trend
 that adding type annotations adds performance overhead. The increase
 is typically linear.}'' \cite{Greenman2018}.  
 
-In this paper, we demonstrate that an
-optimizing virtual machine makes transient type checks ``almost
-free.''
-These checks
-are inserted na\"ively based on local 
-annotations and checked eagerly when control flow reaches them: 
-whenever an annotated method is called or
-an annotated variable is accessed
-we check types dynamically and
+
+In contrast, we demonstrate that
+transient type checks can be ``almost
+free'' via a just-in-time compiler to an
+optimizing virtual machine.
+We insert 
+gradual checks
+na\"ively, for each gradual type 
+annotation.
+% We check types eagerly when control flow reaches them.
+Whenever an annotated method is called or
+an annotated variable is accessed,
+we check types dynamically, and
 terminate the program with a type error if the check fails.
 Despite this simplistic approach, a just-in-time compiler can
 eliminate redundant checks---%
 removing almost all of the checking overhead,
-resulting in
-a performance profile aligned with untyped code.
+resulting in a performance profile aligned with untyped code.
 
-We evaluate our approach by adding transient checks to Moth,
+We evaluate our approach by adding transient type checks to Moth,
 an implementation of the Grace programming language
 built on top of Truffle
 and the Graal just-in-time compiler\citep{Wurthinger2013,Wurthinger:2017:PPE}.
