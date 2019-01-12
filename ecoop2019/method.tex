@@ -307,8 +307,13 @@ will the gradual type test on the argument fail
 (the object that is passed in is not a \code{Department})
 even though the body of the \code{registerTo} method
 does not rely on the \code{code} method that the \code{Department}
-annotation requires of the argument.
-\mwh{Should this/somewhere explain \textit{why} that is? It sounds a bit like just describing a flaw.}
+annotation requires of the argument. 
+The ability to execute statically invalid programs,
+as described above, is valuable because 
+it enables developers to test
+partially implemented programs and also
+lets students see concrete examples of dynamic type errors.
+\mwh{Should this/somewhere explain \textit{why} that is? It sounds a bit like just describing a flaw.} \rr{Added a further sentence, do you think its suitable?}
 
 % \sm{don't say anything about stuff we don't do. this is not really necessary,
 % and I don't think this is necessarily correct, depending on specific type systems}
