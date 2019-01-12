@@ -35,27 +35,14 @@ which reaches that of V8,
 Google's JavaScript implementation
 (cf. \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
 
-\subsection{Implementation} 
+\subsection{Adding Gradual Type Checking} 
 \label{ssec:implementation} 
 
-%This section gives an overview of a possible implementation
-%based on an abstract-syntax-tree (AST) interpreter.
+%% We have implemented our gradual type checks 
+%% by extending Moth, 
+%% an abstract-syntax-tree (AST) interpreter for
+%% Grace (\cref{ssec:moth}).
 
-We have implemented our gradual type checks 
-by extending Moth, 
-an abstract-syntax-tree (AST) interpreter for
-Grace (\cref{ssec:moth}).
-%
-% We developed our implementation as an extension to Moth.
-% As described earlier in \cref{ssec:moth},
-% Moth is an AST-based interpreter on top of the Graal VM.
-%
-% It is optimizes itself based on for instance run-time type information.
-%
-%
-%Based on \cref{sec:term-type-error},
-
-% \kjxdone{why both reading and writing?  answer - doesn't matter?}
 
 One of the goals for our approach to gradual typing was to keep
 the necessary changes to an existing implementation small,
