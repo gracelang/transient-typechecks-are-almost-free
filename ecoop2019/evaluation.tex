@@ -222,7 +222,7 @@ that do not coincide with behavior in the unchecked version.
 
 % explain minima
 
-However, in some benchmarks the run time decreased; notably Permute (\OverheadPermuteP),
+In some benchmarks, however, the run time decreased; notably Permute (\OverheadPermuteP),
 GraphSearch (\OverheadGraphSearchP), and Storage (\OverheadStorageP).
 Permute simply creates the permutations of an array.
 GraphSearch implements a page rank algorithm
@@ -269,7 +269,7 @@ Looking only at the first iteration,
 where we assume that most code is executed in the interpreter,
 the overhead appears minimal.
 Only the Mandelbrot benchmark shows a noticeable slowdown.
-However, benchmarks such as Float, PyStone, and Queens show various spikes.
+Benchmarks such as Float, PyStone, and Queens, however, show various spikes.
 Since spikes appear in both directions (speedups and slowdowns),
 we assume that they indicate a shift,
 for instance, of garbage collection pauses,
@@ -325,8 +325,8 @@ to hundreds of millions times
 for a single iteration of a benchmark.
 
 Our optimizations reduce the number of type test invocations dramatically.
-As a result, the check for the subtyping relationship is done only once for 
-a specific type and a possible super type.
+As a result, the full check for the subtyping relationship is done only once for 
+any specific type and a possible super type.
 Similarly, the generic type check is replaced by a shape check
 and thus minimizes the number of expensive type checks
 to the number of lexical locations that verify types
@@ -337,7 +337,7 @@ location sees at run time.
 
 \Cref{fig:perf-impact-optimization} shows how our optimizations contribute
 to the peak performance.
-It depicts Moth's average peak performance over
+The figure depicts Moth's average peak performance over
 all benchmarks, depending on the activated optimizations.
 As seen before, the untyped version is faster by \OverheadTypingGMeanP.
 Moth with both optimizations enabled as well as
@@ -370,7 +370,7 @@ performance of unit tests, which has an major impact on developer productivity.
 
 \subsection{Transient Typechecks are (Almost) Free}
 
-As discussed earlier, in many existing gradually typed systems,
+As discussed in the introduction, in many existing gradually typed systems,
 one would expect a linear increase of the performance overhead
 with the increasing number of type annotations.
 
