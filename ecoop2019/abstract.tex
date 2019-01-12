@@ -1,20 +1,35 @@
 \begin{abstract}
-  It is widely accepted that the additional run-time checks in a
-  gradually-typed language must cause a linear slowdown in the program's
-  execution.
-  %
-  This performance impact discourages the use of type annotations
-  because adding types can significantly worsen performance, despite the
-  benefits of typed code.
-  %
-  We show that in fact the overhead of transient checks can be near zero
-  with appropriate application of standard just-in-time optimization
-  techniques.
-  %
-  With these techniques programmers need not avoid adding types to their
-  code and a gradually-typed language can have run-time performance
-  comparable to state-of-the-art dynamic language implementations.
-
+%
+ Transient gradual typing imposes run-time type tests that typically cause a 
+ linear slowdown in programs' performance.
+ %
+ This performance impact discourages the use of type annotations
+ because adding types to a progam makes the program slower. 
+ %
+ A virtual machine can employ standard just-in-time optimizations to
+ reduce the overhead of transient checks to near zero.
+ %
+ These optimizations can give gradually-typed languages
+ performance comparable to state-of-the-art dynamic languages,
+ so programmers can add types to their code
+ without affecting their programs' performance.
+%
+  %% It is widely accepted that the additional run-time checks in a
+  %% gradually-typed language must cause a linear slowdown in the program's
+  %% execution.
+  %% %
+  %% This performance impact discourages the use of type annotations
+  %% because adding types can significantly worsen performance, despite the
+  %% benefits of typed code.
+  %% %
+  %% We show that in fact the overhead of transient checks can be near zero
+  %% with appropriate application of standard just-in-time optimization
+  %% techniques.
+  %% %
+  %% With these techniques programmers need not avoid adding types to their
+  %% code and a gradually-typed language can have run-time performance
+  %% comparable to state-of-the-art dynamic language implementations.
+%
 %% Removing \kjx{redundant} type tests makes programs in these
 %% languages run faster. 
 % We add shallow-structural type checking
@@ -39,5 +54,5 @@
 % to run at roughly the same speed as programs without those checks.
 % Overall, adopting common JIT techniques can make these languages
 % more effective in practice.
-
+%
 \end{abstract}
