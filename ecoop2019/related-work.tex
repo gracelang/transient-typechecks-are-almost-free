@@ -59,7 +59,7 @@ The diversity of semantics and language designs incorporating
 gradual typing has been captured recently via surveys
 incorporating formal models of different design options.
 Chung et~al.\citep{kafka18} present an object-oriented model covering optional
-semantics (erasure),  transient semantics, concrete (from Thorn
+semantics (erasure),  transient semantics, concrete semantics (from Thorn
 \cite{Bloom2009}), and behavioural semantics (from Typed Racket), and
 give a series of programs to clarify the semantics of a
 particular language.  
@@ -189,12 +189,12 @@ object against a declaration.
 %}
 %\kjx{don't think Retic checks return values --- some this is now
 %  earlier, check for retricRW refs}
-
+%
 %
 %  although \citeauthor{reticPython2014}'s checks are nominal
 % while ours are structural.
 % - based on Reticulated Python
-  % - Python 3-based implementation (interpretation, no compilation)
+% - Python 3-based implementation (interpretation, no compilation)
 %- soundness notion and supported semantics very similar to ours
 %- evaluate the performance in detail
 % - generate different variants to see how the number of type checks correlate
@@ -212,7 +212,7 @@ approach to our work, demonstrating that key mechanisms such as object shapes
 used by a VM to optimize dynamic languages can be used to eliminate most of
 the overhead of dynamic type checks.
 Unlike our work, Richards
-implement ``full'' gradual typing with blame tracking, rather than
+implement ``monotonic'' gradual typing with blame, rather than
 the simpler transient checks, and do so on top of an adapted Higgs
 VM.
 The Higgs VM implements a baseline just-in-time compiler based on
