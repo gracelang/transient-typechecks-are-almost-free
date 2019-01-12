@@ -298,7 +298,7 @@ declares a different type for its parameter
 % a termination by a typing error.
 When the programmer executes this program,
 both \code{personal\-Car} and \code{governmentCar} can be assigned to
-\code{Vehicle} because that check considers only that the vehicle has
+a variable declared as \code{Vehicle} because checking that assignment considers only that the vehicle has
 a \code{registerTo} method, but not the required argument type of that
 method.
 %
@@ -306,7 +306,8 @@ At \cref{ex:invoke-register-to} the developer
 attempts to register a government car to a person:%
 ~only when the method is \textit{invoked} (\cref{ex:government-car:registerTo})
 will the gradual type test on the argument fail
-(the object that is passed in is not a \code{Department}).
+(the object that is passed in is not a \code{Department} because it lacks a
+\code{code} method).
 %The ability to execute statically invalid programs,
 %is valuable because 
 %it enables developers to test
