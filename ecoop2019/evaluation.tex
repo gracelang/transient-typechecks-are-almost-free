@@ -386,38 +386,55 @@ number of method activations, and only the shape of the activation stack differs
 
 Each benchmark exists in 6 variants, going from no type annotations
 over annotating only the first method parameter to annotating all 5 of the parameters.
+Furthermore, we present the results for the first iteration as well as iteration 100.
+The first iteration is executed at least partially in the interpreter,
+while iteration 100 executes compiled.
 
-\Cref{fig:type-cost-micro} shows such a common scenario of methods being 
+\Cref{fig:type-cost-micro} shows that such a common scenario of methods being 
 gradually annotated with types
-does not incur an run-time overhead in our system.
-The plot shows the median of the run time for each benchmark configuration.
-Furthermore, it indicates a band with the median absolute deviation to
-see the range of which the measurements vary.
+does not incur an overhead on peak performance in our system.
+The plot shows the mean of the run time for each benchmark configuration.
+Furthermore, it indicates a band with the 95\% confidence interval.
 The green line, Moth (neither), corresponds to our Moth with type checking
 but without any optimizations.
 For this case, we see that the performance overhead grows linearly.
-Note that the y axis is on a logarithmic scale,
-which we chose to ensure that some details remain legible for the faster
-variants.
 
-For Moth (both) and Moth (untyped), the bands of median absolute deviation overlap
+For Moth (both) and Moth (untyped) we see for the first iteration that
+the band of confidence intervals diverges, indicating that the additional type
+checks have an impact on startup performance.
+However, for iteration 100, the confidence intervals overlap
 for the optimized Moth as well as the one that does not perform typechecks.
-This means, the that Moth does not suffer from a linear overhead for all of its
+This means, the that Moth does not suffer from a general linear overhead for adding
 type checks.
+Instead, most type checks do not have an impact on peak performance.
 However, as previously argued for the List benchmark,
 this is only the case for checks that can be subsumed by shape checks that
 were performed already before adding type checks.
 
 \begin{figure}
-	\TypeCost{}
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+    \TypeCostFirstIt{}
+    \caption{Iteration 1.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+    \TypeCostLastIt{}
+    \caption{Iteration 100.}
+  \end{subfigure}
+
+	% \TypeCost{}
   \caption{Transient Typechecks are (Almost) Free.
-    Two microbenchmarks demonstrating the common scenario that the addition
+    Two microbenchmarks demonstrate the common scenario that the addition
     of type annotations in our system does not have an impact on peak performance.
     The two microbenchmarks are measured in 6 variants, stepwise increasing the number
     of method arguments that have type annotations.
+    Furthermore, we show the result for the first benchmark iteration and the
+    one hundreds.
     Moth (neither), \ie, Moth without our two optimizations sees a linear increase in run time.
-    Note that the y axis has a logarithmic scale to preserve details for the optimal case.
-    Moth (both) and Moth (untyped) have on both benchmarks essentially the same performance
+    For the first iteration, we see some difference between Moth (both) and Moth (untyped).
+    For iteration 100 however, the compiler eliminated the overhead of type checks
+    and both Moth variants have essentially the same performance
     independent of the number of method arguments with type annotations.}
 	\label{fig:type-cost-micro}
 \end{figure}
