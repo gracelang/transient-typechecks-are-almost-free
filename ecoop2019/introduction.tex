@@ -76,7 +76,12 @@ programs from depending on type checks at run-time.  In the middle,
 offer first-order semantics, checking
 whether an object's type constructor or supported methods match
 explicit type declarations, and checking only when data flows through
-those declarations \cite{Siek2007,Bloom2009,concrete15,reticPython2014,Greenman2018}.  At the other end of the spectrum, behavioural
+those declarations
+\cite{Siek2007,Bloom2009,concrete15,reticPython2014,Greenman2018}.
+Reticulated Python also supports an alternative ``monotonic'' semantics
+which mutates an object to narrow its concrete type when it is passed
+into a more specific type context.
+At the other end of the spectrum, behavioural
 typechecks as in Typed Racket \cite{typedScheme08,takikawa2012} and Gradualtalk \cite{gradualtalk14} support higher-order semantics, retaining
 types until run 
 time, performing the checks eagerly, and giving detailed information
