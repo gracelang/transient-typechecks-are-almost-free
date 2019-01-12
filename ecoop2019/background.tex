@@ -23,7 +23,7 @@ all computation is via dynamically dispatched  ``method requests''
 where the object receiving the request decides which code to run,
 and
 %
-returns within lambdas are ``non-local'', returning to the method
+returns within lambdas that are ``non-local'', returning to the method
 activation in which the block is instantiated\citep{bluebook}.  In
 other ways, Grace is closer to JavaScript than Smalltalk: Grace
 objects can be created from object literals, rather than by
@@ -138,8 +138,7 @@ in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards201
 \subsection{Using Grace's Gradual Types}
 
 %\rr{We should consider a more complex example for the camera ready (so that it's not stretched too thin for the comment on avoiding checking the argument types.)}
-Finally,
-we now illustrate how the gradual type checks work in practice
+We now illustrate how the gradual type checks work in practice
 in the context of a simple program to record information about vehicles.
 Suppose the programmer starts developing this vehicle
 application by defining an object intended to represent a car
