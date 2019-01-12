@@ -121,15 +121,14 @@ subject to the same risks, thus also affecting internal validity ---
 we may not be measuring that implementation correctly.  Moth is built
 on the Truffle and Graal toolchain, so we expect external validity
 there at least --- we expect the results would transfer to other Graal
-VMs doing similar AST-based optimisations.  We have less external
-validity regarding other kinds of VMs (such as VMs specialised to 
-particular languages, or VMs built via meta-tracing rather than AST
-self-optimisation). 
+VMs doing similar AST-based optimizations.  We have less external
+validity regarding other kinds of VMs (such as VMs specialized to 
+particular languages, or VMs built via meta-tracing rather than partial evaluation). 
 Nevertheless, we expect our results should be transferable
 as we rely on common techniques.
 
 Finally, because we are working in Grace, it is less obvious that our
-results generalise to other gradually typed-languages. We have worked
+results generalize to other gradually typed-languages. We have worked
 to ensure e.g.\ our benchmarks do not depend on any features of Grace
 that are not common in other gradually-typed object-oriented
 languages, but as Grace lacks a large corpus of programs the
