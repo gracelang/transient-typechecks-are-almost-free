@@ -32,11 +32,17 @@ type systems: removing type annotations should not change the
 semantics of a correct program, drawing on Boyland's critical insight
 that, of course, such a guarantee must by its nature forbid code that
 can depend on the presence or absence of type declarations elsewhere
-in the program\citep{Boyland2014}.  As Siek et~al.\ explain, by
-choosing to check only the ``top-most type constructor'', the
-semantics we present in this paper should meet the refined gradual
-guarantee \cite{XXXSiek2015}.
-
+in the program\citep{Boyland2014}.
+%%%WRONG KJX
+%% As Siek et~al.\ explain, by
+%% choosing to check only the ``top-most type constructor'', the
+%% semantics we present in this paper should meet the refined gradual
+%% guarantee \cite{XXXSiek2015}.
+Because Grace only checks explicit type declarations (not inferred
+intermediate types), Grace cannot not meet the gradual guarantee,
+as in erasure-based gradual semantics. Grace ensures only that
+the values passing through type annotations cannot be incompatible
+with those annotations.
 
 Type errors in gradual, or other dynamically checked, type systems will
 often be triggered by the type declarations, but often those
@@ -71,7 +77,7 @@ Wilson et~al.\ take a rather different approach, employing
 questionnaires to investigate the semantics programmers expect of a
 gradual typing system  \cite{shriramdls18}.
 
-As with language designs, there seem to be two main implementation
+As with languages more generally, there seem to be two main implementation
 strategies for languages mixing dynamic and static type checks: either
 adding static checks into a dynamic language implementation, or adding
 support for dynamic types to an implementation that depends on
@@ -88,8 +94,10 @@ removing unnecessary overhead.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
 work here, take the opposite approach.
-They add run-time type checks that do not rely on static
-type declarations. These systems do not use information from type
+%%KJX might be correct, but next sentence says same thing much better.a
+%They add run-time type checks that do not rely on static
+%type declarations.
+These systems do not use information from type
 declarations to optimize execution speed, rather the necessity to
 perform (potentially repeated) dynamic type checks tends to slow
 programs down, so here code with no type annotations generally
@@ -164,12 +172,26 @@ performance for code without type annotations.
 Perhaps the closest to our approach are
 Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
 and Richards~\textit{et~al.}~\cite{Richards2017}.
-Vitousek~\textit{et~al.}~describe dynamically checking ``tag-type''
-soundness for Reticulated Python (a term coined by Greenman
-and Migeed~\cite{Greenman2018}), which they term the ``transient'' semantics.
-As with our work, Vitousek~\textit{et~al.} check
+Vitousek~\textit{et~al.}~describe dynamically checking transient types
+% ``tag-type'' soundness
+for Reticulated Python (termed ``tag-type'' soundness by Greenman
+and Migeed~\cite{Greenman2018}).
+As with our work, Vitousek~\textit{et~al.}'s transient checks inspect
 only the ``top-level'' type of an
-object against a declaration.
+object.
+%against a declaration.
+%
+%KJX arguably wrong. after all, what else do you check types agains
+%except a declaration?  Retic do check only the top-level type, but
+%they do it whenever the static checker tells them to, including
+%implicit intermediate inferred types, but not if the static checker
+%says OK. We check only explicit declarations.
+%
+Reticulated Python undertakes these transient type checks at different
+places to Grace.  Grace explicitly checks type anotations, while
+Reticulated Python implicitly checks whenever values flow from dynamic
+to static types.
+%
 %\sm{any important difference we need to mention here?}
 %\sm{and please make sure this is true!!}
 %\mwh{I've checked with both the papers and the implementation. It
@@ -190,6 +212,14 @@ object against a declaration.
 %\kjx{don't think Retic checks return values --- some this is now
 %  earlier, check for retricRW refs}
 %
+% all the above is pretty much correct, but retic actualy checks at
+% different places to us.  I don't know who does more, them or us!
+% it will depend on the program.  Explicitly typed
+% static-single-assignment form Grace code (where every indermediate
+% value is named explicitly by a local, and that local is typed)
+% would do strictly *more* checks than RP.
+% If we have to go around again, that's probably easier than doing an
+% higher fidelity model of retic
 %
 %  although \citeauthor{reticPython2014}'s checks are nominal
 % while ours are structural.

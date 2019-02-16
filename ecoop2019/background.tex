@@ -50,7 +50,8 @@ Grace's types are structural \citep{graceOnward12},
 that is, an object implements a type whenever it
 implements all the methods required by that type,
 rather than requiring classes or objects to declare types explicitly.
-Methods match when they have the same name and arity.
+Methods match when they have the same name and arity:
+argument and return types are ignored.
 A type thus expresses the requests an object can respond to,
 for example whether a particular accessor is available,
 rather than a nominal location in an explicit inheritance hierarchy.
@@ -75,13 +76,14 @@ Grace then checks the types of values at run-time:
 %% \end{itemize}
 %
 %
-In the spectrum of gradual typing, these semantics are essentially the
-transient semantics of Reticulated Python
-\cite{reticPython2014,Greenman2018} ---
-with the minor differences that Grace's semantics
-treat field access as method calls, and we check both reads and
-writes of variables, along with return values on the receiver side
-(see \S\ref{reticRW}).
+In the spectrum of gradual typing, these semantics are
+closest to the 
+transient typechecks of Reticulated Python
+\cite{reticPython2014,Greenman2018}.
+Reticulated Python inserts transient checks only when a value flows from untyped
+to typed code, while Grace inserts transient checks only at explict type
+annotations (but in principle checks every annotation every time).
+
 
 
 \subsection{Why Gradual Typing?}

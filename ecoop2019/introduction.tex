@@ -75,14 +75,18 @@ programs from depending on type checks at run time.  In the middle,
 % and ``concrete'' checks as in Thorn
 offer first-order semantics, checking
 whether an object's type constructor or supported methods match
-explicit type declarations, and checking only when data flows through
-those declarations
+explicit type declarations
+%%%WRONG kjx
+%, and checking only when data flows through those declarations
 \cite{Siek2007,Bloom2009,concrete15,reticPython2014,Greenman2018}.
 Reticulated Python also supports an alternative ``monotonic'' semantics
 which mutates an object to narrow its concrete type when it is passed
 into a more specific type context.
 At the other end of the spectrum, behavioral
-typechecks as in Typed Racket \cite{typedScheme08,takikawa2012} and Gradualtalk \cite{gradualtalk14} support higher-order semantics, retaining
+typechecks as in Typed Racket \cite{typedScheme08,takikawa2012},
+Gradualtalk \cite{gradualtalk14},
+and Reticulated Python's proxies,
+support higher-order semantics, retaining
 types until run 
 time, performing the checks eagerly, and giving detailed information
 about type violations as soon as possible via blame
@@ -180,6 +184,7 @@ na\"ively, for each gradual type
 annotation.
 % We check types eagerly when control flow reaches them.
 Whenever an annotated method is called or
+returns, or
 an annotated variable is accessed,
 we check types dynamically, and
 terminate the program with a type error if the check fails.
