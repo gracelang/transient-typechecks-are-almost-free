@@ -38,9 +38,9 @@ in the program\citep{Boyland2014}.
 %% choosing to check only the ``top-most type constructor'', the
 %% semantics we present in this paper should meet the refined gradual
 %% guarantee \cite{XXXSiek2015}.
-Because Grace only checks explicit type declarations (not inferred
-intermediate types), Grace cannot not meet the gradual guarantee,
-as in erasure-based gradual semantics. Grace ensures only that
+Because Moth only checks explicit type declarations (not inferred
+intermediate types), Moth cannot not meet the refined gradual guarantee.
+Moth ensures only that
 the values passing through type annotations cannot be incompatible
 with those annotations.
 
@@ -188,7 +188,7 @@ object.
 %says OK. We check only explicit declarations.
 %
 Reticulated Python undertakes these transient type checks at different
-places to Grace.  Grace explicitly checks type anotations, while
+places to Moth.  Moth explicitly checks type anotations, while
 Reticulated Python implicitly checks whenever values flow from dynamic
 to static types.
 %
