@@ -119,7 +119,7 @@ p <- p + theme_bw() + theme_simple(font_size = 8) +
           strip.placement = "outside",
           axis.title.x = element_text(size = 8),
           plot.margin = unit(c(0,0,0.1,0.1), "cm"))
-p <- p + ylab("Run-time factor, normalized to Moth (untyped)\n(lower is better)") # +  xlab("Cores")
+p <- p + ylab("Run-time factor, normalized to Java (untyped)\n(lower is better)") # +  xlab("Cores")
 p
 @
 }%
