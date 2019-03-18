@@ -38,7 +38,7 @@ All reported averages use the geometric mean since they aggregate ratios.
 %  - 24 hyperthreads
 %  - Intel Xeon E5-2620 v3 2.40GHz
 % Graal 0.33 Feb. 2018
-% 
+%
 % TODO: update these details when we have time... not a rejection criterion,
 % but needs to be correct in the final version
 All experiments were executed on a machine running Ubuntu Linux 16.04.4,
@@ -88,7 +88,7 @@ The Higgs VM is an interesting point of comparison,
 because Richards~\textit{et~al.}~\cite{Richards2017} used it in their study.
 The goal of this comparison is to determine whether our approach
 could be applicable to industrial strength language implementations
-without adverse effects on their performance. 
+without adverse effects on their performance.
 
 We compare across languages based on the \AWFY benchmarks\citep{Marr2016},
 which are designed to enable a comparison
@@ -163,7 +163,7 @@ The selected benchmarks as well as the papers in which they were used are shown 
       Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
       Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
       SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-    \end{tabular}  
+    \end{tabular}
   \end{center}
 \end{table}
 
@@ -172,7 +172,7 @@ To ensure correctness and completeness of these experiments,
 we added an additional check to Moth that
 reports absent type information to ensure each benchmark is completely typed.
 To assess the performance overhead of type checking,
-we compare the execution of Moth with all checks disabled, \ie, the baseline version from 
+we compare the execution of Moth with all checks disabled, \ie, the baseline version from
 \cref{sec:baseline-perf}, against an execution that has all checks enabled.
 We did not measure programs that mix typed and untyped code
 because with our implementation technique a fully typed program is expected to
@@ -184,7 +184,7 @@ have the largest overhead.
 the overall results comparing Moth,
 with all optimizations,
 against the untyped version.
-We see an average peak-performance overhead of 
+We see an average peak-performance overhead of
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
 
 \begin{figure}[htb]
@@ -213,7 +213,7 @@ We consider this benchmark a pathological case and discuss it
 in detail in \cref{sec:disc-pathological-case}.
 
 Beside List, the highest overheads are on
-Richards (\OverheadRichardsP), CD (\OverheadCDP), 
+Richards (\OverheadRichardsP), CD (\OverheadCDP),
 Snake (\OverheadSnakeP), and Towers (\OverheadTowersP).
 Richards has one major component, also a linked list traversal,
 similar to List.
@@ -245,31 +245,34 @@ the instruction cache of the processor.
 
 \paragraph*{Warmup Performance}
 
-\Cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
-The run-time factor is the result for the typed version over the untyped one.
+To more precisely measure warmup, all relevant experiments were executed 30 times,
+with each running for 100 iterations.
+The resulting \cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
+For each iteration $n$, we normalized the measurements to the mean of iteration $n$
+of the untyped Moth implementation.
 Thus, any increase indicates a slow down because of typing.
-The gray line indicates a smoothed version of the curve
-based on local polynomial regression fitting\citep{Cleveland:1992}
-using neighboring data points.
-It also indicates a 0.95 confidence interval.
+The darker lines indicate the means, while the lighter area indicates
+a $95\%$ confidence interval.
 
 \begin{figure}[htb]
   \centering
-	\TypingWarmup{}
+  %\TypingWarmup{}
+  \TypingWarmupConfInterval{}
 	\caption{Plot of the run time for the first 100 iterations.
-           The gray line is a local polynomial regression fit
-           with a 0.95 confidence interval
-           indicating the trend.
+           The lines indicate the mean at iteration $n$ normalized
+           to the untyped result, the lighter area indicates a $95\%$ confidence interval.
            The first iteration, \ie, mostly interpreted, seems
-           to be affected significantly only for Mandelbrot.}
+           to be affected significantly only for Mandelbrot, though
+           CD shows slower behavior in early warmup, too.}
 	\label{fig:typing-warmup}
 \end{figure}
 
-Looking only at the first iteration,
-where we assume that most code is executed in the interpreter,
+Looking only at the first few iterations,
+where we assume that most code is executed in the interpreter and might be
+affected by compilation activity,
 the overhead appears minimal.
-Only the Mandelbrot benchmark shows a noticeable slowdown.
-Benchmarks such as Float, PyStone, and Queens, however, show various spikes.
+Only the Mandelbrot and CD benchmarks shows a noticeable slowdown.
+PyStone however show various spikes.
 Since spikes appear in both directions (speedups and slowdowns),
 we assume that they indicate a shift,
 for instance, of garbage collection pauses,
@@ -312,7 +315,7 @@ over all benchmarks.
   \label{tab:type-statistics}
 
   \begin{center}
-    \TypingStatsTable{}  
+    \TypingStatsTable{}
   \end{center}
 \end{table}
 
@@ -325,7 +328,7 @@ to hundreds of millions times
 for a single iteration of a benchmark.
 
 Our optimizations reduce the number of type test invocations dramatically.
-As a result, the full check for the subtyping relationship is done only once for 
+As a result, the full check for the subtyping relationship is done only once for
 any specific type and a possible super type.
 Similarly, the generic type check is replaced by a shape check
 and thus minimizes the number of expensive type checks
@@ -391,12 +394,12 @@ Furthermore, we present the results for the first iteration as well as the hundr
 The first iteration is executed at least partially in the interpreter,
 while the hundredth iteration executes compiled.
 
-\Cref{fig:type-cost-micro} shows that such a common scenario of methods being 
+\Cref{fig:type-cost-micro} shows that such a common scenario of methods being
 gradually annotated with types
 does not incur an overhead on peak performance in our system.
 The plot shows the mean of the run time for each benchmark configuration.
 Furthermore, it indicates a band with the 95\% confidence interval.
-The green line, Moth (neither), corresponds to our Moth with type checking
+The yellow line, Moth (neither), corresponds to our Moth with type checking
 but without any optimizations.
 For this case, we see that the performance overhead grows linearly.
 
@@ -449,15 +452,15 @@ realized with few changes to the underlying interpreter.
 This helps to ensure that each Grace implementation
 can provide type checking in a uniform way.
 
-By examining the history of changes maintained by our version control, 
+By examining the history of changes maintained by our version control,
 we estimate that our implementation for Moth required
-549 new lines and 59 changes to existing lines. 
-The changes correspond to the implementation of 
-new modules for the type class (179 lines) and 
+549 new lines and 59 changes to existing lines.
+The changes correspond to the implementation of
+new modules for the type class (179 lines) and
 the self-specializing type checking node (139 lines),
 modifications to the front end to extract typing information
 (115 new lines, 14 lines changes)
-and finally the new fields and amended constructors for AST nodes 
+and finally the new fields and amended constructors for AST nodes
 (116 new lines, 45 lines changes).
 
 % New Classes
@@ -467,7 +470,7 @@ and finally the new fields and amended constructors for AST nodes
 
 % Parsing
 % -------
-% returnType                  ( 18 new lines)  
+% returnType                  ( 18 new lines)
 % typeFor                     ( 31 new lines)
 % typesForParameters          ( 27 new lines)
 % typesForLocals              ( 11 new lines)
