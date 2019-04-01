@@ -1,0 +1,396 @@
+On behalf of the ECOOP 2019 program committee, I am delighted to let you
+know that you paper #63 has been accepted to appear in the conference
+programme.
+
+      Title: Transient Typechecks are (Almost) Free
+    Authors: Richard Roberts (Victoria University of Wellington)
+             Stefan Marr (University of Kent)
+             Michael Homer (Victoria University of Wellington)
+             James Noble (Victoria University of Wellington)
+       Site: https://ecoop19.hotcrp.com/paper/63
+
+Final reviews for your paper are available below and via HotCRP, with a few
+papers having received an additional review since the author response
+period.
+
+The camera-ready version of your paper is due on 11 July 2019.  I will send
+you details related to preparation of the camera-ready version in due
+course.
+
+I look forward to seeing the paper presented at ECOOP in July!
+
+Alastair Donaldson
+ECOOP 2019 Program Chair
+
+
+Review #63A
+===========================================================================
+* Updated: 18 Mar 2019 4:53:09pm GMT
+
+Overall merit
+-------------
+B. Weak accept: I think this paper should be accepted but I will not
+  champion it
+
+Reviewer expertise
+------------------
+X. Expert
+
+Paper summary
+-------------
+Adding types to a program written in a gradually typed language is well known to
+add runtime overhead, as the program now needs to issue heavy type checks
+instead of cheaper method/field checks. 
+
+This paper introduces an approach to reduce that overhead based on a specialized
+execution for type checking, and on a matrix to cache sub-typing relationships.
+The paper also describes a prototype implementation (Moth) of Grace on the
+GraalVM, and describes a comprehensive experimental evaluation of the introduced
+approach using the prototype.
+
+Comments for author
+-------------------
+**Strengths**
+
+- The paper is well written and well organized, with a simple and clear
+ structure that matches expectations and is easy to follow;
+
+- The paper describes a comprehensive evaluation which provides strong arguments
+ that back the paper's claims.
+
+**Weaknesses**
+
+- The paper does not argue about how to extrapolate the lessons learnt from
+ adding gradual types to Grace to other (more popular?) languages mentioned in the
+ introduction.
+
+- The fact that a linked-list is a pathological case of bad performance is
+ disappointing.  Worse still, I'm not sure if common generic data-structures do
+ not suffer from the same problem.
+
+- The paper does not discuss the memory needed for the subtype cache matrix optimization.
+
+--------------------------------------------------------------------------------
+
+More detailed comments below:
+
+**Extrapolate results to other languages**
+
+This paper presents an thorough evaluation with impressive results.  However,
+the argument could be made that this paper is just about two clever
+optimizations to one implementation of one gradually typed language that has
+properties not found in other such languages, which therefore limits the overall
+contribution of this work.
+
+I am not prone to agree with the argument I stated above, but I would like to
+see a deeper discussion about exactly how to apply similar techniques to more
+popular gradually typed languages.  The paper touches this argument in Section
+5.3, but does not go in the depth I was expecting.
+
+**Linked-List is pathological**
+
+The results in Figure 2 are impressive, but I was disappointed with the
+pathological case on the `List` benchmark.  I appreciate that the paper
+acknowledges the gravity of this result, and devotes Section 5.1 to explaining
+why a linked-list is a pathological case.
+
+Unfortunately, it looks like the case described is not limited to linked-lists,
+but to all generic data-structures (e.g., hash maps, sets, etc).
+Is this really the case?
+
+What is the signature of method `next` in the list example?  Does it have types
+for the return value?  I'm asking because I'm confused by L424--L426.  Why does
+the compiler have no information about the return of `next`?  Would it help to
+inline the method of `next`?
+
+**Memory footprint of the subtype cache matrix**
+
+The subtype cache matrix is not critical for peak performance, as the authors
+acknowledge.  I agree that it is a relevant and useful optimization, but it is a
+memory-for-performance optimization; and the paper does not discuss the
+increased memory footprint.
+
+I am not sure I understand the sentence on lines 365--367.  How is the subtype
+cache matrix relevant for the very first execution?
+
+**Minor issues**
+
+L30: concomitant:  I had to look up this work, replacing it with a more popular
+synonym would improve the clarity of the text.
+
+L124:  Non-uniform reference for sections, the rest of the paper uses Section X instead of §
+
+Figures 1, 4: Why is the baseline just a line?  A box plot, just like all the
+other results, would allow to compare the quality/stability of the results among
+implementations.
+
+Figure 1:  The caption should be "Normalized to Java"
+
+Section 4.1:  What is the absolute value for 1?  As Grace is intended for
+students, a 2x overhead on a 500ms execution is OK; the same overhead on a 20sec
+execution is not OK.
+
+I commend the authors for making the experimental evaluation available online.
+I encourage the authors to also submit an artifact if the paper is accepted
+(whether you do it or not will not change my review).
+
+L274-282:  Should state explicitly that all checks for Moth are disabled,
+instead of leaving it in the context.
+
+Figure 2:  Please add a visual representation of the average you report in the
+caption.
+
+Section 4.6:  How many people worked on Moth, and for how long?  How many
+commits, how much code in each, and when each commit?
+
+**Post-response update**
+
+I have read the response, and I acknowledge that the authors have answered the
+most important points raised in my review.  The authors commit to provide more
+information about the implementation and results, and how to extrapolate the
+results to other languages.  I was already quite positive about the paper; with
+this response I am recommending the paper for acceptance.
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+Review #63B
+===========================================================================
+* Updated: 18 Mar 2019 5:07:38pm GMT
+
+Overall merit
+-------------
+B. Weak accept: I think this paper should be accepted but I will not
+  champion it
+
+Reviewer expertise
+------------------
+X. Expert
+
+Paper summary
+-------------
+In a gradually typed programming language, the language implementation must
+check types at run-time which cannot be guaranteed at compile-time. This basic
+concept has led to a number of different approaches in the domain of recursive
+data-types and higher-order types, of which one the most direct is transient
+checks: The code demanding a type must check it upon use, rather than objects
+contextually guaranteeing their own behavior. Traditionally, that approach has
+created linear slowdown in the number of type annotations in the system. This
+paper presents optimizations to an implementation of Grace on Truffle and Graal
+which use existing techniques in typed shapes to eliminate many gradual type
+checks, vastly improving the performance of transient typing.
+
+Comments for author
+-------------------
+This paper continues good work on integrating JIT and gradual typing work to
+eliminate overheads. It is in some sense incremental, in that most of the
+underlying ideas already exist and are implemented elsewhere, but (a) they have
+not been applied to *transient* type checks, and (b) Grace's slightly different
+demands and typing discipline—in particular with respect to an absence of
+"bare" fields—requires particular attention.
+
+In my opinion, any contention of incrementality, however, is totally countered
+by the depth and breadth of evaluation. You've addressed most of the common
+concerns in an evaluation of any JIT compiler, and used a wider array of
+benchmarks than are commonly used, particularly in a reasonably young language.
+I particularly appreciate the measurement of warmup (often essentially ignored,
+despite being the Wild West of JIT performance), and plain and simple counting
+of invocations of type-checks at runtime.
+
+The ability to provide such a broad evaluation is partially due to the context
+of transient type checks: With monotonic or guarded semantics, the "sweet spot"
+for worst performance is *partially* typed, while with transient, *fully* typed
+programs should in principle be worst, so there is at least not a whole lattice
+of partially-typed options to explore as well as all the other axes. That being
+said, in this context, I'm not wholly convinced that a fully-typed program will
+always have the greatest overhead. It is also the case that you're depending on
+partial evaluation to pull the truth of these assertions through inlined
+functions at arbitrary depth, and it's not inconceivable that eliminating or
+adding a type would affect the evaluator's inlining decision in some way and
+thus have unexpected effects on the performance. Indeed, you even reported
+similar cases, where adding types improved performance, which is not an
+expected result in this context. Given that, it's not unreasonable to assume
+that some partially-typed state may have worse—or even markedly
+worse—performance than its untyped or fully-typed equivalents.
+
+My major complaint of this paper, and the only major reason why my assessment
+is not 'A', is its brevity in describing the actual implementation details.
+This falls out largely from the fact that given the surrounding ecosystem,
+there's simply not much there to discuss, but I'm only comfortable with that
+conclusion due to my own familiarity with said surrounding ecosystem, which is
+not a reasonable expectation of an average reader. You have plenty of room to
+show a more complete example, and there's no sin in including background code
+where relevant. It would be reasonable to discuss the actual decisions made by
+the engine for a small example, to demonstrate why the technique works. Truffle
+and Graal are not universal enough for its critical specialization to be one
+paragraph. I am not wholly convinced that that's achievable within the
+necessary timeline, but nor am I wholly convinced that it is not.
+
+There is much more that could have been said to clarify, detail and demonstrate
+which just feels absent.
+
+Still, on the whole, I am positive about this paper, and believe it contributes
+the extrication of another nail from the premature coffin of gradual typing.
+
+
+**Post-response comments**
+
+I was already reasonably satisfied, and my existing concern with the fact that I haven't seen what their background on Graal and Truffle looks like remains, but isn't enough to push my score down. It's not a perfect paper, but it's a valuable contribution to a burgeoning field.
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+Review #63C
+===========================================================================
+* Updated: 28 Mar 2019 12:19:30pm GMT
+
+Overall merit
+-------------
+B. Weak accept: I think this paper should be accepted but I will not
+  champion it
+
+Reviewer expertise
+------------------
+Y. Knowledgeable
+
+Paper summary
+-------------
+This paper provides evidence that the transient approach to gradual typing does not necessarily incur linear performance overhead. This is shown in the context of the gradually (optionally) typed programming Grace, with a new implementation (Moth), on top of the Truffle/Graal framework. Shallow/top-level type checks and subtype checks are cached, and in most cases completely eliminated by the run-time. As a result, benchmarks of typed Grace run almost as fast as the untyped versions, even though all type checking is done at run time. As an additional benefit, the implementation does not require deep/invasive modifications of the (non-typed) Grace implementation.
+
+Comments for author
+-------------------
+# Evaluation
+
+I enjoyed reading this paper, even though the experience was a bit rough here and there. The approach seems very useful, and widely applicable. It provides further evidence of the flexibility and performance power of Truffle/Graal in the context of dynamic (OO) programming languages.
+
+Pros
+
+- Well-written paper; especially the introduction and related work section are comprehensive and very readable.
+
+- Great results in terms of performance. In a sense transient gradual typing + truffle/graal is a match made in heaven (at least in the context of AST-based interpreters).
+
+- The technique is demonstrated with Grace, but should be applicable to any dynamic programming language with optional type annotations. 
+
+- The implementation seems quite lean, which further should make it easy to adopt in the context of other languages.
+
+
+Cons
+
+- Not sure there is much novelty in technical terms. The combination of (transient) gradual typing + specialization/inline caching as performed by Truffle/Graal is good, but also somewhat unsurprising.
+
+- Some parts of the paper require too much background on how Truffle/Graal works. More detail is needed about how it all fits together.
+
+
+# After response
+
+I'm happy with how the authors responded, especially regarding additional background on Truffle/Graal. Looking forward to the revised paper.
+
+# Comments on the presentation
+
+
+l120: "written or read" already here I wondered why checking reads is needed; the paper revisits this idea, but I'm surprised it wasn't discarded from the start.
+
+l157 constitu[te]
+
+l158 two things: the "crash" won't be in the middle of print, but printRegistration, no? Furthermore, the "crash" will no just happen earlier, when calling printRegistration with a non-Vehicle, right? But both are run-time errors?
+
+Listing 3 is quite puzzling, and it's not immediately clear what is the point, and where is the inconsistency of the types (as mentioned in the caption). I think the point is that both personalCar, and governmentCar *are* vehicles, but (over-)specialize the registerTo method, and that's why the call on governmentCar fails.
+
+l166 Line 20 -> Line 25
+
+Listing 4: It's unclear to me what language is used here. It looks like typed Python, but later it becomes clear it is some kind of DSL for Truffle, which surprises me, since it's a Java framework. This could be introduced more clearly, and earlier.  If it is a variant Python, I'm confused by the lack of the "self" argument on methods. Furthermore, on line 12, shouldn't this be obj.get_type()?
+
+Listing 5, same comments. The caption needs rephrasing. Line 33 can be on line 32. Line 18/19 can be on 17. Line 29 can be on 28 (I guess these are remnants of SIGPLAN two column style ;). I also fail to understand how the two code snippets fit in the overall interpreter. It seems the examples are assuming a bit too much background knowledge on Truffle. I don't understand what a TypeCheckNode does, in an AST interpreter; where is it in the AST hiearchy of expressions or statements? The text from 208 down does not help much either: what is "our type checking node", what is meant by "generic objects"? And how does the specialization work? What does the node specialize into?
+
+Figure 2, caption: -14 -> $-$14. "In today's complex system" -> what does this mean?
+e.g. -> , e.g.,
+
+l330: I fail to see why mandelbrot shows a noticeable slowdown in Figure 3. And I also don't see why Float, PyStone, and Queens are singled out for having spikes. Couldn't the same be said for Snake, Towers, JSon, CD, Bounds and most others?
+
+Table 2: why is there min and max number of invocations? Does this mean (some of) the benchmarks are non-deterministic? I also wonder if these results are compatible with (known?) results about code being (mostly?) monomorphic, since the approach is more or less a polymorphic inline cache via specialization (if I understand it correctly).
+
+Figure 4: Maybe this is benchmark lingo, but what is *average* peak performance?
+
+Figure 5: What is the distinction between (a) and (b)? Is the difference we are seeing here caused by warm-up? How is it possible to run 1 iteration for varying number of typed method arguments.
+
+l397: present[s]
+
+l403: for Moth -> of Moth
+
+l424etc Is the point here that method next has no type signature?
+
+l432: here we have the obvious optimization of not checking reads, but I don't understand how not omitting them simplifies the implementation. Activating blocks, and writing to variables or fields involves *writing* right?
+
+l488: what is the refined gradual guarantee?
+
+Response by Richard Roberts <rykardo.r@gmail.com>
+---------------------------------------------------------------------------
+We thank the reviewers for their insightful feedback. We will make all recommended typographical and wording changes.
+
+#### Background on Graal/Truffle (Rev. B and C)
+
+We fully agree that more background is needed for a self-contained paper. In hindsight, we were too reluctant to include details on Graal and Truffle.
+
+We will add a new background section on Graal and Truffle, giving a recap on their basic mechanisms (self-optimizing interpreters, partial evaluation). In the optimization sections, we will give a more complete picture of how the optimizations fit into a Truffle interpreter, and also better describe which compiler decisions/heuristics are most relevant for performance. We expect this to be about 2-3 days of work, and thus feasible.
+
+#### Results are possibly “incremental”, “unsurprising” (Rev. B, C)
+
+Considering various 2018 papers, which found a linear slowdown [21,28,29, see p.2], we felt that it is a significant and novel contribution to demonstrate that VM optimizations can remove almost all of this overhead at a JavaScript-V8-level of performance.
+
+#### Pathological case, generic data structures, inlining (Rev. A)
+
+The linked-list example can also apply other generic data structures. However, in realistic programs, it's unlikely since such loops usually do additional work, which hides the cost of the check, or even provides opportunity to avoid it.
+
+In this case, `next` is monomorphic and inlined. Graal also folds the check of the return type of `next` with the check for writing to the variable `elem`. However, neither of these two checks (one after optimization) were in the program before; and Graal is unable to fold it with, e.g., the method dispatch.
+
+The case of generic collections could be optimized with storage strategies. For homogeneous collections, the check could be moved out of the loop, since it will succeed after it succeeded for the first item. We plan to examine this in future work.
+
+#### Memory footprint (Rev. A)
+
+Triggered by the question, we measured the memory footprint of the subtype cache matrix using the “Java Object Layouts” library. It currently uses 1MB of memory when initialized for 1000 types. We can include this result in our evaluation section. However, given the available benchmarks, it is unclear whether this number is meaningful. Large applications may have many more types, which may require the use of a sparse matrix with various other implications.
+
+#### Extrapolation to other Languages (Rev. A)
+
+We will expand the discussion of extrapolating our results. Certainly these techniques could be applied to other languages. However, as the semantics of gradual type systems vary widely, we ultimately need to evaluate each scheme individually. We plan to do this in future work.
+
+----
+
+# Minor Remarks
+
+**Subtype Cache Matrix, first execution (Rev. A)**
+As a cache for the type check, it is relevant for the first execution of a lexical location with a type check. It’s a global cache, which is accessed the first time a type-check node at a specific lexical location executes.
+
+**Why checks on reads? (Rev. C)**
+From an engineering perspective, it is easiest to uniformly add checks to all read operations because it requires only a single change in the implementation of the read operation. More optimal would be only checking writes, but this requires inspecting/changing hundreds of operations (primitives/builtin functions), which is more prone to error and incompleteness. Given the good results, we decided that sticking with read-checks is the more maintainable approach for an academic project.
+
+**Fully-typed programs may not have the greatest overhead (Rev. B)**
+There is indeed some variation possible. It seems similar to performance issues around inlining budgets. Further studying this phenomenon is probably best done in a context with larger programs. We will add the concern to our Threats to Validity discussion and future work.
+
+**Mandelbrot 1st iteration slowdown (Rev. C)**
+Mandelbrot is a computational kernel with many primitive operations, but no object-oriented elements. Optimized code is only reached after the first full benchmark iteration because we do not currently do on-stack-replacement for loops. Mandelbrot is the only benchmark in our suite with this code pattern, all others, even NBody have e.g. method calls, and reach optimized code earlier.
+
+**Fig.3 Spikes in warmup (Rev. C)**
+After the submission, we have been able to run the warmup benchmarks with more iterations. One of the issues is that we simply compared iteration *n* between typed/untyped. Any small shifts of iteration performance, e.g. because of GC, show as exaggerated spikes. We now have data for 30 runs for each pair, and can take the average over iteration *n*, which eliminates the major spikes.
+
+**Table 2: min/max number of invocations (Rev. C)**
+Since we aggregate over all benchmarks, we wanted to also show the range of variation in a concise way. The benchmarks are completely deterministic in how many typechecks they perform. There is no variation in these numbers between runs.
+
+**Are the optimizations essentially Polymorphic Inline caches? (Rev. C)**
+Yes, they are indeed a variation on the theme, and they have the same criterion as the normal PICs in the system, which is why checks can be optimized out.
+
+**What is average peak performance? (Rev. C)**
+The boxplots aggregate over multiple benchmarks. To make this explicit, we put the *average* into the sentence. It may be superfluous, but we did not want to take chances.
+
+**Figure 5: warmup, and varying number of typed arguments (Rev. C)**
+Fig.5a shows iteration one, which executes still in the interpreter, and shows type-checking overhead before optimization. Fig.5b shows the performance after reaching the optimized code. For each benchmark (Check or Nest), there are 6 files, which vary only by the type annotations (from 0-5 per method).
+
+**Syntax for code examples (Rev. C)**
+We tried to distinguish the implemented language from the language used for implementation, to avoid confusion when looking at the listings. The Python-like pseudo code was chosen for the implementation language, while we used Grace’s curly-brace syntax for all Grace code (the implemented language). We will make this more clear.
+
+**Fig. 1,4: Baseline just a line? (Rev. B)**
+The normalization removes any variance from the data because the datapoints are results for each benchmark, which all become 1. Thus, the boxplot appears as a line.
+
+**TypeCheckNode in AST interpreter (Rev. C)**
+Strictly speaking, AST is a misnomer. Truffle trees are rather “execution trees”. We’ll cover this in the background section.
