@@ -78,49 +78,12 @@ output_sum_stats$Exp <- revalue(output_sum_stats$Exp,
 output_sum_stats$Criterion <- factor(output_sum_stats$Criterion, levels(output_sum_stats$Criterion)[c(2,1)])
 output_sum_stats$Exp <- factor(output_sum_stats$Exp, levels(output_sum_stats$Exp)[c(2,4,3,1)])
 
-# t <- tabular(Justify("l")*Heading("Executed Test")*Criterion*
-#                Justify("l")*Heading("Enabled Optimization")*Exp
-#              ~ Justify("r")*(
-#                Heading("Absolute")*(Heading("mean")*mean_v + Heading("min")*min_v + Heading("max")*max_v) + Heading("Normalized to Neither")*(Heading("geomean")*gmean_r + Heading("min")*min_r + Heading("max")*max_r))*Heading()*round_print, data=output_sum_stats)
-
 t <- tabular(Heading("Type Test")*Criterion*
                Heading("Enabled Optimization")*Exp
              ~ Justify("r")*(Heading("mean \\#invocations")*mean_v + Heading("min")*min_v + Heading("max")*max_v)*Heading()*format_print,
              data=output_sum_stats)
 
 t
-
-# output_sum_stats <- sum_stats %>%
-#   mutate()
-# 
-# round_print(filter(sum_stats, Criterion == "NumberOfSubclassChecks" & Exp == "Neither")$mean_v)
-# round_print(filter(sum_stats, Criterion == "NumberOfSubclassChecks" & Exp == "Neither")$max_v)
-# round_print(filter(sum_stats, Criterion == "NumberOfSubclassChecks" & Exp == "Both")$mean_v)
-# 
-# round_print()
-# 
-# typing_overhead <- droplevels(filter(norm, VM=="MothTyped"))
-# #to_vm_names <- vm_names[levels(typing_overhead$VM)]
-# #typing_overhead$VM <- revalue(typing_overhead$VM, to_vm_names)
-# 
-# p <- ggplot(typing_overhead, aes(reorder(Benchmark, desc(Benchmark)), RuntimeRatio))
-# p <- p +
-#   geom_hline(aes(yintercept=0.8), colour="#cccccc", linetype="dashed") +
-#   geom_hline(aes(yintercept=0.9), colour="#cccccc", linetype="dashed") +
-#   geom_hline(aes(yintercept=1), colour="#cccccc", linetype="dashed") +
-#   geom_hline(aes(yintercept=1.1), colour="#cccccc", linetype="dashed") +
-#   geom_hline(aes(yintercept=1.5), colour="#cccccc", linetype="dashed") +
-#   geom_boxplot(outlier.size = 0.5) +
-#   coord_flip(ylim = c(0.80, 2))  # 
-# p <- p + theme_bw() + theme_simple(font_size = 8) +
-#     theme(axis.text.x = element_text(angle= 90, vjust=0.5, hjust=1),
-#           legend.position="none",
-#           strip.placement = "outside",
-#           axis.title.x = element_text(size = 8),
-#           axis.title.y = element_blank(),
-#           plot.margin = unit(c(0,0,0.1,0.1), "cm"))
-# p <- p + ylab("Run-time factor, normalized to Moth (untyped)\n(lower is better)") +  xlab("")
-# p
 @
 }%
 

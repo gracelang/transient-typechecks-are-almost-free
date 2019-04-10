@@ -36,12 +36,6 @@ data2 <- data_30in %>%
 
 \def\TypeCost{%
 <<type-cost-micro, fig.height=2.5, fig.width=4.5>>=
-# p <- ggplot(data_warmed, aes(InputSize, Value, colour = VM)) +
-#   facet_grid(cols = vars(Benchmark)) +
-#   geom_boxplot(outlier.size = 0.2) +
-#   scale_y_log10()
-# p
-
 p <- ggplot(warmed_mean, aes(x = InputSize, y = RuntimeMean, colour = VM, fill = VM)) +
   facet_grid(cols = vars(Benchmark)) +
   scale_y_log10() +
@@ -58,11 +52,6 @@ p + theme_simple(font_size = 8) +
 
 \def\TypeCostFirstIt{%
 <<type-cost-micro-first-it, fig.height=2.5, fig.width=2.6>>=
-# p <- ggplot(data_warmed, aes(InputSize, Value, colour = VM)) +
-#   facet_grid(cols = vars(Benchmark)) +
-#   geom_boxplot(outlier.size = 0.2) +
-#   scale_y_log10()
-# p
 col_palette <- get_safe_color_palette(3)
 col_palette <- c(col_palette[[2]], col_palette[[3]], col_palette[[1]])
 

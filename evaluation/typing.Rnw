@@ -9,7 +9,6 @@ if (Sys.getenv("RSTUDIO") == "1") {
 source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
-# bench <- readRDS("acme.rds.bz2")
 data_0 <- load_data_file("023-a3e099e1-full-run.data.bz2") %>%
   select(c("Value", "Unit", "Benchmark", "VM", "Iteration", "Invocation")) %>%
   filter(VM == "Moth (both)" | VM == "Moth (untyped)")

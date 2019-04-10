@@ -13,6 +13,9 @@ source("scripts/paper.R", chdir=TRUE)
 data <- select(load_data_file("023-a3e099e1-full-run.data.bz2"),
                c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 
+##
+## Discard Data not relevant for this analysis
+##
 
 ## Assume that all benchmarks are warmed up after 100 iterations, mostly true, based on visual inspection
 data <- data %>%
@@ -35,6 +38,10 @@ data <- filter(data, Benchmark %in% c("DeltaBlue",
                                       "Storage",
                                       "Towers" ))
 data <- droplevels(data)
+
+##
+## Calculate statistics
+##
 
 # levels(droplevels(filter(data, VM == "MothTyped"))$Benchmark)
 
