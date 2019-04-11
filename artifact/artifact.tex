@@ -1,14 +1,9 @@
-\documentclass[a4paper,UKenglish]{darts-v2019}
-%This is a template for producing DARTS artifact descriptions. 
-%for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
-%for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
-% for section-numbered lemmas etc., use "numberwithinsect"
- 
+\documentclass[a4paper,USenglish]{darts-v2019}
+
 \usepackage{microtype}%if unwanted, comment out or use option "draft"
+\usepackage{cleveref}
 
-%\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
-
-%\nolinenumbers to disable line numbers
+\nolinenumbers % to disable line numbers
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
 
@@ -18,8 +13,8 @@
 
 \newenvironment{scope}{\section{Scope}}{}
 \newenvironment{content}{\section{Content}}{}
-\newenvironment{getting}{\section{Getting the artifact} The artifact 
-endorsed by the Artifact Evaluation Committee is available free of 
+\newenvironment{getting}{\section{Getting the artifact} The artifact
+endorsed by the Artifact Evaluation Committee is available free of
 charge on the Dagstuhl Research Online Publication Server (DROPS).}{}
 \newenvironment{platforms}{\section{Tested platforms}}{}
 \newcommand{\license}[1]{{\section{License}#1}}
@@ -28,29 +23,28 @@ charge on the Dagstuhl Research Online Publication Server (DROPS).}{}
 
 
 % Author macros::begin %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{A Sample Research Description for the DARTS series} %TODO Please add
+\title{Transient Typechecks are (Almost) Free, Artifact}
 
-\titlerunning{A Sample DARTS Research Description} %optional, in case that the title is too long; the running title should fit into the top page column
+% \titlerunning{A Sample DARTS Research Description} %optional, in case that the title is too long; the running title should fit into the top page column
 
-% ARTIFACT: Authors may not be exactly the same as the related scholarly paper, e.g., you may want to include authors who contributed to the preparation of the artifact, but not to the companion paper
+\author{Richard Roberts}{School of Design, Victoria University of Wellington}{rykardo.r@gmail.com}{https://orcid.org/0000-0002-3462-8539}{}
+\author{Stefan Marr}{School of Computing, University of Kent}{s.marr@kent.ac.uk}{https://orcid.org0000-0001-9059-5180}{}
+\author{Michael Homer}{School of Engineering and Computer Science, Victoria University of Wellington}{mwh@ecs.vuw.ac.nz}{}{}
+\author{James Noble}{School of Engineering and Computer Science, Victoria University of Wellington}{kjx@ecs.vuw.ac.nz}{https://orcid.org/0000-0001-9036-5692}{}
 
-\author{John Q. Public}{Dummy University Computing Laboratory, [optional: Address], Country \and My second affiliation, Country \and \url{http://www.myhomepage.edu} }{johnqpublic@dummyuni.org}{https://orcid.org/0000-0002-1825-0097}{(Optional) author-specific funding acknowledgements}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional
+\authorrunning{Roberts, Marr, Homer, Noble}
 
-\author{Joan R. Public\footnote{Optional footnote, e.g. to mark corresponding author}}{Department of Informatics, Dummy College, [optional: Address], Country}{joanrpublic@dummycollege.org}{[orcid]}{[funding]}
+\Copyright{Richard Roberts, Stefan Marr, Michael Homer, James Noble}
 
-\authorrunning{J.\,Q. Public and J.\,R. Public}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
+\ccsdesc[500]{Software and its engineering~Just-in-time compilers}
+\ccsdesc[300]{Software and its engineering~Object oriented languages}
+\ccsdesc[300]{Software and its engineering~Interpreters}
 
-\Copyright{John Q. Public and Joan R. Public}%TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+\keywords{dynamic type checking, gradual types, optional types, Grace,
+Moth, object-oriented programming}
 
-\ccsdesc[100]{General and reference~General literature}
-\ccsdesc[100]{General and reference}%TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
 
-\keywords{Dummy keyword}%TODO mandatory; please add comma-separated list of keywords
-
-%TODO Please provide information to the related scholarly information
-\RelatedArticle{John Q. Open and Joan R. Access, ``A very nice paper'', in Proceedings of the 30th Conference on Very Important Topics (CVIT 2016), LIPIcs, Vol.~0, pp.~0:1--0:2, 2016.\newline \url{https://doi.org/10.4230/LIPIcs.xxx.xxx.xxx}}
-
-\acknowledgements{I want to thank \dots}%optional
+\RelatedArticle{Richard Roberts, Stefan Marr, Michael Homer, and James Noble, ``Transient Typechecks are (Almost) Free'', in Proceedings of TODO (ECOOP'19), TODO LIPIcs, Vol.~0, pp.~0:1--0:2, 2016.\newline \url{https://doi.org/10.4230/LIPIcs.xxx.xxx.xxx}}
 
 %Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Volume{3}
@@ -64,65 +58,132 @@ charge on the Dagstuhl Research Online Publication Server (DROPS).}{}
 \maketitle
 
 \begin{abstract}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci arcu, eu mollis dolor. Aliquam eleifend suscipit lacinia. Maecenas quam mi, porta ut lacinia sed, convallis ac dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. 
+
+  Transient gradual typing imposes run-time type tests that typically cause a
+  linear slowdown in programs' performance.
+  %
+  This performance impact discourages the use of type annotations
+  because adding types to a program makes the program slower.
+  %
+  A virtual machine can employ standard just-in-time optimizations to
+  reduce the overhead of transient checks to near zero.
+  %
+  These optimizations can give gradually-typed languages
+  performance comparable to state-of-the-art dynamic languages,
+  so programmers can add types to their code
+  without affecting their programs' performance.
+
+  This artifact includes our implementation as part of Moth,
+  an implementation of the Grace language on top of the Truffle/Graal platform.
+  The artifact contains all elements of our empirical evaluation.
+  It aims to enable other researchers to repeat our experiments,
+  verify our results, and possibly extend our research.
  \end{abstract}
 
 % ARTIFACT: please stick to the structure of 7 sections provided below
 
 % ARTIFACT: section on the scope of the artifact (what claims of the paper are intended to be backed by this artifact?)
 \begin{scope}
-What is the scope of the artifact? What claims of the related scholarly paper are intended to be backed by this artifact?
+
+The artifact provided with our paper is intended to enable others
+to verify our claims.Our claims are (rephrased from the paper):
+
+\begin{enumerate}
+  \item that our support for type checking does not occur significant overhead
+  \item that Moth's performance is comparable to that of Node.js, for the given set of benchmark programs, and
+  \item that the size of our implementation for type checking is as stated by the paper.
+
+\end{enumerate}
+
+To validate claims 1 and 2, one would need to run the full benchmark set.
+However, a full run will take multiple days.
+Furthermore, using a VirtualBox will likely cause additional performance overhead
+and a setup on a dedicated benchmark machine directly may be advisable.
+The instructions are linked in \cref{sec:getting}.
+
+To verify our data without rerunning the experiments,
+we provide the necessary R scripts and a Latex document.
+Inspecting these scripts would allow to verify the math,
+and check whether the plots can be reproduced correctly from the given data.
+
+
+Because of the virtualization or different hardware,
+the benchmark results may differ to the ones reported.
+However, relative to each other, we expect the results to show a similar picture.
+
+Claim 3 can be verified by examining the code responsible
+for executing the type checking.
+As outlined by the paper, the support for type checking is primarily
+handled by the self-optimizing `TypeCheckNode` (170 lines).
+The types themselves are represented by the
+\texttt{SomStructuralType} class (205 lines).
+
+These implementation of these can be found in the VirtualBox image
+or as part of the GitHub project at:
+
+\begin{itemize}
+  \item \texttt{moth-benchmarks/implementations/Moth/SOMns/src/som/interpreter/nodes/dispatch/TypeCheckNode.java}
+  \item \texttt{moth-benchmarks/implementations/Moth/SOMns/src/som/vm/SomStructuralType.java}
+\end{itemize}
+
+Beyond the above, minor changes have been made to Moth to enable the above
+classes to be used during parsing and execution of the Grace program.
+The easiest way to identity these changes is to open our the source code
+in a Java IDE (we used Eclipse Oxygen, and the project has an Eclipse project file).
+
+
 \end{scope}
 
 % ARTIFACT: section on the contents of the artifact (code, data, etc.)
 \begin{content}
 The artifact package includes:
 \begin{itemize}
-\item \dots
+  \item the experimental setup with all benchmarks, language implementations, and scripts used to run the experiments
+  \item the implementation of Moth, including the version history
+  \item a description of how to setup the experiments on Ubuntu 16.04
+  \item a description of the scripts used to generate the numbers and plots used in the paper
+  \item data files of our benchmark results, from which the plots were generated
 \end{itemize}
 \end{content}
 
 % ARTIFACT: section containing links to sites holding the
 % latest version of the code/data, if any
 \begin{getting}
+\label{sec:getting}
+
 % leave empty if the artifact is only available on the DROPS server.
 % otherwise, provide links to the latest version of the artifact (e.g., on github)
 In addition, the artifact is also available at:
-\url{https://to.be.specified}.
+\url{https://github.com/gracelang/moth-benchmarks/tree/paper-experiments}\\
+This document gives a detailed overview and step-by-step instructions.
+
+The main artifact file can be downloaded from:\\
+\url{https://drive.google.com/file/d/1Zo6Sn6EOOlgV90v78T11GPL76ZokuW_c}.
 \end{getting}
 
 % ARTIFACT: section specifying the platforms on which the artifact is known to
 % work, including requirements beyond the operating system such as large
 % amounts of memory or many processor cores
 \begin{platforms}
-Please specify the platforms on which the artifact is known to
-work, including requirements beyond the operating system such as large
-amounts of memory or many processor cores.
+The artifact is a VirtualBox image and has been tested with VirtualBox 6.0.
+
+The image contains an Ubuntu 16.04 system, and the step-by-step instructions
+include details on how to setup the system.
+While we do not provide separate instructions, our development was done on macOS,
+and thus is also expected to work.
 \end{platforms}
 
 % ARTIFACT: section specifying the license under which the artifact is
 % made available
-\license{The artifact is available under license \dots.}
+\license{The material in this repository is licensed under the terms of the MIT License. Please note, the repository links in form of submodules to other repositories which are licensed under different terms.}
 
 % ARTIFACT: section specifying the md5 sum of the artifact master file
-% uploaded to the Dagstuhl Research Online Publication Server, enabling 
-% downloaders to check that the file is the expected version and suffered 
+% uploaded to the Dagstuhl Research Online Publication Server, enabling
+% downloaders to check that the file is the expected version and suffered
 % no damage during download.
-\mdsum{xxx}
+\mdsum{31dc57ea83b94ca02b997a23190bc685}
 
-% ARTIFACT: section specifying the size of the artifact master file uploaded
-% to the Dagstuhl Research Online Publication Server
-\artifactsize{x.xx GiB}
-
-\subparagraph*{Acknowledgements.}
-
-I want to thank \dots
-
-% ARTIFACT: optional appendix
-\appendix
-\section{Morbi eros magna}
-
-Morbi eros magna, vestibulum non posuere non, porta eu quam. Maecenas vitae orci risus, eget imperdiet mauris. Donec massa mauris, pellentesque vel lobortis eu, molestie ac turpis. Sed condimentum convallis dolor, a dignissim est ultrices eu. Donec consectetur volutpat eros, et ornare dui ultricies id. Vivamus eu augue eget dolor euismod ultrices et sit amet nisi. Vivamus malesuada leo ac leo ullamcorper tempor. Donec justo mi, tempor vitae aliquet non, faucibus eu lacus. Donec dictum gravida neque, non porta turpis imperdiet eget. Curabitur quis euismod ligula \cite{DBLP:books/mk/GrayR93,DBLP:conf/focs/FOCS16,DBLP:conf/focs/HopcroftPV75,DBLP:journals/cacm/Dijkstra68a,DBLP:journals/cacm/Knuth74}. 
+\artifactsize{5.6 GiB}
 
 
 % ARTIFACT: include here any additional references, if needed...
@@ -131,9 +192,9 @@ Morbi eros magna, vestibulum non posuere non, porta eu quam. Maecenas vitae orci
 %% Bibliography
 %%
 
-%% Either use bibtex (recommended), 
+%% Either use bibtex (recommended),
 
-\bibliography{darts-v2019-sample-article}
+% \bibliography{darts-v2019-sample-article}
 
 %% .. or use the thebibliography environment explicitely
 
