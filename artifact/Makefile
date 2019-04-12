@@ -1,6 +1,6 @@
 all:
 	pdflatex artifact
-	bibtex artifact
+	#bibtex artifact
 	pdflatex artifact
 	pdflatex artifact
 
