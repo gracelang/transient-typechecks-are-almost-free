@@ -11,7 +11,8 @@ all: $(KNITR_TEX)
 	pdflatex $(PAPER)
 
 generated:
-	mkdir generated
+	mkdir -p ../generated
+	ln -s ../generated generated
 
 generated/%.tex: ../evaluation/%.Rnw generated ../evaluation/scripts/*.R $(DATA_FILES)
 	../evaluation/scripts/knit.R $< $@
