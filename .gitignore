@@ -7,4 +7,6 @@
 *.aux
 *.vtc
 *tikzDictionary
-
+*.fdb_latexmk
+*.fls
+.Rhistory
