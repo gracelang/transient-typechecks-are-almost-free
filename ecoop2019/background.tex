@@ -173,14 +173,17 @@ Next, the programmer adds a check to ensure any object passed to the
 \code{registration} request; 
 they define the structural type \code{Vehicle}\citep{theCleanVehicle}
 naming just that method (\cref{ex:vehicle}, \cref{ex:adding-type:vehicle}), 
-and annotate the \code{printRegistration} method's
+and annotate the \code{print\-Reg\-is\-tra\-tion} method's
 argument with that type (\cref{ex:vehicle}, \cref{ex:adding-type}).
 The annotation ensures that a type error will be thrown if an object,
-passed to the \code{printRegistration} method,
+passed to the \code{print\-Reg\-is\-tra\-tion} method,
 cannot respond to the \code{registration} message.
-Furthermore, as type errors constituent termination, 
-a crash somewhere in the middle of the
-implementation of the \code{print} method
+Without the type check, only the \code{print} method would
+cause a run-time error, somewhere in process of parsing
+and interpolating the string.
+However, since type errors cause termination, 
+such a run-time error in the middle of the
+\code{print} implementation
 will now be avoided.
 
 
