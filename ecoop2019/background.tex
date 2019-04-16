@@ -40,8 +40,8 @@ includes a distinguished ``\code{Unknown}'' type which matches any other type
 and is the implicit type for untyped program parts.
 
 The static core of Grace's type system is well described
-elsewhere\citep{TimJonesThesis};%
-~here we explain how
+elsewhere\citep{TimJonesThesis};
+here we explain how
 these types can be understood 
 dynamically, from the Grace programmer's point of view.
 Grace's types are structural \citep{graceOnward12},
@@ -54,7 +54,7 @@ A type thus expresses the requests an object can respond to,
 for example whether a particular accessor is available,
 rather than a nominal location in an explicit inheritance hierarchy.
 
-Grace then checks the types of values at run-time:
+Grace then checks the types of values at run time:
 %
 \begin{itemize}
 \item the values of arguments are checked after a method is requested, 
@@ -79,7 +79,7 @@ closest to the
 transient typechecks of Reticulated Python
 \cite{reticPython2014,Greenman2018}.
 Reticulated Python inserts transient checks only when a value flows from untyped
-to typed code, while Grace inserts transient checks only at explict type
+to typed code, while Grace inserts transient checks only at explicit type
 annotations (but in principle checks every annotation every time).
 
 
