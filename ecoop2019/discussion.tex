@@ -59,6 +59,7 @@ while (...) do {
 \end{lstlisting}
 
 \subsection{Optimizations}
+\label{sec:discussion-opt}
 
 % - possible optimization for reads
 % - discuss what the effect of dropping checks on reads would be
@@ -68,6 +69,10 @@ while (...) do {
 %   -> but would either delay errors (more imprecision)
 %      or require all assignments, also from primitives to be checked
 
+\subparagraph{Read and Write Checks.}
+\label{sec:discussion-read-write}
+
+\smtodo{expand on engineering tradeoffs (LOC changes, link to eval section)}
 As a simplification, we currently check variable access
 on both reads and writes.
 This approach simplifies the implementation, because we do not need to
@@ -93,6 +98,7 @@ which simplifies the implementation.
 %      the return value. instead, us truffle approach of reverting optimizations
 %      by indicating violations with an exception.
 
+\subparagraph{Dynamic Type Propagation.}
 Another optimization could be to use Truffle's approach to 
 self-specialization\citep{Wurthinger:2012:SelfOptAST}
 and propagate type information to avoid redundant checks.
