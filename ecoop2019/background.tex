@@ -61,7 +61,10 @@ Grace then checks the types of values at run time:
       but before the body of the method is executed;
 \item the value returned by a method is checked after its body is executed; and
 \item the values of variables are checked
-      whenever written or read by user code.
+      whenever written or read by user code.\footnote{
+        Since read and write checks may seem unnecessary,
+        we expand on the rational briefly in \cref{sec:discussion-read-write}.
+      }
 \end{itemize}
 %
 %
