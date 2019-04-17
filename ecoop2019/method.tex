@@ -130,12 +130,10 @@ class TypeCheckNode(Node):
     T = get_type(obj)
     
     if record[T, expected] is unknown: |\label{ex:typenode:matrix}|
-      record[T, expected] =
-          T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
+      record[T, expected] = T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
 
     if not record[T, expected]:
-      raise TypeError(
-          "{obj} doesn't implement {expected}")
+      raise TypeError("{obj} doesn't implement {expected}")
 \end{lstlisting}
 
 The first performance-critical aspect to our implementation
