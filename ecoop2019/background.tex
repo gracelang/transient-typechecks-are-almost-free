@@ -180,11 +180,10 @@ argument with that type (\cref{ex:vehicle}, \cref{ex:adding-type}).
 The annotation ensures that a type error will be thrown if an object,
 passed to the \code{print\-Reg\-is\-tra\-tion} method,
 cannot respond to the \code{registration} message.
-Without the type check, only the \code{print} method would
-cause a run-time error, somewhere in process of parsing
-and interpolating the string.
+Without the type check, the \code{print} method would
+cause a run-time error when interpolating the string.
 However, since type errors cause termination, 
-such a run-time error in the middle of the
+the run-time error in the middle of the
 \code{print} implementation
 will now be avoided.
 
