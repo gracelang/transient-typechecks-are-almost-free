@@ -111,19 +111,17 @@ class TypeCheckNode(Node):
 
   expected: Type
 
-  @Spec(static_guard=expected.check(obj))
+  @Spec(static_guard=`expected.check(obj)`)
   def check(obj: Number): |\label{ex:typenode:number}|
     pass
 
-  @Spec(static_guard=expected.check(obj))
+  @Spec(static_guard=`expected.check(obj)`)
   def check(obj: String): |\label{ex:typenode:string}|
     pass
 
   ...
 
-  @Spec(
-      guard=obj.shape==cached_shape,
-      static_guard=expected.check(obj))
+  @Spec(guard=`obj.shape==cached_shape`, static_guard=`expected.check(obj)`)
   def check(obj: Object, @Cached(obj.shape) cached_shape: Shape): |\label{ex:typenode:object}|
     pass
   
