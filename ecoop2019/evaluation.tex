@@ -313,6 +313,10 @@ over all benchmarks.
 \begin{table}[htb]
   \caption{Type Test Statistics over all Benchmarks.
   This table shows how many of the type tests can be avoided based on our two optimizations.
+  As indicated by the numbers, the number of type tests can vary significantly
+  between benchmarks.
+  Thus, the table shows the mean, minimum, and maximum number of type tests
+  across all benchmarks for a given configuration.
   With the use of an optimized node that replaces type checks with simple object shape checks,
   \code{check\_generic} is invoked only for the first time that a lexical location
   sees a specific object shape, which eliminates run-time type checks almost completely.
