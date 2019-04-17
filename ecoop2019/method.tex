@@ -86,7 +86,7 @@ class Type:
     return True
 
   def check(obj: Object):
-    t = get_type(obj)
+    t = obj.get_type()
     return self.is_satisfied_by(t) |\label{ex:type:check}|
 \end{lstlisting}
 
@@ -130,7 +130,7 @@ class TypeCheckNode(Node):
   
   @Fallback
   def check_generic(obj: Any): |\label{ex:typenode:generic}|
-    T = get_type(obj)
+    T = obj.get_type()
     
     if record[T, expected] is unknown: |\label{ex:typenode:matrix}|
       record[T, expected] = T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
