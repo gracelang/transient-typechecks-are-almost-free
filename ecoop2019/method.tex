@@ -74,7 +74,7 @@ An object satisfies a type if all members required by the type are provided
 by that object (\cref{ex:type:satisfied}).
 
 
-\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
+\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible,float,floatplacement=H,morekeywords={not}]
 class Type:
   def init(members):
     self._members = members
@@ -104,7 +104,10 @@ There are two aspects to our implementation that are critical for a minimal-over
  
 %Here we discuss each of the aspects in more detail.
 
-\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the type checking node that support type checking},float,floatplacement=htbp,columns=flexible,morekeywords={global}]
+\begin{lstlisting}[label={ex:typenode},escapechar=|,%
+  caption={An illustration of the type checking node that support type checking\sm{Rev.: The caption needs rephrasing.}},%
+  float,floatplacement=htb,%
+  columns=flexible,morekeywords={global,raise,pass,unknown,not}]
 global record: Matrix
 
 class TypeCheckNode(Node):
