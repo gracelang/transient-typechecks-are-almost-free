@@ -429,7 +429,7 @@ In both benchmarks, each method increments a counter,
 which is checked at the end of the execution to verify that both do the same
 number of method activations, and only the shape of the activation stack differs.
 
-Each benchmark exists in 6 variants, each variant in a separate file,
+Each benchmark exists in six variants, each variant in a separate file,
 going from having no type annotations
 over annotating only the first method parameter to annotating all 5 parameters.
 To demonstrate the impact of compilation,
@@ -473,7 +473,7 @@ this is only the case for checks that can be subsumed by shape checks
 
 	% \TypeCost{}
   \caption{Transient Typechecks are (Almost) Free.
-    Two microbenchmarks, in 6 variants each, demonstrate the common scenario
+    Two microbenchmarks, each with six variants, demonstrate the common scenario
     of adding type annotations over time, which in our system does not have an impact on peak performance.
     The benchmark variants differ only in the increasing number
     of method arguments that have type annotations.
