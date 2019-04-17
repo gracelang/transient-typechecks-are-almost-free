@@ -387,6 +387,28 @@ performance of unit tests, which has an major impact on developer productivity.
 	\label{fig:perf-impact-optimization}
 \end{figure}
 
+\paragraph*{Impact on Memory Usage}
+
+In our implementation, the subtype cache matrix is the largest additional
+data structure.
+We initialize it for up to 1000 types and use 1 byte per type combination.
+Java utilizes ca.\ 1MB of memory for the matrix.
+Additional memory is used to represent the type-check nodes at every lexical location.
+Since they behave like polymorphic inline caches (PIC)\citep{Hoelzle:91:PIC},
+their memory usage depends on the specific program execution.
+For the benchmarks used in this paper, the extra memory use can be up to 200KB.
+
+In the context of Graal and Truffle, this additional memory usage is small,
+since the metacompilation approach uses a lot of memory\citep{Marr:2015:MTPE}.
+In a dedicated virtual machine,
+memory use can be further optimized and be as efficient as for other kinds of PICs.
+
+% Havlak     116424 byte nodes
+% Mandelbrot  24480 byte
+% DeltaBlue  134784 byte
+% Richards    67824 byte
+% Json        59760 byte
+% CD         174168 byte
 
 \subsection{Transient Typechecks are (Almost) Free}
 
