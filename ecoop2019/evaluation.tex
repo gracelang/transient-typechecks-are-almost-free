@@ -191,7 +191,9 @@ have the largest overhead.
 the overall results comparing Moth,
 with all optimizations,
 against the untyped version.
-We see an average peak-performance overhead of
+The run-time overhead,
+after discarding the warmup iterations,
+is on average
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
 
 \begin{figure}[htb]
@@ -351,12 +353,12 @@ location sees at run time.
 
 \Cref{fig:perf-impact-optimization} shows how our optimizations contribute
 to the peak performance.
-The figure depicts Moth's average peak performance over
+The figure depicts Moth's peak performance over
 all benchmarks, depending on the activated optimizations.
 As for \cref{fig:awfy-baseline},
 we do a per-benchmark unit conversion using Moth (untyped),
 preserving the distribution properties of the results,
-but enabling us to show the results on  a single plot.
+but enabling us to show the results on a single plot.
 
 As seen before in \cref{fig:typing-overhead}, the untyped version is faster by \OverheadTypingGMeanP.
 Moth with both optimizations enabled as well as
@@ -375,7 +377,7 @@ performance of unit tests, which has an major impact on developer productivity.
 \begin{figure}[htb]
   \centering
 	\OptimizationOverview{}
-  \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
+  \caption{Performance Impact of the Optimizations on the Peak Performance over all Benchmarks.
   The boxplot shows the performance of Moth normalized to the untyped version, \ie,
   without any type checks.
   This means all results for Moth (untyped) are 1.0 and its box appears as a line.
