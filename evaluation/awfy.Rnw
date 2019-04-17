@@ -133,25 +133,25 @@ p
 
 
 
-\newcommand{\OverheadNodeGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Node")$geomean)}x\xspace}
-\newcommand{\OverheadNodeMinX}{\Sexpr{X1(filter(vm_stats, VM=="Node")$min)}x\xspace}
-\newcommand{\OverheadNodeMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Node")$max)}x\xspace}
+\newcommand{\OverheadNodeGMeanX}{$\Sexpr{X1(filter(vm_stats, VM=="Node")$geomean)}$x\xspace}
+\newcommand{\OverheadNodeMinX}{$\Sexpr{X1(filter(vm_stats, VM=="Node")$min)}$x\xspace}
+\newcommand{\OverheadNodeMaxX}{$\Sexpr{X1(filter(vm_stats, VM=="Node")$max)}$x\xspace}
 
-\newcommand{\OverheadMothGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Moth (untyped)")$geomean)}x\xspace}
-\newcommand{\OverheadMothMinX}{\Sexpr{X1(filter(vm_stats, VM=="Moth (untyped)")$min)}x\xspace}
-\newcommand{\OverheadMothMaxX}{\Sexpr{X1(filter(vm_stats, VM=="Moth (untyped)")$max)}x\xspace}
+\newcommand{\OverheadMothGMeanX}{$\Sexpr{X1(filter(vm_stats, VM=="Moth (untyped)")$geomean)}$x\xspace}
+\newcommand{\OverheadMothMinX}{$\Sexpr{X1(filter(vm_stats, VM=="Moth (untyped)")$min)}$x\xspace}
+\newcommand{\OverheadMothMaxX}{$\Sexpr{X1(filter(vm_stats, VM=="Moth (untyped)")$max)}$x\xspace}
 
-\newcommand{\OverheadMothNodeGMeanX}{\Sexpr{X1(filter(vm_stats_node, VM=="Moth (untyped)")$geomean)}x\xspace}
-\newcommand{\OverheadMothNodeMinX}{\Sexpr{X1(filter(vm_stats_node, VM=="Moth (untyped)")$min)}x\xspace}
-\newcommand{\OverheadMothNodeMaxX}{\Sexpr{X1(filter(vm_stats_node, VM=="Moth (untyped)")$max)}x\xspace}
+\newcommand{\OverheadMothNodeGMeanX}{$\Sexpr{X1(filter(vm_stats_node, VM=="Moth (untyped)")$geomean)}$x\xspace}
+\newcommand{\OverheadMothNodeMinX}{$\Sexpr{X1(filter(vm_stats_node, VM=="Moth (untyped)")$min)}$x\xspace}
+\newcommand{\OverheadMothNodeMaxX}{$\Sexpr{X1(filter(vm_stats_node, VM=="Moth (untyped)")$max)}$x\xspace}
 
-\newcommand{\OverheadMothNodeGMeanP}{\Sexpr{per(filter(vm_stats_node, VM=="Moth (untyped)")$geomean)}\%\xspace}
-\newcommand{\OverheadMothNodeMinP}{\Sexpr{per(filter(vm_stats_node, VM=="Moth (untyped)")$min)}\%\xspace}
-\newcommand{\OverheadMothNodeMaxP}{\Sexpr{per(filter(vm_stats_node, VM=="Moth (untyped)")$max)}\%\xspace}
+\newcommand{\OverheadMothNodeGMeanP}{$\Sexpr{per(filter(vm_stats_node, VM=="Moth (untyped)")$geomean)}$\%\xspace}
+\newcommand{\OverheadMothNodeMinP}{$\Sexpr{per(filter(vm_stats_node, VM=="Moth (untyped)")$min)}$\%\xspace}
+\newcommand{\OverheadMothNodeMaxP}{$\Sexpr{per(filter(vm_stats_node, VM=="Moth (untyped)")$max)}$\%\xspace}
 
-\newcommand{\OverheadHiggsGMeanX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$geomean)}x\xspace}
-\newcommand{\OverheadHiggsMinX}{\Sexpr{X1(filter(vm_stats, VM=="Higgs")$min)}x\xspace}
-\newcommand{\OverheadHiggsMaxX}{\Sexpr{X0(filter(vm_stats, VM=="Higgs")$max)}x\xspace}
+\newcommand{\OverheadHiggsGMeanX}{$\Sexpr{X1(filter(vm_stats, VM=="Higgs")$geomean)}$x\xspace}
+\newcommand{\OverheadHiggsMinX}{$\Sexpr{X1(filter(vm_stats, VM=="Higgs")$min)}$x\xspace}
+\newcommand{\OverheadHiggsMaxX}{$\Sexpr{X0(filter(vm_stats, VM=="Higgs")$max)}$x\xspace}
 
 
-\newcommand{\WarmupCutOff}{\Sexpr{warmup_low_fast}\xspace}
+\newcommand{\WarmupCutOff}{$\Sexpr{warmup_low_fast}$\xspace}
