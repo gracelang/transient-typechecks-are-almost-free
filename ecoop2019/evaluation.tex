@@ -67,7 +67,8 @@ Removed for double blind review
 	\AwfyBaseline{}
 	\caption{Comparison of Java 1.8, Node.js 10.4, Higgs VM, and Moth.
   The boxplot depicts the peak-performance results for the \AWFY benchmarks,
-  each benchmark normalized based on the result for Java.
+  each benchmark normalized individually based on the result for Java,
+  which means all results for Java are 1.0, and its box appears as a line.
   For these benchmarks, Moth is within the performance range
   of JavaScript, as implemented by Node.js,
   which makes Moth an acceptable platform for our experiments.}
@@ -112,6 +113,11 @@ but can give a good indication for basic mechanisms such as type checking.
 \Cref{fig:awfy-baseline} shows the results.
 We use Java as baseline since it is the fastest language implementation
 in this experiment.
+Note that we perform a unit conversion on the results separately for each benchmark,
+using the average of Java as 1 unit.
+While this conversion does not change the distribution of the data,
+it allows us to show it neatly on one plot.
+
 We see that Node.js (V8) is about
 \OverheadNodeGMeanX (min. \OverheadNodeMinX, max. \OverheadNodeMaxX)
 slower than Java.
@@ -180,7 +186,7 @@ have the largest overhead.
 
 \paragraph*{Peak Performance}
 
-\cref{fig:typing-overhead} depicts
+\Cref{fig:typing-overhead} depicts
 the overall results comparing Moth,
 with all optimizations,
 against the untyped version.
@@ -342,7 +348,12 @@ location sees at run time.
 to the peak performance.
 The figure depicts Moth's average peak performance over
 all benchmarks, depending on the activated optimizations.
-As seen before, the untyped version is faster by \OverheadTypingGMeanP.
+As for \cref{fig:awfy-baseline},
+we do a per-benchmark unit conversion using Moth (untyped),
+preserving the distribution properties of the results,
+but enabling us to show the results on  a single plot.
+
+As seen before in \cref{fig:typing-overhead}, the untyped version is faster by \OverheadTypingGMeanP.
 Moth with both optimizations enabled as well as
 Moth with the optimized type-check node (cf. \cref{ex:type})
 reach the same performance.
@@ -362,6 +373,7 @@ performance of unit tests, which has an major impact on developer productivity.
   \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
   The boxplot shows the performance of Moth normalized to the untyped version, \ie,
   without any type checks.
+  This means all results for Moth (untyped) are 1.0 and its box appears as a line.
   The performance of Moth with both optimizations and Moth
   with only the node for optimized type checks are identical.
   The subtype check cache improves performance over the unoptimized version,
