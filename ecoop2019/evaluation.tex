@@ -429,11 +429,13 @@ In both benchmarks, each method increments a counter,
 which is checked at the end of the execution to verify that both do the same
 number of method activations, and only the shape of the activation stack differs.
 
-Each benchmark exists in 6 variants, going from no type annotations
-over annotating only the first method parameter to annotating all 5 of the parameters.
-Furthermore, we present the results for the first iteration as well as the hundredth iteration.
+Each benchmark exists in 6 variants, each variant in a separate file,
+going from having no type annotations
+over annotating only the first method parameter to annotating all 5 parameters.
+To demonstrate the impact of compilation,
+we present the results for the first iteration as well as the hundredth iteration.
 The first iteration is executed at least partially in the interpreter,
-while the hundredth iteration executes compiled.
+while the hundredth iteration executes fully compiled.
 
 \Cref{fig:type-cost-micro} shows that such a common scenario of methods being
 gradually annotated with types
@@ -442,9 +444,10 @@ The plot shows the mean of the run time for each benchmark configuration.
 Furthermore, it indicates a band with the 95\% confidence interval.
 The yellow line, Moth (neither), corresponds to our Moth with type checking
 but without any optimizations.
-For this case, we see that the performance overhead grows linearly.
+For this case, we see that the performance overhead grows
+linearly with the number of type annotations.
 
-For Moth (both) and Moth (untyped) we see for the first iteration that
+For Moth (both) and Moth (untyped), we see for the first iteration that
 the band of confidence intervals diverges, indicating that the additional type
 checks have an impact on startup performance.
 However, for the hundredth iteration, the confidence intervals overlap
@@ -470,12 +473,12 @@ this is only the case for checks that can be subsumed by shape checks
 
 	% \TypeCost{}
   \caption{Transient Typechecks are (Almost) Free.
-    Two microbenchmarks demonstrate the common scenario that the addition
-    of type annotations in our system does not have an impact on peak performance.
-    The two microbenchmarks are measured in 6 variants, stepwise increasing the number
+    Two microbenchmarks, in 6 variants each, demonstrate the common scenario
+    of adding type annotations over time, which in our system does not have an impact on peak performance.
+    The benchmark variants differ only in the increasing number
     of method arguments that have type annotations.
-    Furthermore, we show the result for the first benchmark iteration and the
-    one hundredth.
+    We show the result for the first benchmark iteration (a) and the
+    one hundredth (b).
     Moth (neither), \ie, Moth without our two optimizations sees a linear increase in run time.
     For the first iteration, we see some difference between Moth (both) and Moth (untyped).
     By the hundredth iteration, however, the compiler has eliminated
