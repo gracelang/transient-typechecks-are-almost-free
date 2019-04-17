@@ -369,10 +369,16 @@ the peak performance.
 However, we can see that the subtype cache matrix improves performance
 by an order of magnitude over the Moth version without any type check optimizations.
 This shows that it is a relevant and useful optimization.
-Combined with the numbers of \cref{tab:type-statistics},
-this optimization is going to be relevant for the very first execution of code.
-A typical scenario of interest for developers would be, for instance, the
-performance of unit tests, which has an major impact on developer productivity.
+Based on the numbers of \cref{tab:type-statistics},
+we see that this optimization is relevant for the very first execution of code.
+For code that has not executed before,
+having the global cache for the subtype relations gives the most benefit.
+After the first execution, the lexical caches in form of the type check nodes
+are primed with the same information, and the subtype cache matrix is only rarely needed.
+An example for code that benefits from the subtype cache matrix is unit test code,
+because most of the code is executed only once.
+While the performance of unit tests is not always critical,
+it can have a major impact on developer productivity.
 
 \begin{figure}[htb]
   \centering
