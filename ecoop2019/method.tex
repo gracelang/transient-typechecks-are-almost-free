@@ -72,6 +72,7 @@ object conforms to that type.
 % to support Grace's pattern matching facilities \cite{gracePatternsDLS12}.
 An object satisfies a type if all members required by the type are provided
 by that object (\cref{ex:type:satisfied}).
+
 Note, we use a pseudo code syntax similar to Python for all code examples
 that represent the implementation of Moth.
 We chose this syntax to avoid any confusion with our Grace examples,
@@ -111,7 +112,9 @@ There are two aspects to our implementation that are critical for a minimal-over
 %Here we discuss each of the aspects in more detail.
 
 \begin{lstlisting}[label={ex:typenode},escapechar=|,%
-  caption={An illustration of the type checking node that support type checking\sm{Rev.: The caption needs rephrasing.}},%
+  caption={A sketch of the specializations in \code{TypeCheckNode} to minimize the run-time overhead of type checking.
+    A specialization is a minimal set of operations for one specific situation, \eg,
+    that the value to be checked is some type of number.},%
   float,floatplacement=htb,%
   columns=flexible,morekeywords={global,raise,pass,unknown,not}]
 global record: Matrix
@@ -135,7 +138,7 @@ class TypeCheckNode(Node):
     pass
   
   @Fallback
-  def check_generic(obj: Any): |\label{ex:typenode:generic}|
+  def check(obj: Any): |\label{ex:typenode:generic}|
     T = obj.get_type()
     
     if record[T, expected] is unknown: |\label{ex:typenode:matrix}|
@@ -144,6 +147,8 @@ class TypeCheckNode(Node):
     if not record[T, expected]:
       raise TypeError("{obj} doesn't implement {expected}")
 \end{lstlisting}
+
+\subparagraph{Optimized Type Check Node}
 
 The first performance-critical aspect to our implementation
 is the optimization of the type checking node.
@@ -181,6 +186,50 @@ Note that shapes are not equivalent to types,
 however, shapes imply the set of members of an object, and thus,
 do imply whether an object fulfills one of our structural types.
 
+\begin{lstlisting}[label={lst:variable-read},escapechar=|,%
+  caption={Sketch of a \code{VariableReadNode} using the \code{TypeCheckNode} to ensure Grace's transient semantics.},%
+  float,floatplacement=htb,%
+  columns=flexible,morekeywords={global,raise,pass,unknown,not}]
+class VariableReadNode(Node):
+  slot: FrameSlot
+  type_check: TypeCheckNode
+
+  @Spec
+  def do_read(frame: VirtualFrame):
+    value = frame.read(slot)
+    if type_check:              |\label{lst:var-read:if}|
+      type_check.check(value)   |\label{lst:var-read:check}|
+    return value
+\end{lstlisting}
+
+The \code{TypeCheckNode} node is used in Moth in all places that need to check
+types, which includes for instance reading and writing of variables.
+\Cref{lst:variable-read} shows a sketch of an AST node that implements reading
+from a local variable, which is stored in a frame object.
+A frame corresponds to a stack frame, which is sometimes also call an environment.
+
+\Cref{lst:var-read:if} first checks whether a type check needs to be performed.
+Since type annotations are optional, it may not be necessary to check for a type.
+Note that \code{type\_check} is a constant
+for just-in-time compilation (cf. \cref{sec:background-graal-pe}),
+which enables subsequent optimizations.
+\Cref{lst:var-read:check} then calls the \code{check()} method on the
+\code{TypeCheckNode}, which may result in a type error.
+For a variable that only contains numbers, the \code{type\_check} object
+would activate the number specialization in its state machine.
+For just-in-time compilation, this means only the code for
+checking numbers needs to be compiled, but none of the other specializations.
+
+In many cases, the specialization for objects would be activated in a \code{TypeCheckNode},
+which checks the shape of an object against a cached one.
+This check is identical to the check a polymorphic inline cache (PIC) does (cf. \cref{sec:background-pics}).
+Since PICs are used for all method calls,
+they are very common in most programs,
+and additional checks like this type check can be removed
+by common subexpression elimination.
+
+
+\subparagraph{Subtype Cache Matrix}
 The other performance-critical aspect to our implementation
 is the use of a matrix to cache sub-typing relationships.
 The matrix compares types against types,
@@ -192,7 +241,7 @@ All cells in the matrix begin as unknown and, as
 encountered in checks during execution, we populate the table.
 If a particular relationship has been computed before
 we can skip the check and instead recall the previously-computed value
-(\cref{ex:typenode:reuse}).
+(\cref{ex:typenode:reuse} in \cref{ex:typenode}).
 Using this table we are able to eliminate the redundancy of evaluating
 the same type to type relationships across different checks in the program. To reduce redundancy further we also unify types in a similar way to Java's string interning; 
 during the construction of a type we first check to see if the same
