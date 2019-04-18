@@ -404,3 +404,36 @@ For the use of PICs, object shapes are important,
 because they give objects a form of identification that groups them,
 and which in practice, has similar properties with respect to monomorphic
 behavior as classes have.
+
+\subsection{Just-in-Time Compilation with Graal and Truffle}
+\label{sec:background-graal-pe}
+
+The Graal compiler is a just-in-time compiler for Java.
+For languages built on the Truffle framework,
+it comes with an additional support for partial evaluation,
+which enables efficient native code generation for
+Truffle interpreters\citep{Wurthinger:2017:PPE}.
+
+As such, Graal is a metacompiler.
+This means, instead of compiling a specific program, in our case a Grace program,
+it compiles our Grace interpreter Moth for the execution of a specific Grace method.
+For simplicity, partial evaluation can be thought of a highly aggressive inlining strategy.
+It starts with the root node of a specific Grace method
+and inlines all code reachable from it, while considering the execution tree
+to be constant.
+To enable further optimizations,
+Graal does further inlining on the level of the Grace program,
+which is important to expose the same optimization opportunities
+classic just-in-time compilers have.
+The applied optimizations include for instance
+constant folding, common subexpression elimination, and loop-invariant code motion.
+
+Especially loop-invariant code motion and common subexpression elimination are important
+to generate efficient native code for dynamic languages.
+Since we rely on techniques such as self-optimizing nodes, PICs and object shapes,
+which all introduce various checks,
+a compiler needs to move these out of loops, and remove redundant checks.
+
+Combining all these techniques sketched in this section,
+Graal and Truffle are able to execute dynamic languages as efficient
+as virtual machines built for a specific language.
