@@ -51,7 +51,13 @@ For our List benchmark, this check induces an overhead of \OverheadListP.
 % I am sure that it couldn't when we were at the whiteboard,
 % but I don't see it any more}
 
-\begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},escapechar=|,label={ex:pathological-case},float,floatplacement=htb]
+\begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},%
+  escapechar=|,label={ex:pathological-case},%
+  float,floatplacement=htb]
+type ListElement = interface {
+  next
+}
+
 var elem: ListElement := headOfList
 while (...) do {
   elem := elem.next
