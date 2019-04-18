@@ -302,11 +302,13 @@ will the gradual type test on the argument fail
 \code{code} method).
 
 \section{Graal, Truffle, Self-Optimization and Dynamic Adaptive Compilation}
+\label{sec:background-implementation}
 
 This section gives a brief introduction into just-in-time compilation,
 and the main techniques we rely on for our optimizations.
 
 \subsection{Self-Optimizing Interpreters}
+\label{sec:background-self-opt}
 
 Self-optimizing abstract-syntax-tree (AST) interpreters\citep{Wurthinger:2012:SelfOptAST}
 are the foundation for the work presented here.
@@ -346,3 +348,29 @@ what often starts out as something close to a traditional AST,
 in the end incorporates additional knowledge about the execution.
 Thus, such trees should be referred to more correctly as \emph{execution trees}.
 
+
+\subsection{Polymorphic Inline Caches for Optimizing Dynamic Behavior}
+\label{sec:background-pics}
+
+Polymorphic inline caches (PICs)\citep{Hoelzle:91:PIC}
+are a variation on the theme of caching run-time values to improve performance.
+Originally, they focused on method invocation in dynamic languages
+to avoid costly method lookups by
+caching the looked-up method for a specific type.
+%
+For dynamic languages,
+PICs can be generalized to not only consider the receiver type,
+but instead for instance the object shape (cf. \cref{sec:background-obj-shape}),
+which enables the optimizations we are aiming for.
+
+In a language such as JavaScript,
+a PIC would be used for instance for the following expression:
+\code{obj.toString()}.
+The dot can be thought of as the lexical representation of the method lookup.
+An implementation would keep a small cache for each such dot in the code.
+This means, for each lexical lookup location, we have a separate cache.
+PICs benefit from the relative monomorphic behavior of programs.
+Thus, a specific lexical lookup is likely to see only one kind of
+object in the \code{obj} variable.
+Thus, the cache will have the correct method for the object ready
+and can avoid a costly lookup.
