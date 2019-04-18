@@ -374,3 +374,33 @@ Thus, a specific lexical lookup is likely to see only one kind of
 object in the \code{obj} variable.
 Thus, the cache will have the correct method for the object ready
 and can avoid a costly lookup.
+
+
+\subsection{Object Shapes: Metadata for Dynamic Objects}
+\label{sec:background-obj-shape}
+
+Object shapes\citep{woss2014object},
+which are also know as maps\citep{Self} or hidden classes,
+are in the most general case a type and usage profile for groups of objects.
+In languages such as Self, JavaScript, and Grace,
+we do not have traditional classes that define the set of fields for an object.
+The set of fields might even change over time.
+Furthermore, fields can theoretically store any possible value.
+However, in practice, the behavior of programs is again relatively monomorphic
+and for instance objects created in a specific program part are likely
+to have always the same set of fields, which each are used to store only
+a small number of different kinds of values.
+For example, an object representing a counter would have a field \code{count},
+which always stores integers,
+while an object representing a person may have always a field \code{name}
+that stores a string, but never an integer.
+
+Object shapes represent this run-time information in a way that allows a
+just-in-time compiler to generate highly efficient code and represent
+the object similar to C structs in memory.
+Furthermore, object shapes can be conflated with additional information,
+for instance to represent knowledge about types\citep{Bauman2017,Richards2017}.
+For the use of PICs, object shapes are important,
+because they give objects a form of identification that groups them,
+and which in practice, has similar properties with respect to monomorphic
+behavior as classes have.
