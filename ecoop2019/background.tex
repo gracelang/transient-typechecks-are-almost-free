@@ -301,3 +301,48 @@ will the gradual type test on the argument fail
 (the object that is passed in is not a \code{Department} because it lacks a
 \code{code} method).
 
+\section{Graal, Truffle, Self-Optimization and Dynamic Adaptive Compilation}
+
+This section gives a brief introduction into just-in-time compilation,
+and the main techniques we rely on for our optimizations.
+
+\subsection{Self-Optimizing Interpreters}
+
+Self-optimizing abstract-syntax-tree (AST) interpreters\citep{Wurthinger:2012:SelfOptAST}
+are the foundation for the work presented here.
+Together with partial evaluation\citep{Wurthinger:2017:PPE},
+self-optimization enables efficient dynamic language implementations
+that reach the performance of custom state-of-the-art virtual machines
+(cf. \cref{sec:baseline-perf} and \citep{Marr:2015:MTPE}).
+The framework for building such interpreters is called Truffle.
+
+The key idea is that an AST rewrites itself based on a program's run-time values
+to reflect the minimal set of operations needed to execute the program correctly.
+
+As an example, consider the addition of two numbers in a dynamic language,
+possibly written simply as: \code{a + b}.
+Because there are no static types known,
+the run-time values for \code{a} and \code{b} could potentially be anything
+from an integer, over a double, to arbitrary objects.
+In an self-optimizing interpreter, the expression may be represented by
+an \code{add} node, with two child nodes that each read a variable.
+The first time the \code{add} node executes,
+it may find that both values to be added are integers.
+It will then speculate that all future executions
+also see integers, and thus, rewrite itself to an \code{add-integer} node.
+This \code{add-integer} node will simply confirm that both values are integers,
+and then directly perform the integer addition.
+Compared to a general \code{add} node,
+we do not have to cover the cases for doubles, strings, and other kinds of objects,
+which results in much simpler code that can be more easily optimized.
+All other cases are supported by rewriting the \code{add} node to more general
+versions.
+This happens for instance, when the values are not integers.
+However, in practice, program behave very often monomorphic and
+the speculation is highly beneficial.
+
+As a consequence of the rewriting,
+what often starts out as something close to a traditional AST,
+in the end incorporates additional knowledge about the execution.
+Thus, such trees should be referred to more correctly as \emph{execution trees}.
+
