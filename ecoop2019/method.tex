@@ -72,9 +72,15 @@ object conforms to that type.
 % to support Grace's pattern matching facilities \cite{gracePatternsDLS12}.
 An object satisfies a type if all members required by the type are provided
 by that object (\cref{ex:type:satisfied}).
+Note, we use a pseudo code syntax similar to Python for all code examples
+that represent the implementation of Moth.
+We chose this syntax to avoid any confusion with our Grace examples,
+even so, Moth is implemented in Java.
 
 
-\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible,float,floatplacement=H,morekeywords={not}]
+\begin{lstlisting}[label={ex:type},escapechar=|,%
+  caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},%
+  float,floatplacement=htb,columns=flexible,float,floatplacement=H,morekeywords={not}]
 class Type:
   def init(members):
     self._members = members
