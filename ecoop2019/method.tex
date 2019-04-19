@@ -252,23 +252,3 @@ we avoid creating the new instance and provide the existing one instead.
 Together the self-specializing type check node and the cache matrix 
 ensure that our implementation eliminates redundancy, and
 consequently, we are able to minimize the run-time overhead of our system. 
-
-%%let's nor worry about that now.  another whole paper at least
-%% \smtodo{Yeah, then the insight here is that we can’t communicate
-%%   “purity”. And generally, I think the insight with many kinds of
-%%   language implementations is that these methods we may want to be
-%%   “visibly pure”/idempotent rarely are provably so.
-%%   \ldots Instead, the problem is avoided by being explicit about when
-%%   values are valid.} 
-
-
-% The Graal compiler 
-% Moth needs to query the shape of arguments to evaluate them.
-% Moth then needs to query the shape again to run the specializations' guards.
-% Once profiled Graal can remove this redundancy by eliminating
-% reusing the first query.
-% During this compilation Graal also employs other optimizations 
-% -- sub-expression elimination, inlining, propagation and folding --\tabularnewline
-% and, as we demonstrate next in \cref{sec:evaluation},
-% produces a compiled version of the method with minimal overhead incurred from
-% the type check.

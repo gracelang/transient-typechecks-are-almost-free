@@ -46,10 +46,6 @@ when writing to \code{elem}, because it has no information about
 what value will be returned from \code{next}, and so it needs to preserve the check to be able to trigger an error
 on the assignment.
 For our List benchmark, this check induces an overhead of \OverheadListP.
-% TODO: reconsider after submission:
-% \sm{I am not sure why this does not fold with the .next check.
-% I am sure that it couldn't when we were at the whiteboard,
-% but I don't see it any more}
 
 Compiler optimizations such as inlining are also insufficient
 for this particular case, because there are no guarantees about what
