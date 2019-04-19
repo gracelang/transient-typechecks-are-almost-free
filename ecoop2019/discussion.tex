@@ -103,7 +103,6 @@ about elements of the data structure.
 \subparagraph{Read and Write Checks.}
 \label{sec:discussion-read-write}
 
-\smtodo{expand on engineering tradeoffs (LOC changes, link to eval section)}
 As a simplification, we currently check variable access
 on both reads and writes.
 This approach simplifies the implementation, because we do not need to
@@ -113,13 +112,20 @@ One optimization could be to avoid read checks.
 A type violation can normally only occur when writing to a variable,
 but not when reading.
 However, to maintain the semantics, this would require us to adapt
-many primitives; 
-such as operations that activate blocks to check their arguments,
-or that write to variables or fields.
-With our current implementation
-we get errors as soon as user code accesses fields,
-% but not primitive operations,
+many primitives.
+Examples for primitives are operations that activate blocks,
+which need to check their arguments or return values
+as well as any primitives that write to variables or fields.
+Given the number of primitives, this is error prone
+and incompleteness would result in missing type checks.
+
+Bye checking reads and writes in a few well defined locations,
+we get errors as soon as user code accesses fields and variables.
+Moreover, we have a small set of locations that required changes,
 which simplifies the implementation.
+Given the good
+results (cf. \cref{sec:eval-opt-perf,sec:eval-changes}), we decided to keep read checks, because it is the more uniform and maintainable
+approach for an academic project.
 
 %   - we can use truffle's approach to specializing ASTs to propagate
 %     type constraints into the code we are using, which means,
