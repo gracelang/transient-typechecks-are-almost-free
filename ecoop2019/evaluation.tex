@@ -281,6 +281,17 @@ where we assume that most code is executed in the interpreter and might be
 affected by compilation activity,
 the overhead appears minimal.
 Only the Mandelbrot and CD benchmarks shows a noticeable slowdown.
+
+Mandelbrot with its distinctly slow first iteration
+can be explained by its code structure.
+Since it is a computational kernel with many primitive operations,
+but no method calls, optimized code is only reached after the first full
+benchmark iteration.
+The problem could be alleviated with on-stack-replacement
+for loops, which is currently not done.
+Since other benchmarks use methods, they reach compiled code earlier
+and do not exhibit the same first-iteration slowdown.
+
 PyStone however show various spikes.
 Since spikes appear in both directions (speedups and slowdowns),
 we assume that they indicate a shift,
