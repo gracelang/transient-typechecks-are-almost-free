@@ -358,6 +358,7 @@ combined with the number of shapes a specific lexical
 location sees at run time.
 
 \paragraph*{Impact on Performance}
+\label{sec:eval-opt-perf}
 
 \Cref{fig:perf-impact-optimization} shows how our optimizations contribute
 to the peak performance.
@@ -427,6 +428,7 @@ memory use can be further optimized and be as efficient as for other kinds of PI
 % CD         174168 byte
 
 \subsection{Transient Typechecks are (Almost) Free}
+\label{sec:eval-best-case}
 
 As discussed in the introduction, in many existing gradually typed systems,
 one would expect a linear increase of the performance overhead
@@ -503,6 +505,7 @@ this is only the case for checks that can be subsumed by shape checks
 \end{figure}
 
 \subsection{Changes to Moth}
+\label{sec:eval-changes}
 
 Outlined earlier in \cref{sec:method}, a secondary
 goal of our design was to enable the implementation of our approach to be
