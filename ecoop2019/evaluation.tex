@@ -66,9 +66,11 @@ Our experimental setup is available online to enable reproductions.\footnote{
   The boxplot depicts the peak-performance results for the \AWFY benchmarks,
   each benchmark normalized individually based on the result for Java,
   which means all results for Java are 1.0, and its box appears as a line.
+  The dots on the plot represent the geometric mean reported as averages.
   For these benchmarks, Moth is within the performance range
   of JavaScript, as implemented by Node.js,
-  which makes Moth an acceptable platform for our experiments.}
+  which makes Moth an acceptable platform for our experiments.
+  }
 	\label{fig:awfy-baseline}
 \end{figure}
 
@@ -201,10 +203,12 @@ is on average
   The plot depicts the run-time overhead on peak performance over
   the untyped performance. On average, transient type checking introduces
   an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
+  The average is indicated as a line with long dashes.
   The visible outliers correspond to various complex aspects of the overall
   system, \eg, including garbage collection and cache effects.
   Note that the axis is logarithmic to avoid distorting the proportions
-  of relative speedups and slowdowns.}
+  of relative speedups and slowdowns.
+  }
 	\label{fig:typing-overhead}
 \end{figure}
 
@@ -396,6 +400,7 @@ it can have a major impact on developer productivity.
   The boxplot shows the performance of Moth normalized to the untyped version, \ie,
   without any type checks.
   This means all results for Moth (untyped) are 1.0 and its box appears as a line.
+  The dots on the plot represent the geometric mean reported as averages.
   The performance of Moth with both optimizations and Moth
   with only the node for optimized type checks are identical.
   The subtype check cache improves performance over the unoptimized version,

@@ -76,6 +76,11 @@ stats <- norm %>%
     RR.sd         = sd(RuntimeRatio),
     RR.median     = median(RuntimeRatio))
 
+stats <- stats %>%
+  group_by(VM) %>%
+  mutate(
+    VMGMean = geometric.mean(RuntimeFactor))
+
 stats_node <- norm_node %>%
   group_by(VM, Benchmark) %>%
   summarise(
@@ -105,10 +110,20 @@ vm_stats_node <- stats_node %>%
 @
 
 \def\AwfyBaseline{%
-<<awfy-baseline, fig.height=2.5, fig.width=4.5>>=
+<<awfy-baseline, fig.height=2, fig.width=4.5>>=
 baseline <- droplevels(stats)
 base_names <- vm_names[levels(baseline$VM)]
 baseline$VM <- revalue(baseline$VM, base_names)
+baseline$VM <- reorder(baseline$VM, X=-baseline$VMGMean)
+
+fixed_geomean <- function (x) {
+  # just shift values temporarily away from 0,
+  # transformation doesn't change results when using a sufficiently large constant
+  # normally, one would use simply 1, but in this case, it may change the results
+  # fixed_geomean should really only be used in the context of stat_summary
+  m <- geometric.mean(x + 10000000)
+  m - 10000000
+}
 
 p <- ggplot(baseline, aes(VM, RuntimeFactor))
 p <- p +
@@ -118,6 +133,7 @@ p <- p +
   geom_hline(aes(yintercept=3), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=4), colour="#cccccc", linetype="dashed") +
   geom_boxplot(outlier.size = 0.5) +
+  stat_summary(fun.y = "fixed_geomean", size = 1, colour = "red", geom = "point") +
   scale_y_log10(breaks = c(0.75, 1, 2, 3, 4, 10, 50)) +
   coord_flip(ylim = c(0.5, 75))  # 
 p <- p + theme_bw() + theme_simple(font_size = 8) +
