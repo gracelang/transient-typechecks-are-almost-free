@@ -150,6 +150,22 @@ This could be used to remove redundant checks in the interpreter
 by simply discovering at run time that whole subexpressions conform to the
 type annotations.
 
+\subparagraph{Performance Impact of Types}
+
+As seen in \cref{sec:disc-pathological-case},
+there are cases where adding types may reduce performance,
+even so, in the best case this does not happen (cf. \cref{sec:eval-best-case}).
+
+While the expectation is that adding more types may result in higher potential
+for performance issues, in the context of dynamic and adaptive compilation
+as used for Moth, this is not necessarily the case.
+Since compilers rely on various heuristics, for instance for inlining,
+there may be situations where a fully typed program is faster than
+a program with fewer types.
+Since the checks need to be compiled themselves, they also influence such heuristics.
+This means it is possible that
+partially typed programs my show worse performance than fully typed ones.
+
 \subsection{Threats to Validity}
 
 %\kjx{this is a first draft, people should fix / check it!}
@@ -161,7 +177,7 @@ or performance of the gradual typing checks, affecting construct
 validity --- we may not have implemented what we think we have. Given
 that, our benchmarking harness run on the same implementation is
 subject to the same risks, thus also affecting internal validity ---
-we may not be measuring that implementation correctly.  Moth is built
+we may not be measuring the implementation correctly.  Moth is built
 on the Truffle and Graal toolchain, so we expect external validity
 there at least --- we expect the results would transfer to other Graal
 VMs doing similar AST-based optimizations.  We have less external
