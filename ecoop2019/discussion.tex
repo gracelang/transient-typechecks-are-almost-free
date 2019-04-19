@@ -13,25 +13,25 @@
 
 
 One of the key optimizations for our work
-and the work of others\citep{Richards2017,Bauman2017}
+and the work of others\citep{Bauman2017,Richards2017}
 is the use of object shapes
 to encode information about types
 (in our case),
 or type casts and assumptions
 (in the case of gradually typed systems).
-
+%
 The general idea is that a VM will already use object shapes
 for method dispatches, field accesses, and other operations on objects.
 Thus any further use to also imply type information
 can often be optimized away
-when the compiler sees that the same checks are done
-(and therefore can be combined). This is similar to 
-the elimination of other side-effect-free common subexpressions.
+when the compiler sees that the same checks are done,
+and therefore can be combined
+by optimizations such as common subexpression elimination.
 
 This assumption breaks, however, when checks are introduced
 that do not correspond to those that exist already.
 As described in \cref{sec:method},
-our approach introduces checks for reading and writing to variables.
+our approach introduces checks for reading from and writing to variables.
 \Cref{ex:pathological-case} gives an example of a pathological case.
 It is a loop traversing a linked list.
 For this example our approach 
@@ -51,6 +51,14 @@ For our List benchmark, this check induces an overhead of \OverheadListP.
 % I am sure that it couldn't when we were at the whiteboard,
 % but I don't see it any more}
 
+Compiler optimizations such as inlining are also insufficient
+for this particular case, because there are no guarantees about what
+\code{elem} does to implement \code{next}.
+The \code{next} method of a specific kind of \code{ListElement} may even have
+a type annotation for a return value.
+Though, the best Graal can do in this example is to combine the check for the
+return value with the one writing to \code{elem}.
+
 \begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},%
   escapechar=|,label={ex:pathological-case},%
   float,floatplacement=htb]
@@ -63,6 +71,23 @@ while (...) do {
   elem := elem.next
 }
 \end{lstlisting}
+
+Since the example shows a somewhat generic data structure,
+there is the question of whether the issue applies to other data structures as
+well.
+Our benchmarks use a range of data structures including hash maps, sets,
+and vectors, none of which show the issue, because in more complex programs
+the chance of having already a check there before is high
+and cases were there has not been one before seem to be rare.
+
+Though, one can consider additional optimizations
+to further eliminate checks.
+For generic data structures, storage strategies\citep{Bolz2013}
+could be used to encode type information about elements.
+This would allow to do checks only once before a loop,
+and the loop itself can rely on the previously established knowledge
+about elements of the data structure.
+
 
 \subsection{Optimizations}
 \label{sec:discussion-opt}
