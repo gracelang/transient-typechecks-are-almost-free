@@ -133,7 +133,7 @@ p <- p +
   geom_hline(aes(yintercept=3), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=4), colour="#cccccc", linetype="dashed") +
   geom_boxplot(outlier.size = 0.5) +
-  stat_summary(fun.y = "fixed_geomean", size = 1, colour = "red", geom = "point") +
+  stat_summary(fun.y = "fixed_geomean", size = 1, colour = "#ce8080", geom = "point") +
   scale_y_log10(breaks = c(0.75, 1, 2, 3, 4, 10, 50)) +
   coord_flip(ylim = c(0.5, 75))  # 
 p <- p + theme_bw() + theme_simple(font_size = 8) +
