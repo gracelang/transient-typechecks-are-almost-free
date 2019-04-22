@@ -1,0 +1,162 @@
+ECOOP 2019 Artifacts Paper #10 Reviews and Comments
+===========================================================================
+Paper #10 Transient Typechecks are (Almost) Free
+
+
+Review #10A
+===========================================================================
+
+Questions for "kicking the tires" phase
+---------------------------------------
+The authors provided a VM that contains all scripts and implementations needed for the artifact. This VM worked out of the box without any issue. 
+
+Authors also provide instructions to reproduce results from scratch. There are a few issues with the main scripts:
+
+### 1. Install Python-pip
+ 
+There is a minor issue. Since I use a fresh VM, I needed to install also some dependencies.
+
+```bash
+$ sudo apt-get install python-pip
+```
+
+### 2. Access to the repository
+
+I guess authors want to use 
+
+```bash 
+$ git clone --recursive -b paper-experiments https://github.com/gracelang/moth-benchmarks
+```
+Otherwise, I get the following error:
+
+```
+$ git clone --recursive -b paper-experiments git@github.com:gracelang/moth-benchmarks.git
+Cloning into 'moth-benchmarks'...
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+```
+
+### 3. Install mono-develop
+
+Dependencies `mono-develop` and `dmd-compiler` should be separated.
+
+```
+apt install -y openjdk-8-jdk openjdk-8-source python-pip ant maven nodejs mono-devel dmd-compiler dub
+```
+
+### 4. DMD compiler installation
+
+I got an error with the existing script. The problem was the path in which to save the `d-apt.list` file. 
+This should be the one:
+
+```
+## Save it in the /etc/apt/sources.list.d/ directory
+$ wget http://master.dl.sourceforge.net/project/d-apt/files/d-apt.list -O /etc/apt/sources.list.d/d-apt.list
+$ sudo apt-get update && sudo apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring
+$ sudo apt-get update && sudo apt-get install dmd-compiler dub
+```
+
+### 5. Evaluation scripts. 
+
+It seems there is a missing file `data-processing.R`:
+
+```bash
+$ sudo Rscript scripts/libraries.R 
+[sudo] password for moth: 
+[INFO] Loading Libraries
+Error in file(filename, "r", encoding = encoding) : 
+  cannot open the connection
+Calls: source -> file
+In addition: Warning message:
+In file(filename, "r", encoding = encoding) :
+  cannot open file 'data-processing.R': No such file or directory
+Execution halted
+```
+
+#### Solution:
+Move to the `scripts` directory:
+
+```bash
+cd ~evaluation/scripts/ && sudo Rscript libraries.R
+```
+
+Or change the `libraries.R` script with the paths 
+`scripts/libraries.R`. In fact, this change should be done for all the `source("path")`.
+
+
+After all of these fixes, I could also reproduce the examples as described in the artifact. 
+
+
+## Question for the authors:
+
+* Is it possible to obtain the scripts for recreating the plots and statistic analysis if I am running in a my own machine? I see that in the moth.ova VM, evaluation files are already there. Is there any repository I can download them?
+
+
+
+Review #10B
+===========================================================================
+
+Questions for "kicking the tires" phase
+---------------------------------------
+It is very easy to get started. The experiment is still running and may finish in several days, as described in the submitted document. Anyway, I have already observed data written into the file `benchmark.data`.
+
+
+
+Review #10C
+===========================================================================
+
+Questions for "kicking the tires" phase
+---------------------------------------
+I was able to use the VM and tried running all the benchmarks (together in bulk). I didn't try installing the artifact from source code.
+
+Suggestions/Problems/Concerns:
+
+* The Mandelbrot-neither benchmark failed due to a timeout with the following output:
+
+https://www.dropbox.com/s/u76nbjipe3muc1h/mandelbrot-timeout-fail.txt?dl=1
+
+The technical specs of the computer I was running the VM on are:
+
+```
+Macbook Pro
+macOS Mojave v. 10.14.4
+2.8 GHz Intel Core i7
+Number of Processors:    1
+Total Number of Cores:    4
+L2 Cache (per Core):    256 KB
+L3 Cache:    6 MB
+RAM: 16 GB 1600 MHz DDR3
+```
+
+* For this phase of evaluation, I read in detail only the Getting Started guide and skimmed the rest. The Getting Started guide prompted me to run all benchmarks, and so I did. This resulted in the benchmarks taking much longer to run than I expected. Only after letting the benchmarks run for over 10 hours, I saw the note about how long running all benchmarks would take, which was in the claims section. For better expectations management, please note how long running all the benchmarks will take in the Getting Started guide, preferably before providing the command for running them.
+
+* A concern related to the above one is that there seems to be no way for me to see the progress of the run. To get an idea for this, I looked for output files that would correspond to each benchmark but was unable to find any. Since the benchmarks take such a long time to run, please consider providing a way to check their progress.
+
+* Another concern related to the above one is that there seems to be no way to run only one benchmark at a time, instead of all of them together. Please add this capability, as this way the artifact user would be able to iron out all the problems without having to commit to a long wait for the results, especially since the time it takes to run all benchmarks seems to be in the order of days. Once you add this capability, please use it in the basic experiment execution section in the README and on the webpage, instead of prompting the user to run all benchmarks right away.
+
+*  There are three different sources of information about this artifact: a webpage, a PDF (eval-description.pdf) in the VM, and a README file in the VM, which is a copy of the content of the webpage. At first, I was confused about the relationship between these files and what file(s) I should use to run the artifact. For better clarity on the process of running the artifact, consider naming the generated file (eval-description.pdf) so that it's clear that it's generated. For example, append "generated" to its name. It would also help if the fact that this file is generated is prominently noted in the file itself as well.
+
+* When running `rebench codespeed.conf all` in the VM, the first thing I got was the following error:
+
+```
+Error: Process niceness can not be set.
+    To execute benchmarks with highest priority,
+    you might need root/admin rights.
+    Deactivated usage of nice command.
+```
+
+Since the VM environment is completely under your control, it would be nice not to have this error thrown.
+
+* When running some benchmarks, I received a warning about mean runtime being low. For example:
+
+```
+Executing run:Bounce (MothTypedStats, moth-awfy-stats, 1500) 1 None -Dsom.useOptTypeCheckNode=false -Dsom.useSubtypeTable=false
+    cmd: /home/moth/moth-benchmarks/implementations/./Moth.sh  -A -G -tc -Dsom.collectTypeStats=true  -Dsom.useOptTypeCheckNode=false -Dsom.useSubtypeTable=false harness.grace Bounce.grace 1  1500
+    cwd: /home/moth/moth-benchmarks/benchmarks/Moth
+    Warning: Low mean run time.
+        The mean (0.0) is lower than min_iteration_time (50)
+ / Running Benchmarks: Bounce (MothTypedStats, moth-awfy-stats, 1500) 1 None -Dsom.useOptTypeCheckNode=false -Dsom.useSubtypeTable=false    mean:        0.0 - Running Benchmarks:          DeltaBlue (Moth (both), moth-awfy-startup, 12000 \
+```
+Is this expected? It would be nice not to see these warnings, and if there is no way for you to fix the underlying issue(s) or suppress the warnings, please provide an explanation for them in the README file and on the webpage.
