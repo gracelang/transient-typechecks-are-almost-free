@@ -10,7 +10,7 @@ source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
 
-data <- select(load_data_file("023-a3e099e1-full-run.data.bz2"),
+data <- select(load_data_file("036-c658c2a2-30-in.data.bz2"),
                c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 
 ##
