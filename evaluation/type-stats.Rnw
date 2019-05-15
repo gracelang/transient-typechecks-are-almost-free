@@ -9,7 +9,7 @@ if (Sys.getenv("RSTUDIO") == "1") {
 source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
-data <- load_data_file("type-stats.data.bz2",
+data <- load_data_file("036-c658c2a2-30-in.data.bz2",
                        c("Invocation", "Iteration", "Value", "Unit",
                          "Criterion", "Benchmark", "VM", "Suite", "Extra",
                          "Warmup", "Cores", "Var"))

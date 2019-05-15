@@ -28,15 +28,15 @@ load_data_file <- function (file, row_names, version = 0, sha = "") {
   bench <- read.table(file, sep="\t", header=FALSE, col.names=row_names, fill=TRUE)
 
   # Give Run Ids to the rows, but need to consider different criterions
-  num_criteria <- length(levels(bench$Criterion))
-  run_nums <- seq_len(nrow(bench) / num_criteria)
-  bench$rid <- rep(run_nums, each = num_criteria)
+  # num_criteria <- length(levels(bench$Criterion))
+  # run_nums <- seq_len(nrow(bench) / num_criteria)
+  # bench$rid <- rep(run_nums, each = num_criteria)
   
   bench$Extra <- factor(bench$Extra)
   bench$Cores <- factor(bench$Cores)
   bench$Suite <- factor(bench$Suite)
 
-  bench <- mutate(bench, version = version, sha = sha)
+  # bench <- mutate(bench, version = version, sha = sha)
   bench
 }
 
