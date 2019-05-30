@@ -33,7 +33,7 @@ Despite these changes Moth
 preserves the peak performance of \SOMns,
 which reaches that of V8,
 Google's JavaScript implementation
-(cf. \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
+(cf.\ \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
 
 \subsection{Adding Gradual Type Checking} 
 \label{ssec:implementation} 
@@ -65,7 +65,7 @@ existing method, variable read, and variable write nodes.
 %
 
 The check node uses the internal representation of a Grace type
-(cf. \cref{ex:type}, \cref{ex:type:check}) to test whether an observed
+(cf.\ \cref{ex:type}, \cref{ex:type:check}) to test whether an observed
 object conforms to that type. 
 % These \code{Type} objects are created by
 % Grace \code{interface} expressions, and also help
@@ -75,8 +75,8 @@ by that object (\cref{ex:type:satisfied}).
 
 Note, we use a pseudo code syntax similar to Python for all code examples
 that represent the implementation of Moth.
-We chose this syntax to avoid any confusion with our Grace examples,
-even so, Moth is implemented in Java.
+We chose this syntax to avoid any confusion with our Grace examples
+(even though Moth is implemented in Java).
 
 
 \begin{lstlisting}[label={ex:type},escapechar=|,%
@@ -176,7 +176,7 @@ which may raise a type error.
 
 For generic objects, we rely on the specialization on \cref{ex:typenode:object},
 which checks that the object satisfies the expected type.
-If that is the case, it reads the shape of the object (cf. \cref{ssec:moth}) at specialization time,
+If that is the case, it reads the shape of the object (cf.\ \cref{ssec:moth}) at specialization time,
 and caches it for later comparisons.
 Thus, during normal execution,
 we only need to read the shape of the object and then compare it to the cached shape
@@ -202,16 +202,17 @@ class VariableReadNode(Node):
     return value
 \end{lstlisting}
 
-The \code{TypeCheckNode} node is used in Moth in all places that need to check
-types, which includes for instance reading and writing of variables.
+The \code{TypeCheckNode} is used in Moth in all places that need to check
+types, which includes  reading and writing variables as well as method
+requests and returns.
 \Cref{lst:variable-read} shows a sketch of an AST node that implements reading
 from a local variable, which is stored in a frame object.
-A frame corresponds to a stack frame, which is sometimes also call an environment.
+A frame corresponds to a stack frame,  sometimes also called an environment.
 
 \Cref{lst:var-read:if} first checks whether a type check needs to be performed.
 Since type annotations are optional, it may not be necessary to check for a type.
 Note that \code{type\_check} is a constant
-for just-in-time compilation (cf. \cref{sec:background-graal-pe}),
+for just-in-time compilation (cf.\ \cref{sec:background-graal-pe}),
 which enables subsequent optimizations.
 \Cref{lst:var-read:check} then calls the \code{check()} method on the
 \code{TypeCheckNode}, which may result in a type error.
@@ -221,12 +222,12 @@ For just-in-time compilation, this means only the code for
 checking numbers needs to be compiled, but none of the other specializations.
 
 In many cases, the specialization for objects would be activated in a \code{TypeCheckNode},
-which checks the shape of an object against a cached one.
-This check is identical to the check a polymorphic inline cache (PIC) does (cf. \cref{sec:background-pics}).
+which checks the shape of an object against a cache.
+This check is identical to the check performed by a polymorphic inline cache (PIC, cf.\ \cref{sec:background-pics}).
 Since PICs are used for all method calls,
 they are very common in most programs,
-and additional checks like this type check can be removed
-by common subexpression elimination.
+and these additional checks can often be removed
+easily via common subexpression elimination.
 
 
 \subparagraph{Subtype Cache Matrix}
