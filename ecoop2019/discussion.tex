@@ -52,7 +52,7 @@ for this particular case, because there are no guarantees about what
 \code{elem} does to implement \code{next}.
 The \code{next} method of a specific kind of \code{ListElement} may even have
 a type annotation for a return value.
-Though, the best Graal can do in this example is to combine the check for the
+The best Graal can do in this example is to combine the check for the
 return value with the one writing to \code{elem}.
 
 \begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},%
@@ -73,16 +73,15 @@ there is the question of whether the issue applies to other data structures as
 well.
 Our benchmarks use a range of data structures including hash maps, sets,
 and vectors, none of which show the issue, because in more complex programs
-the chance of having already a check there before is high
-and cases were there has not been one before seem to be rare.
-
-Though, one can consider additional optimizations
-to further eliminate checks.
+the chance of already having a check there is high,
+and cases were there has not been one before seem to be rare --- although
+one can always consider additional optimizations
+to eliminate further checks.
 For generic data structures, storage strategies\citep{Bolz2013}
 could be used to encode type information about elements.
-This would allow to do checks only once before a loop,
-and the loop itself can rely on the previously established knowledge
-about elements of the data structure.
+This would allow the VM to check only once before a loop,
+and the loop could then rely on that check for guarantees
+about the elements of the data structure.
 
 
 \subsection{Optimizations}
@@ -115,12 +114,12 @@ as well as any primitives that write to variables or fields.
 Given the number of primitives, this is error prone
 and incompleteness would result in missing type checks.
 
-Bye checking reads and writes in a few well defined locations,
+By checking reads and writes in a few well defined locations,
 we get errors as soon as user code accesses fields and variables.
-Moreover, we have a small set of locations that required changes,
-which simplifies the implementation.
+Moreover, only a small set of locations required changes to the code,
+which simplified the implementation.
 Given the good
-results (cf. \cref{sec:eval-opt-perf,sec:eval-changes}), we decided to keep read checks, because it is the more uniform and maintainable
+results (cf. \cref{sec:eval-opt-perf,sec:eval-changes}), we decided to keep read checks, because it isa more uniform and maintainable
 approach for an academic project.
 
 %   - we can use truffle's approach to specializing ASTs to propagate
@@ -160,7 +159,7 @@ there may be situations where a fully typed program is faster than
 a program with fewer types.
 Since the checks need to be compiled themselves, they also influence such heuristics.
 This means it is possible that
-partially typed programs my show worse performance than fully typed ones.
+partially typed programs may show worse performance than fully typed ones.
 
 \subsection{Threats to Validity}
 
@@ -205,8 +204,8 @@ further research.
 
 For languages such as Newspeak, Strongtalk, or TypeScript,
 where types do not have run-time semantics,
-our approach would however be applicable and we expect similar results.
-One may add termination based on type errors to these languages,
+one could add termination based on type errors to these languages,
 or simply avoid termination and report the errors after program completion
 as a debugging aid.
-For both options, we expect our results to be applicable.
+For either option, our approach should apply and we would expect similar results.
+
