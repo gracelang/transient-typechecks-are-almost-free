@@ -26,27 +26,37 @@ important early attempt
 and also surveys previous work.
 
 Revived practical adoption of dynamic languages generated revived
-research interest, leading to the formulation of the ``gradual
-guarantee''\citep{Siek2006,XXXSiek2015} to characterize sound gradual
-type systems: removing type annotations should not change the
-semantics of a correct program, drawing on Boyland's critical insight
-that, of course, such a guarantee must by its nature forbid code that
-can depend on the presence or absence of type declarations elsewhere
-in the program\citep{Boyland2014}.
+research interest, leading to the formulation of the \textit{gradual
+  guarantee} to characterize sound gradual type systems: informally
+``removing type annotations always produces a program that is still
+well typed'' and also ``evaluates to an equivalent value'' \citep{XXXSiek2015}
+, drawing on Boyland's critical insight
+that such a guarantee must by its nature exclude code that
+reflects on the presence or absence of type declarations\citep{Boyland2014}.
 %%%WRONG KJX
 %% As Siek et~al.\ explain, by
 %% choosing to check only the ``top-most type constructor'', the
 %% semantics we present in this paper should meet the refined gradual
 %% guarantee \cite{XXXSiek2015}.
-Because Moth only checks explicit type declarations (not inferred
-intermediate types), Moth cannot not meet the \ugh{refined gradual guarantee}\sm{what's this? reviewer question. James, please tell us what this is}.
-Moth ensures only that
-the values passing through type annotations cannot be incompatible
-with those annotations.
+%
+%
+Moth ensures that the values passing through type annotations cannot
+be incompatible with those annotations, that type annotations cannot change
+program values, and Moth's type tests consider only method names (not any
+further type annotations).  This means that removing type annotations
+cannot cause a program to fail or change its behaviour, satisfying
+the informal statement of the gradual guarantee.
+%
+Moth does not meet the refined formal statement of theguarantee in
+\citet{XXXSiek2015}'s Theorem 5, however, because Theorem 5 requires
+all intermediate values conform to their inferred static types.  Moth only
+checks at explicit type declarations, not inferred intermediate types.
+
+% \ugh{refined gradual guarantee}\sm{what's this? reviewer question. James, please tell us what this is}.
 
 Type errors in gradual, or other dynamically checked, type systems will
-often be triggered by the type declarations, but often those
-declarations will not be at fault---indeed in a correctly typed
+be detected at the type declarations, but often those
+declarations will not be at fault --- indeed in a correctly typed
 program in a sound gradually typed system,  the declarations cannot be
 at fault because they will have passed the static type
 checker. Rather, the underlying fault must be somewhere within the
