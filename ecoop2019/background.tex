@@ -269,7 +269,8 @@ As an example, consider the addition of two numbers in a dynamic language,
 possibly written simply as: \code{a + b}.
 Because there are no static types known,
 the run-time values for \code{a} and \code{b} could potentially be anything
-from an integer, over a double, to arbitrary objects.
+from an integer or a double, to a string or a collection, or any
+arbitrary objects that have a ``\code{+}'' method.
 In an self-optimizing interpreter, the expression may be represented by
 an \code{add} node, with two child nodes that each read a variable.
 The first time the \code{add} node executes,
@@ -283,14 +284,15 @@ we do not have to cover the cases for doubles, strings, and other kinds of objec
 which results in much simpler code that can be more easily optimized.
 All other cases are supported by rewriting the \code{add} node to more general
 versions.
-This happens for instance, when the values are not integers.
-However, in practice, program behave very often monomorphic and
-the speculation is highly beneficial.
+This happens for instance, when the values are not integers, 
+however, programs are often very monomorphic in practice, and
+so the speculation is highly beneficial.
 
 As a consequence of the rewriting,
 what often starts out as something close to a traditional AST,
 in the end incorporates additional knowledge about the execution.
-Thus, such trees should be referred to more correctly as \emph{execution trees}.
+Thus, such trees should be referred to more correctly as
+\emph{execution trees} rather than ASTs.
 
 
 \subsection{Polymorphic Inline Caches for Optimizing Dynamic Behavior}
@@ -313,10 +315,10 @@ a PIC would be used for instance for the following expression:
 The dot can be thought of as the lexical representation of the method lookup.
 An implementation would keep a small cache for each such dot in the code.
 This means, for each lexical lookup location, we have a separate cache.
-PICs benefit from the relative monomorphic behavior of programs.
-Thus, a specific lexical lookup is likely to see only one kind of
-object in the \code{obj} variable.
-Thus, the cache will have the correct method for the object ready
+PICs benefit from the relatively monomorphic behavior of programs.
+A specific lexical lookup is likely to see only one kind of
+object in the \code{obj} variable, so the cache will usually have the
+correct method for the object ready 
 and can avoid a costly lookup.
 
 
@@ -331,7 +333,7 @@ we do not have traditional classes that define the set of fields for an object.
 The set of fields might even change over time.
 Furthermore, fields can theoretically store any possible value.
 However, in practice, the behavior of programs is again relatively monomorphic
-and for instance objects created in a specific program part are likely
+and objects created in a specific part of a  program are likely
 to have always the same set of fields, which each are used to store only
 a small number of different kinds of values.
 For example, an object representing a counter would have a field \code{count},
@@ -340,9 +342,10 @@ while an object representing a person may have always a field \code{name}
 that stores a string, but never an integer.
 
 Object shapes represent this run-time information in a way that allows a
-just-in-time compiler to generate highly efficient code and represent
-the object similar to C structs in memory.
-Furthermore, object shapes can be conflated with additional information,
+just-in-time compiler to
+represent objects in memory similarly to C structs, and then to 
+generate highly efficient code.
+Object shapes can be conflated with additional information,
 for instance to represent knowledge about types\citep{Bauman2017,Richards2017}.
 For the use of PICs, object shapes are important,
 because they give objects a form of identification that groups them,
@@ -354,13 +357,13 @@ behavior as classes have.
 
 The Graal compiler is a just-in-time compiler for Java.
 For languages built on the Truffle framework,
-it comes with an additional support for partial evaluation,
+Graal comes with  additional support for partial evaluation,
 which enables efficient native code generation for
 Truffle interpreters\citep{Wurthinger:2017:PPE}.
 
 As such, Graal is a metacompiler.
-This means, instead of compiling a specific program, in our case a Grace program,
-it compiles our Grace interpreter Moth for the execution of a specific Grace method.
+This means that instead of compiling a specific program, in our case a Grace program,
+Graal compiles our Grace interpreter Moth for the execution of a specific Grace method.
 For simplicity, partial evaluation can be thought of a highly aggressive inlining strategy.
 It starts with the root node of a specific Grace method
 and inlines all code reachable from it, while considering the execution tree
@@ -378,6 +381,7 @@ Since we rely on techniques such as self-optimizing nodes, PICs and object shape
 which all introduce various checks,
 a compiler needs to move these out of loops, and remove redundant checks.
 
-Combining all these techniques sketched in this section,
-Graal and Truffle are able to execute dynamic languages as efficient
-as virtual machines built for a specific language.
+By combining all the techniques sketched in this section,
+Graal and Truffle are able to execute dynamic languages as efficiently
+as virtual machines built for a specific language -- but with much
+less implementation effort.
