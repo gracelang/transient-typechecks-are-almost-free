@@ -47,7 +47,7 @@ further type annotations).  This means that removing type annotations
 cannot cause a program to fail or change its behaviour, satisfying
 the informal statement of the gradual guarantee.
 %
-Moth does not meet the refined formal statement of theguarantee in
+Moth does not meet the refined formal statement of the guarantee in
 \citet{XXXSiek2015}'s Theorem 5, however, because Theorem 5 requires
 all intermediate values conform to their inferred static types.  Moth only
 checks at explicit type declarations, not inferred intermediate types.
@@ -100,7 +100,9 @@ boundary.  Fully statically typed code needs no dynamic type checks,
 and so generally performs better than dynamically typed code. Adopting
 a gradual type system such as Typed Racket\citep{typedScheme08} allows
 programmers to explicitly declare types that can be checked statically,
-removing unnecessary overhead.
+removing unnecessary overhead.  \citet{ORTIN2019}'s approach takes
+this to a logical extreme using a rule base to guide program
+specialisation at compile time based on abstract interpretation.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
 work here, take the opposite approach.
