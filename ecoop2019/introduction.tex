@@ -91,6 +91,9 @@ types until run
 time, performing the checks eagerly, and giving detailed information
 about type violations as soon as possible via blame
 tracking \cite{blame2009,blameForAll2011}.
+Finally, Ductile typing
+dynamically interprets a static type system at runtime
+\cite{Ductile2011}.
 %
 %\mwh{Does a monotonic semantics fit on this spectrum somewhere?}
 %\kjx{Not in the greenman/fellenstein spectrum, but I guess I'd put it
@@ -98,7 +101,7 @@ tracking \cite{blame2009,blameForAll2011}.
 %
 Unfortunately, any gradual system with run-time semantics
 (\ie everything more complex than erasure) currently
-imposes significant run-time performance overhead to provide those semantics
+imposes a significant run-time performance overhead to provide those semantics
 \citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
 
 The performance cost of run-time checks is problematic in itself,
