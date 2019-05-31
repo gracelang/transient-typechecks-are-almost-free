@@ -1,10 +1,11 @@
-# Shallow Types for Insightful Programs
+# Transient Typechecks are (Almost) Free
 
 A manuscript on how we provide shallow low-overhead support for Grace's types.
 
 ## Compile
 
-This project using LaTeX to generate the paper. To compile the project, simply run `./compile.sh` from the root directory of this project. The content of the paper is divided [sections](https://github.com/richard-roberts/AGTFG/tree/master/content). 
+This paper is written using LaTeX.
 
+To compile the project, simply run `./compile.sh` from the root directory of this project.
 
-
+The body of the paper can be found in the [ecoop2019](ecoop19) folder.

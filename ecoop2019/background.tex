@@ -1,6 +1,4 @@
-%!TEX root = ../latex/paper.tex
-
-\clearpage
+%!TEX root = paper.tex
 
 \section{Gradual Types in Grace}
 \label{sec:background}
@@ -42,8 +40,8 @@ includes a distinguished ``\code{Unknown}'' type which matches any other type
 and is the implicit type for untyped program parts.
 
 The static core of Grace's type system is well described
-elsewhere\citep{TimJonesThesis};%
-~here we explain how
+elsewhere\citep{TimJonesThesis};
+here we explain how
 these types can be understood 
 dynamically, from the Grace programmer's point of view.
 Grace's types are structural \citep{graceOnward12},
@@ -56,14 +54,16 @@ A type thus expresses the requests an object can respond to,
 for example whether a particular accessor is available,
 rather than a nominal location in an explicit inheritance hierarchy.
 
-Grace then checks the types of values at run-time:
+Grace then checks the types of values at run time:
 %
 \begin{itemize}
 \item the values of arguments are checked after a method is requested, 
       but before the body of the method is executed;
 \item the value returned by a method is checked after its body is executed; and
 \item the values of variables are checked
-      whenever written or read by user code.
+      whenever written or read by user code.\footnote{
+        Checking on read in addition to writes may seem unnecessary.
+        For the rational, see \cref{sec:discussion-read-write}.}
 \end{itemize}
 %
 %
@@ -81,7 +81,7 @@ closest to the
 transient typechecks of Reticulated Python
 \cite{reticPython2014,Greenman2018}.
 Reticulated Python inserts transient checks only when a value flows from untyped
-to typed code, while Grace inserts transient checks only at explict type
+to typed code, while Grace inserts transient checks only at explicit type
 annotations (but in principle checks every annotation every time).
 
 
@@ -134,7 +134,7 @@ Unfortunately, existing gradual type
 implementations do not meet these goals, particularly regarding
 performance; hence the ongoing debate about whether gradual typing is
 alive, dead, or some state
-in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018}.
+in between\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Greenman2018,Greenman2019jfp}.
 
 
 \subsection{Using Grace's Gradual Types}
@@ -148,7 +148,8 @@ application by defining an object intended to represent a car
 the car object, prints out its registration number (\cref{ex:method}).
 %
 
-\begin{lstlisting}[caption={The start of a simple program for tracking vehicle information.},float=h,label=lst:car-reg,escapechar=|,columns=flexible]
+\begin{lstlisting}[caption={The start of a simple Grace program for tracking vehicle information.},%
+  float=h,label=lst:car-reg,escapechar=|,columns=flexible]
 def car = object {|\label{ex:object}|
     var registration is public := "JO3553"
 }
@@ -175,81 +176,26 @@ Next, the programmer adds a check to ensure any object passed to the
 \code{registration} request; 
 they define the structural type \code{Vehicle}\citep{theCleanVehicle}
 naming just that method (\cref{ex:vehicle}, \cref{ex:adding-type:vehicle}), 
-and annotate the \code{printRegistration} method's
+and annotate the \code{print\-Reg\-is\-tra\-tion} method's
 argument with that type (\cref{ex:vehicle}, \cref{ex:adding-type}).
 The annotation ensures that a type error will be thrown if an object,
-passed to the \code{printRegistration} method,
+passed to the \code{print\-Reg\-is\-tra\-tion} method,
 cannot respond to the \code{registration} message.
-Furthermore, as type errors constituent termination, 
-a crash somewhere in the middle of the
-implementation of the \code{print} method
+Without the type check, the \code{print} method would
+cause a run-time error when interpolating the string.
+However, since type errors cause termination, 
+the run-time error in the middle of the
+\code{print} implementation
 will now be avoided.
 
-
-% \sm{you already said the following}
-% By adding the type annotation to the program,
-% the student can now be sure the \code{getReg} method
-% will only be invoked when its arguments can respond to this message.
-
-%\paragraph{Flexibility.}
-%\paragraph{Semnatics}
-
-% \kjx{isn't most of this covered by the earlier para above now? -- so
-%   can we delete this one? please!?}
-% While Grace's static type system supports full static type
-% checking\citep{graceOnward12}, Grace's specification requires dynamic
-% type tests to be \emph{shallow}, that is, they check only for the
-% presence and arity of methods in an object, rather than also checking
-% conformance of argument and result types.  This is to ensure that the
-% presence or absence of type annotations does not affect the execution
-% of a program, for the reason originally outlined by
-% Boyland~\cite{Boyland2014}, thus maintaining a version of the gradual
-% guarantee.  The resulting semantics are \del{more-or-less}\sm{we really need to say something stronger here or drop this} equivalent to
-% type-tag soundness\citep{reticPython2014,Vitousek2017,Greenman2018}.
-% \kjx{now saying ``equivalent'', punting fine details to the related work section - but
-%   I suggest we kill this para}.
-
-%% SM: someone should really take a really close look at these and identify the
-%%     differences. And I don't want to do that.
-% ---the difference being that
-% where type-tag soundness supports shallow \emph{nominal} type checks,
-% we support shallow \emph{structural} type checks.
-%%KJX: my comment above is plan WRONG - Retic is structural too.
-%% main differences are method returns, object assignments.
-
-% The notion of our type system being shallow means 
-% that members of a type are untyped.
-% In particular, our design does not have information on parameter types
-% and return types for types' members.
-% This design implies that blame tracking is not needed,\mwh{Um.}
-% because the types are less detailed than in other systems.\mwh{I would hope that a competent reviewer would't fall for this\ldots}\sm{ok, what can we do about this? what's the precise issue here?
-% The idea is that we do not need blame, because we do not have the type casts
-% from blame-supported gradual systems.
-% The difference is, I think that there is nothing we can not check immediately,
-% and error as soon as there is a type.
-% I believe the examples are usually higher-order functions/blocks.
-% We only check the arity. So, there is no type cast wrapping necessary,
-% when we pass it into a method that would expect another type of block arguments.
-% (because passing in should not error, the error should only happen when
-% the block is used in these systems, right?)}
-% One reason for this design is that it avoids the overhead incurred
-% by tracking type assumptions for precise blame attribution.
-
-
-
-% Another aspect of this design is
-% that our shallow approach to types
-% allows for more flexible use 
-% without requiring type parameters, \ie, generics.
 In \cref{ex:complex}, 
 the programmer continues development and creates two car objects 
 (\cref{ex:personal-car,ex:government-car}),
 that conform to an expanded \code{Vehicle} type (\cref{ex:new-vehicle}).
 
 
-
-\begin{lstlisting}[caption={A program in development with inconsistent
-    types.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
+\begin{lstlisting}[caption={A program in development with inconsistently
+    typed \code{registerTo} methods.},escapechar=|,label={ex:complex},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
 type Vehicle = interface { |\label{ex:new-vehicle}|
     registration
     registerTo(_)
@@ -294,8 +240,148 @@ method.
 %
 At \cref{ex:invoke-register-to} the developer
 attempts to register a government car to a person:%
-~only when the method is \textit{invoked} (\cref{ex:government-car:registerTo})
+~only when the method (\cref{ex:government-car:registerTo}) is \emph{invoked}
 will the gradual type test on the argument fail
 (the object that is passed in is not a \code{Department} because it lacks a
 \code{code} method).
 
+\section{Graal, Truffle, Self-Optimization and Dynamic Adaptive Compilation}
+\label{sec:background-implementation}
+
+This section gives a brief introduction into just-in-time compilation,
+and the main techniques we rely on for our optimizations.
+
+\subsection{Self-Optimizing Interpreters}
+\label{sec:background-self-opt}
+
+Self-optimizing abstract-syntax-tree (AST) interpreters\citep{Wurthinger:2012:SelfOptAST}
+are the foundation for the work presented here.
+Together with partial evaluation\citep{Wurthinger:2017:PPE},
+self-optimization enables efficient dynamic language implementations
+that reach the performance of custom state-of-the-art virtual machines
+(cf. \cref{sec:baseline-perf} and \citep{Marr:2015:MTPE}).
+The framework for building such interpreters is called Truffle.
+
+The key idea is that an AST rewrites itself based on a program's run-time values
+to reflect the minimal set of operations needed to execute the program correctly.
+
+As an example, consider the addition of two numbers in a dynamic language,
+possibly written simply as: \code{a + b}.
+Because there are no static types known,
+the run-time values for \code{a} and \code{b} could potentially be anything
+from an integer or a double, to a string or a collection, or any
+arbitrary objects that have a ``\code{+}'' method.
+In an self-optimizing interpreter, the expression may be represented by
+an \code{add} node, with two child nodes that each read a variable.
+The first time the \code{add} node executes,
+it may find that both values to be added are integers.
+It will then speculate that all future executions
+also see integers, and thus, rewrite itself to an \code{add-integer} node.
+This \code{add-integer} node will simply confirm that both values are integers,
+and then directly perform the integer addition.
+Compared to a general \code{add} node,
+we do not have to cover the cases for doubles, strings, and other kinds of objects,
+which results in much simpler code that can be more easily optimized.
+All other cases are supported by rewriting the \code{add} node to more general
+versions.
+This happens for instance, when the values are not integers, 
+however, programs are often very monomorphic in practice, and
+so the speculation is highly beneficial.
+
+As a consequence of the rewriting,
+what often starts out as something close to a traditional AST,
+in the end incorporates additional knowledge about the execution.
+Thus, such trees should be referred to more correctly as
+\emph{execution trees} rather than ASTs.
+
+
+\subsection{Polymorphic Inline Caches for Optimizing Dynamic Behavior}
+\label{sec:background-pics}
+
+Polymorphic inline caches (PICs)\citep{Hoelzle:91:PIC}
+are a variation on the theme of caching run-time values to improve performance.
+Originally, they focused on method invocation in dynamic languages
+to avoid costly method lookups by
+caching the looked-up method for a specific type.
+%
+For dynamic languages,
+PICs can be generalized to not only consider the receiver type,
+but instead for instance the object shape (cf. \cref{sec:background-obj-shape}),
+which enables the optimizations we are aiming for.
+
+In a language such as JavaScript,
+a PIC would be used for instance for the following expression:
+\code{obj.toString()}.
+The dot can be thought of as the lexical representation of the method lookup.
+An implementation would keep a small cache for each such dot in the code.
+This means, for each lexical lookup location, we have a separate cache.
+PICs benefit from the relatively monomorphic behavior of programs.
+A specific lexical lookup is likely to see only one kind of
+object in the \code{obj} variable, so the cache will usually have the
+correct method for the object ready 
+and can avoid a costly lookup.
+
+
+\subsection{Object Shapes: Metadata for Dynamic Objects}
+\label{sec:background-obj-shape}
+
+Object shapes\citep{woss2014object},
+which are also know as maps\citep{Self} or hidden classes,
+are in the most general case a type and usage profile for groups of objects.
+In languages such as Self, JavaScript, and Grace,
+we do not have traditional classes that define the set of fields for an object.
+The set of fields might even change over time.
+Furthermore, fields can theoretically store any possible value.
+However, in practice, the behavior of programs is again relatively monomorphic
+and objects created in a specific part of a  program are likely
+to have always the same set of fields, which each are used to store only
+a small number of different kinds of values.
+For example, an object representing a counter would have a field \code{count},
+which always stores integers,
+while an object representing a person may have always a field \code{name}
+that stores a string, but never an integer.
+
+Object shapes represent this run-time information in a way that allows a
+just-in-time compiler to
+represent objects in memory similarly to C structs, and then to 
+generate highly efficient code.
+Object shapes can be conflated with additional information,
+for instance to represent knowledge about types\citep{Bauman2017,Richards2017}.
+For the use of PICs, object shapes are important,
+because they give objects a form of identification that groups them,
+and which in practice, has similar properties with respect to monomorphic
+behavior as classes have.
+
+\subsection{Just-in-Time Compilation with Graal and Truffle}
+\label{sec:background-graal-pe}
+
+The Graal compiler is a just-in-time compiler for Java.
+For languages built on the Truffle framework,
+Graal comes with  additional support for partial evaluation,
+which enables efficient native code generation for
+Truffle interpreters\citep{Wurthinger:2017:PPE}.
+
+As such, Graal is a metacompiler.
+This means that instead of compiling a specific program, in our case a Grace program,
+Graal compiles our Grace interpreter Moth for the execution of a specific Grace method.
+For simplicity, partial evaluation can be thought of a highly aggressive inlining strategy.
+It starts with the root node of a specific Grace method
+and inlines all code reachable from it, while considering the execution tree
+to be constant.
+To enable further optimizations,
+Graal does further inlining on the level of the Grace program,
+which is important to expose the same optimization opportunities
+classic just-in-time compilers have.
+The applied optimizations include for instance
+constant folding, common subexpression elimination, and loop-invariant code motion.
+
+Especially loop-invariant code motion and common subexpression elimination are important
+to generate efficient native code for dynamic languages.
+Since we rely on techniques such as self-optimizing nodes, PICs and object shapes,
+which all introduce various checks,
+a compiler needs to move these out of loops, and remove redundant checks.
+
+By combining all the techniques sketched in this section,
+Graal and Truffle are able to execute dynamic languages as efficiently
+as virtual machines built for a specific language -- but with much
+less implementation effort.

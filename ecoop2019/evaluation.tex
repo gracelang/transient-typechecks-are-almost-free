@@ -18,11 +18,11 @@ To account for the complex warmup behavior
 of modern systems\citep{Barrett:2017:VMW} as well as
 the non-determinism caused by \eg garbage collection and cache effects,
 we run each benchmark for \NumIterationsAll iterations in the same
-VM invocation\footnote{
+VM invocation.\footnote{
 For the Higgs VM, we only use \NumIterationsHiggs iterations,
 because of its lower performance.
 This is sufficient since Higgs's compilation approach induces less variation
-and leads to more stable measurements.}.
+and leads to more stable measurements.}
 Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
@@ -51,11 +51,8 @@ Benchmarks were executed one by one to avoid interference between them.
 The analysis of the results was done with R 3.4.1,
 and plots are generated with ggplot 2.2.1 and tikzDevice 0.11.
 Our experimental setup is available online to enable reproductions.\footnote{
-%% \smtodo{add version info}
-% TODO: for final version add version info
-Removed for double blind review
-%\url{https://gitlab.com/richard-roberts/moth-benchmarks/tree/dev}
-}
+  \smtodo{merge changes, and tag final version}
+\url{https://github.com/gracelang/moth-benchmarks}}
 
 
 \subsection{\AWFY?}
@@ -67,10 +64,13 @@ Removed for double blind review
 	\AwfyBaseline{}
 	\caption{Comparison of Java 1.8, Node.js 10.4, Higgs VM, and Moth.
   The boxplot depicts the peak-performance results for the \AWFY benchmarks,
-  each benchmark normalized based on the result for Java.
+  each benchmark normalized individually based on the result for Java,
+  which means all results for Java are 1.0, and its box appears as a line.
+  The dots on the plot represent the geometric mean reported as averages.
   For these benchmarks, Moth is within the performance range
   of JavaScript, as implemented by Node.js,
-  which makes Moth an acceptable platform for our experiments.}
+  which makes Moth an acceptable platform for our experiments.
+  }
 	\label{fig:awfy-baseline}
 \end{figure}
 
@@ -82,10 +82,11 @@ Removed for double blind review
 %   - Higgs
 To establish the performance of Moth,
 we compare it to Java and JavaScript.
+Moth is used in its untyped version, \ie, without type checks.
 For JavaScript we chose two implementations,
 Node.js with V8 as well as the Higgs VM.
 The Higgs VM is an interesting point of comparison,
-because Richards~\textit{et~al.}~\cite{Richards2017} used it in their study.
+because Richards\,\emph{et\,al.}\citep{Richards2017} used it in their study.
 The goal of this comparison is to determine whether our approach
 could be applicable to industrial strength language implementations
 without adverse effects on their performance.
@@ -112,6 +113,11 @@ but can give a good indication for basic mechanisms such as type checking.
 \Cref{fig:awfy-baseline} shows the results.
 We use Java as baseline since it is the fastest language implementation
 in this experiment.
+Note that we perform a unit conversion on the results separately for each benchmark,
+using the average of Java as 1 unit.
+While this conversion does not change the distribution of the data,
+it allows us to show it neatly on one plot.
+
 We see that Node.js (V8) is about
 \OverheadNodeGMeanX (min. \OverheadNodeMinX, max. \OverheadNodeMaxX)
 slower than Java.
@@ -160,8 +166,8 @@ The selected benchmarks as well as the papers in which they were used are shown 
       NBody & \cite{Kuhlenschmidt:2018:preprint,Vitousek2017,Greenman2018} & used \cite{Marr2016} \\
       Queens & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} & used \cite{Marr2016} \\
       PyStone & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
-      Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} & used \cite{Marr2016} \\
-      Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017} \\
+      Sieve & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017,Greenman2019jfp} & used \cite{Marr2016} \\
+      Snake & \cite{Takikawa2016,Muehlboeck2017,Bauman2017,Richards2017,Greenman2019jfp} \\
       SpectralNorm & \cite{Vitousek2017,Muehlboeck2017,Greenman2018} \\
     \end{tabular}
   \end{center}
@@ -180,11 +186,13 @@ have the largest overhead.
 
 \paragraph*{Peak Performance}
 
-\cref{fig:typing-overhead} depicts
+\Cref{fig:typing-overhead} depicts
 the overall results comparing Moth,
 with all optimizations,
 against the untyped version.
-We see an average peak-performance overhead of
+The run-time overhead,
+after discarding the warmup iterations,
+is on average
 \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
 
 \begin{figure}[htb]
@@ -195,10 +203,12 @@ We see an average peak-performance overhead of
   The plot depicts the run-time overhead on peak performance over
   the untyped performance. On average, transient type checking introduces
   an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
-  The visible outliers reflect the noise in today's complex system
-  and correspond \eg to garbage collection and cache effects.
+  The average is indicated as a line with long dashes.
+  The visible outliers correspond to various complex aspects of the overall
+  system, \eg, including garbage collection and cache effects.
   Note that the axis is logarithmic to avoid distorting the proportions
-  of relative speedups and slowdowns.}
+  of relative speedups and slowdowns.
+  }
 	\label{fig:typing-overhead}
 \end{figure}
 
@@ -272,6 +282,17 @@ where we assume that most code is executed in the interpreter and might be
 affected by compilation activity,
 the overhead appears minimal.
 Only the Mandelbrot and CD benchmarks shows a noticeable slowdown.
+
+Mandelbrot with its distinctly slow first iteration
+can be explained by its code structure.
+Since it is a computational kernel with many primitive operations,
+but no method calls, optimized code is only reached after the first full
+benchmark iteration.
+The problem could be alleviated with on-stack-replacement
+for loops, which is currently not done.
+Since other benchmarks use methods, they reach compiled code earlier
+and do not exhibit the same first-iteration slowdown.
+
 PyStone however show various spikes.
 Since spikes appear in both directions (speedups and slowdowns),
 we assume that they indicate a shift,
@@ -281,7 +302,7 @@ triggered by the additional data structures for type information.
 
 \subsection{Effectiveness of Optimizations}
 
-To characterize the concrete impact of our two optimizations, i.e.,
+To characterize the concrete impact of our two optimizations, \ie,
 the optimized type checking node, which replaces complex type tests
 with checks for object shapes, and our matrix to cache sub-typing information,
 we look at the number of type checks performed by the benchmarks,
@@ -307,6 +328,10 @@ over all benchmarks.
 \begin{table}[htb]
   \caption{Type Test Statistics over all Benchmarks.
   This table shows how many of the type tests can be avoided based on our two optimizations.
+  As indicated by the numbers, the number of type tests can vary significantly
+  between benchmarks.
+  Thus, the table shows the mean, minimum, and maximum number of type tests
+  across all benchmarks for a given configuration.
   With the use of an optimized node that replaces type checks with simple object shape checks,
   \code{check\_generic} is invoked only for the first time that a lexical location
   sees a specific object shape, which eliminates run-time type checks almost completely.
@@ -337,12 +362,18 @@ combined with the number of shapes a specific lexical
 location sees at run time.
 
 \paragraph*{Impact on Performance}
+\label{sec:eval-opt-perf}
 
 \Cref{fig:perf-impact-optimization} shows how our optimizations contribute
 to the peak performance.
-The figure depicts Moth's average peak performance over
+The figure depicts Moth's peak performance over
 all benchmarks, depending on the activated optimizations.
-As seen before, the untyped version is faster by \OverheadTypingGMeanP.
+As for \cref{fig:awfy-baseline},
+we do a per-benchmark unit conversion using Moth (untyped),
+preserving the distribution properties of the results,
+but enabling us to show the results on a single plot.
+
+As seen before in \cref{fig:typing-overhead}, the untyped version is faster by \OverheadTypingGMeanP.
 Moth with both optimizations enabled as well as
 Moth with the optimized type-check node (cf. \cref{ex:type})
 reach the same performance.
@@ -351,17 +382,25 @@ the peak performance.
 However, we can see that the subtype cache matrix improves performance
 by an order of magnitude over the Moth version without any type check optimizations.
 This shows that it is a relevant and useful optimization.
-Combined with the numbers of \cref{tab:type-statistics},
-this optimization is going to be relevant for the very first execution of code.
-A typical scenario of interest for developers would be, for instance, the
-performance of unit tests, which has an major impact on developer productivity.
+Based on the numbers of \cref{tab:type-statistics},
+we see that this optimization is relevant for the very first execution of code.
+For code that has not executed before,
+having the global cache for the subtype relations gives the most benefit.
+After the first execution, the lexical caches in form of the type check nodes
+are primed with the same information, and the subtype cache matrix is only rarely needed.
+An example for code that benefits from the subtype cache matrix is unit test code,
+because most of the code is executed only once.
+While the performance of unit tests is not always critical,
+it can have a major impact on developer productivity.
 
 \begin{figure}[htb]
   \centering
 	\OptimizationOverview{}
-  \caption{Performance Impact of the Optimizations on the Average Peak Performance over all Benchmarks.
+  \caption{Performance Impact of the Optimizations on the Peak Performance over all Benchmarks.
   The boxplot shows the performance of Moth normalized to the untyped version, \ie,
   without any type checks.
+  This means all results for Moth (untyped) are 1.0 and its box appears as a line.
+  The dots on the plot represent the geometric mean reported as averages.
   The performance of Moth with both optimizations and Moth
   with only the node for optimized type checks are identical.
   The subtype check cache improves performance over the unoptimized version,
@@ -370,8 +409,31 @@ performance of unit tests, which has an major impact on developer productivity.
 	\label{fig:perf-impact-optimization}
 \end{figure}
 
+\paragraph*{Impact on Memory Usage}
+
+In our implementation, the subtype cache matrix is the largest additional
+data structure.
+We initialize it for up to 1000 types and use 1 byte per type combination.
+Java utilizes ca.\ 1MB of memory for the matrix.
+Additional memory is used to represent the type-check nodes at every lexical location.
+Since they behave like polymorphic inline caches (PIC)\citep{Hoelzle:91:PIC},
+their memory usage depends on the specific program execution.
+For the benchmarks used in this paper, the extra memory use can be up to 200KB.
+
+In the context of Graal and Truffle, this additional memory usage is small,
+since the metacompilation approach uses a lot of memory\citep{Marr:2015:MTPE}.
+In a dedicated virtual machine,
+memory use can be further optimized and be as efficient as for other kinds of PICs.
+
+% Havlak     116424 byte nodes
+% Mandelbrot  24480 byte
+% DeltaBlue  134784 byte
+% Richards    67824 byte
+% Json        59760 byte
+% CD         174168 byte
 
 \subsection{Transient Typechecks are (Almost) Free}
+\label{sec:eval-best-case}
 
 As discussed in the introduction, in many existing gradually typed systems,
 one would expect a linear increase of the performance overhead
@@ -388,11 +450,13 @@ In both benchmarks, each method increments a counter,
 which is checked at the end of the execution to verify that both do the same
 number of method activations, and only the shape of the activation stack differs.
 
-Each benchmark exists in 6 variants, going from no type annotations
-over annotating only the first method parameter to annotating all 5 of the parameters.
-Furthermore, we present the results for the first iteration as well as the hundredth iteration.
+Each benchmark exists in six variants, each variant in a separate file,
+going from having no type annotations
+over annotating only the first method parameter to annotating all 5 parameters.
+To demonstrate the impact of compilation,
+we present the results for the first iteration as well as the hundredth iteration.
 The first iteration is executed at least partially in the interpreter,
-while the hundredth iteration executes compiled.
+while the hundredth iteration executes fully compiled.
 
 \Cref{fig:type-cost-micro} shows that such a common scenario of methods being
 gradually annotated with types
@@ -401,9 +465,10 @@ The plot shows the mean of the run time for each benchmark configuration.
 Furthermore, it indicates a band with the 95\% confidence interval.
 The yellow line, Moth (neither), corresponds to our Moth with type checking
 but without any optimizations.
-For this case, we see that the performance overhead grows linearly.
+For this case, we see that the performance overhead grows
+linearly with the number of type annotations.
 
-For Moth (both) and Moth (untyped) we see for the first iteration that
+For Moth (both) and Moth (untyped), we see for the first iteration that
 the band of confidence intervals diverges, indicating that the additional type
 checks have an impact on startup performance.
 However, for the hundredth iteration, the confidence intervals overlap
@@ -413,7 +478,7 @@ a general linear overhead for adding type checks.
 Instead, most type checks do not have an impact on peak performance.
 However, as previously argued for the List benchmark,
 this is only the case for checks that can be subsumed by shape checks
-(shape checks are performed whether or not type checks are presents).
+(shape checks are performed whether or not type checks are present).
 
 \begin{figure}
   \begin{subfigure}[t]{0.5\textwidth}
@@ -429,12 +494,12 @@ this is only the case for checks that can be subsumed by shape checks
 
 	% \TypeCost{}
   \caption{Transient Typechecks are (Almost) Free.
-    Two microbenchmarks demonstrate the common scenario that the addition
-    of type annotations in our system does not have an impact on peak performance.
-    The two microbenchmarks are measured in 6 variants, stepwise increasing the number
+    Two microbenchmarks, each with six variants, demonstrate the common scenario
+    of adding type annotations over time, which in our system does not have an impact on peak performance.
+    The benchmark variants differ only in the increasing number
     of method arguments that have type annotations.
-    Furthermore, we show the result for the first benchmark iteration and the
-    one hundredth.
+    We show the result for the first benchmark iteration (a) and the
+    one hundredth (b).
     Moth (neither), \ie, Moth without our two optimizations sees a linear increase in run time.
     For the first iteration, we see some difference between Moth (both) and Moth (untyped).
     By the hundredth iteration, however, the compiler has eliminated
@@ -445,6 +510,7 @@ this is only the case for checks that can be subsumed by shape checks
 \end{figure}
 
 \subsection{Changes to Moth}
+\label{sec:eval-changes}
 
 Outlined earlier in \cref{sec:method}, a secondary
 goal of our design was to enable the implementation of our approach to be
@@ -453,7 +519,7 @@ This helps to ensure that each Grace implementation
 can provide type checking in a uniform way.
 
 By examining the history of changes maintained by our version control,
-we estimate that our implementation for Moth required
+we estimate that our implementation of Moth required
 549 new lines and 59 changes to existing lines.
 The changes correspond to the implementation of
 new modules for the type class (179 lines) and

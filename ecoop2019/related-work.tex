@@ -26,27 +26,38 @@ important early attempt
 and also surveys previous work.
 
 Revived practical adoption of dynamic languages generated revived
-research interest, leading to the formulation of the ``gradual
-guarantee''\citep{Siek2006,XXXSiek2015} to characterize sound gradual
-type systems: removing type annotations should not change the
-semantics of a correct program, drawing on Boyland's critical insight
-that, of course, such a guarantee must by its nature forbid code that
-can depend on the presence or absence of type declarations elsewhere
-in the program\citep{Boyland2014}.
+research interest, leading to the formulation of the \textit{gradual
+  guarantee} to characterize sound gradual type systems: informally
+``removing type annotations always produces a program that is still
+well typed'' and also ``evaluates to an equivalent value'' \citep{XXXSiek2015},
+drawing on Boyland's critical insight
+that such a guarantee must by its nature exclude code that
+reflects on the presence or absence of type declarations\citep{Boyland2014}.
 %%%WRONG KJX
 %% As Siek et~al.\ explain, by
 %% choosing to check only the ``top-most type constructor'', the
 %% semantics we present in this paper should meet the refined gradual
 %% guarantee \cite{XXXSiek2015}.
-Because Moth only checks explicit type declarations (not inferred
-intermediate types), Moth cannot not meet the refined gradual guarantee.
-Moth ensures only that
-the values passing through type annotations cannot be incompatible
-with those annotations.
+%
+%
+Moth ensures that the values passing through type annotations cannot
+be incompatible with those annotations and that type annotations cannot change
+program values, and Moth's type tests consider only method names (not any
+further type annotations).  This means that removing type annotations
+cannot cause a program to fail or change its behaviour, satisfying
+the informal statement of the gradual guarantee.
+%
+Moth does not meet the refined formal statement of the guarantee in
+Siek\textit{et~al.}'s~\cite{XXXSiek2015}'s Theorem~5, however, because
+Theorem~5 requires
+all intermediate values conform to their inferred static types.  Moth only
+checks at explicit type declarations, not inferred intermediate types.
+
+% \ugh{refined gradual guarantee}\sm{what's this? reviewer question. James, please tell us what this is}.
 
 Type errors in gradual, or other dynamically checked, type systems will
-often be triggered by the type declarations, but often those
-declarations will not be at fault---indeed in a correctly typed
+be detected at the type declarations, but often those
+declarations will not be at fault --- indeed in a correctly typed
 program in a sound gradually typed system,  the declarations cannot be
 at fault because they will have passed the static type
 checker. Rather, the underlying fault must be somewhere within the
@@ -64,16 +75,16 @@ overhead\citep{reticPython2014,monotonic2015,Vitousek2017}.
 The diversity of semantics and language designs incorporating
 gradual typing has been captured recently via surveys
 incorporating formal models of different design options.
-Chung et~al.\citep{kafka18} present an object-oriented model covering optional
+Chung~\textit{et~al.}~\citep{kafka18} present an object-oriented model covering optional
 semantics (erasure),  transient semantics, concrete semantics (from Thorn
 \cite{Bloom2009}), and behavioural semantics (from Typed Racket), and
 give a series of programs to clarify the semantics of a
 particular language.  
-Greenman et~al.\ take a more functional approach, again modelling
+Greenman~\textit{et~al.} take a more functional approach, again modelling
 erasure, transient (``first order''), and behavioural (``higher
 order'') semantics \cite{bensurvey18icfp}, and also present
 performance information based on Typed Racket.
-Wilson et~al.\ take a rather different approach, employing
+Wilson~\textit{et~al.} take a rather different approach, employing
 questionnaires to investigate the semantics programmers expect of a
 gradual typing system  \cite{shriramdls18}.
 
@@ -90,7 +101,9 @@ boundary.  Fully statically typed code needs no dynamic type checks,
 and so generally performs better than dynamically typed code. Adopting
 a gradual type system such as Typed Racket\citep{typedScheme08} allows
 programmers to explicitly declare types that can be checked statically,
-removing unnecessary overhead.
+removing unnecessary overhead. Ortin~\textit{et~al.}'s~\cite{ORTIN2019} approach takes
+this to a logical extreme using a rule base to guide program
+specialisation at compile time based on abstract interpretation.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
 work here, take the opposite approach.
@@ -116,7 +129,7 @@ Takikawa~\textit{et~al.}~\cite{Takikawa2016} asked ``is sound gradual typing
 dead?'' based on a systematic performance measurement on Typed Racket.
 The key here is their evaluation method, where they constructed a
 number of different permutations of typed and untyped code, and
-evaluated performance along the spectrum.
+evaluated performance along the spectrum \citep{Greenman2019jfp}.
 Bauman~\textit{et~al.}~\cite{Bauman2017} replied to Takikawa~\textit{et~al.}'s study, in which they used Pycket\citep{Pycket2015} (a tracing JIT for Racket)
 rather than the standard Racket VM,
 but maintained full gradually-typed Racket semantics.
@@ -153,15 +166,6 @@ structural.
 % \rrtodo{Are we nearly equal Greenman,
 % in the sense that a reference to a type object the same as a tag?}
 
-
-%% SM: Removed, I can't say anything concrete here.
-%%     No idea how to compare to this system.
-%%     Their base lines are just too diffent, and I have no how these systems
-%%     would perform on our benchmarks.
-
-%%%dumpted in anyway since we cite it, we should say something
-%%%even if we are saying nothing
-%%%
 Most recently, Kuhlenschmidt~\textit{et~al.}~\cite{Kuhlenschmidt:2018:preprint} employ an
 ahead of time (\ie traditional, static) compiler for a custom
 language called Grift and demonstrate good performance for code where more than
@@ -188,7 +192,7 @@ object.
 %says OK. We check only explicit declarations.
 %
 Reticulated Python undertakes these transient type checks at different
-places to Moth.  Moth explicitly checks type anotations, while
+places to Moth.  Moth only checks explicit type annotations, while
 Reticulated Python implicitly checks whenever values flow from dynamic
 to static types.
 %
@@ -235,7 +239,15 @@ to static types.
 %   - thus, we only tested N configurations per benchmark\sm{N should be a macro}
 We refrain from a direct performance comparison since
 Reticulated Python is an interpreter without just-in-time compilation
-and thus performance tradeoffs are different.
+and thus performance tradeoffs are different. In recent experimental
+work, however, Vitousek~\textit{et~al.}~\cite{vitousek-transient-arXive-2019} have evaluated
+Reticulated Python's transient semantics running on top of an
+unmodified PyPy JIT metacompiler.
+These results are broadly consistent with those presented here,
+finding similarly small slowdowns using just the tracing JIT, and reducing
+those slowdowns even further when some tests are elimited via static
+type inference.
+
 
 Richards~\textit{et~al.}~\cite{Richards2017} take a similar implementation
 approach to our work, demonstrating that key mechanisms such as object shapes

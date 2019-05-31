@@ -48,8 +48,8 @@ by professional programmers for a very wide range of tasks \cite{Pang2018}.
 A key advantage of these dynamic languages is the flexibility offered
 by the lack of a static type system. 
 From the perspective of many computer scientists, software engineers,
-and \ugh{computational theologists}\sm{can we drop this?}, this advantage has a concomitant
-disadvantage in that programs without types are considered more
+and computational theologists, this flexibility has the
+disadvantage that programs without types are more
 difficult to read, to understand, and to analyze than programs with
 types. Gradual Typing aims to remedy this disadvantage, adding types
 to dynamic languages while maintaining their flexibility
@@ -91,15 +91,18 @@ types until run
 time, performing the checks eagerly, and giving detailed information
 about type violations as soon as possible via blame
 tracking \cite{blame2009,blameForAll2011}.
+Finally, Ductile typing
+dynamically interprets a static type system at runtime
+\cite{Ductile2011}.
 %
 %\mwh{Does a monotonic semantics fit on this spectrum somewhere?}
 %\kjx{Not in the greenman/fellenstein spectrum, but I guess I'd put it
 %  after concrete and before behavioural. Does it matter?}
 %
 Unfortunately, any gradual system with run-time semantics
-(i.e.\ everything more complex than erasure) currently
-imposes significant run-time performance overhead to provide those semantics
-\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018}.
+(\ie everything more complex than erasure) currently
+imposes a significant run-time performance overhead to provide those semantics
+\citep{Takikawa2016,Vitousek2017,Muehlboeck2017,Bauman2017,Richards2017,Stulova2016,Greenman2018,Greenman2019jfp}.
 
 The performance cost of run-time checks is problematic in itself,
 but also creates perverse incentives. Rather than the ideal of

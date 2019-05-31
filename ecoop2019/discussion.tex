@@ -1,4 +1,4 @@
-%!TEX root = ../latex/paper.tex
+%!TEX root = paper.tex
 
 \section{Discussion}
 \label{sec:discussion}
@@ -13,25 +13,25 @@
 
 
 One of the key optimizations for our work
-and the work of others\citep{Richards2017,Bauman2017}
+and the work of others\citep{Bauman2017,Richards2017}
 is the use of object shapes
 to encode information about types
 (in our case),
 or type casts and assumptions
 (in the case of gradually typed systems).
-
+%
 The general idea is that a VM will already use object shapes
 for method dispatches, field accesses, and other operations on objects.
 Thus any further use to also imply type information
 can often be optimized away
-when the compiler sees that the same checks are done
-(and therefore can be combined). This is similar to 
-the elimination of other side-effect-free common subexpressions.
+when the compiler sees that the same checks are done,
+and therefore can be combined
+by optimizations such as common subexpression elimination.
 
 This assumption breaks, however, when checks are introduced
 that do not correspond to those that exist already.
 As described in \cref{sec:method},
-our approach introduces checks for reading and writing to variables.
+our approach introduces checks for reading from and writing to variables.
 \Cref{ex:pathological-case} gives an example of a pathological case.
 It is a loop traversing a linked list.
 For this example our approach 
@@ -46,19 +46,46 @@ when writing to \code{elem}, because it has no information about
 what value will be returned from \code{next}, and so it needs to preserve the check to be able to trigger an error
 on the assignment.
 For our List benchmark, this check induces an overhead of \OverheadListP.
-% TODO: reconsider after submission:
-% \sm{I am not sure why this does not fold with the .next check.
-% I am sure that it couldn't when we were at the whiteboard,
-% but I don't see it any more}
 
-\begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},escapechar=|,label={ex:pathological-case},float,floatplacement=htb]
+Compiler optimizations such as inlining are also insufficient
+for this particular case, because there are no guarantees about what
+\code{elem} does to implement \code{next}.
+The \code{next} method of a specific kind of \code{ListElement} may even have
+a type annotation for a return value.
+The best Graal can do in this example is to combine the check for the
+return value with the one writing to \code{elem}.
+
+\begin{lstlisting}[caption={Example for dynamic type checks not corresponding to existing checks.},%
+  escapechar=|,label={ex:pathological-case},%
+  float,floatplacement=htb]
+type ListElement = interface {
+  next
+}
+
 var elem: ListElement := headOfList
 while (...) do {
   elem := elem.next
 }
 \end{lstlisting}
 
+Since the example shows a somewhat generic data structure,
+there is the question of whether the issue applies to other data structures as
+well.
+Our benchmarks use a range of data structures including hash maps, sets,
+and vectors, none of which show the issue, because in more complex programs
+the chance of already having a check there is high,
+and cases were there has not been one before seem to be rare --- although
+one can always consider additional optimizations
+to eliminate further checks.
+For generic data structures, storage strategies\citep{Bolz2013}
+could be used to encode type information about elements.
+This would allow the VM to check only once before a loop,
+and the loop could then rely on that check for guarantees
+about the elements of the data structure.
+
+
 \subsection{Optimizations}
+\label{sec:discussion-opt}
 
 % - possible optimization for reads
 % - discuss what the effect of dropping checks on reads would be
@@ -67,6 +94,9 @@ while (...) do {
 %   -> could give performance benefits (experiment?)
 %   -> but would either delay errors (more imprecision)
 %      or require all assignments, also from primitives to be checked
+
+\subparagraph{Read and Write Checks.}
+\label{sec:discussion-read-write}
 
 As a simplification, we currently check variable access
 on both reads and writes.
@@ -77,13 +107,20 @@ One optimization could be to avoid read checks.
 A type violation can normally only occur when writing to a variable,
 but not when reading.
 However, to maintain the semantics, this would require us to adapt
-many primitives; 
-such as operations that activate blocks to check their arguments,
-or that write to variables or fields.
-With our current implementation
-we get errors as soon as user code accesses fields,
-% but not primitive operations,
-which simplifies the implementation.
+many primitives.
+Examples for primitives are operations that activate blocks,
+which need to check their arguments or return values
+as well as any primitives that write to variables or fields.
+Given the number of primitives, this is error prone
+and incompleteness would result in missing type checks.
+
+By checking reads and writes in a few well defined locations,
+we get errors as soon as user code accesses fields and variables.
+Moreover, only a small set of locations required changes to the code,
+which simplified the implementation.
+Given the good
+results (cf. \cref{sec:eval-opt-perf,sec:eval-changes}), we decided to keep read checks, because it is a more uniform and maintainable
+approach for an academic project.
 
 %   - we can use truffle's approach to specializing ASTs to propagate
 %     type constraints into the code we are using, which means,
@@ -93,6 +130,7 @@ which simplifies the implementation.
 %      the return value. instead, us truffle approach of reverting optimizations
 %      by indicating violations with an exception.
 
+\subparagraph{Dynamic Type Propagation.}
 Another optimization could be to use Truffle's approach to 
 self-specialization\citep{Wurthinger:2012:SelfOptAST}
 and propagate type information to avoid redundant checks.
@@ -107,6 +145,22 @@ This could be used to remove redundant checks in the interpreter
 by simply discovering at run time that whole subexpressions conform to the
 type annotations.
 
+\subparagraph{Performance Impact of Types}
+
+As seen in \cref{sec:disc-pathological-case},
+there are cases where adding types may reduce performance,
+even so, in the best case this does not happen (cf. \cref{sec:eval-best-case}).
+
+While the expectation is that adding more types may result in higher potential
+for performance issues, in the context of dynamic and adaptive compilation
+as used for Moth, this is not necessarily the case.
+Since compilers rely on various heuristics, for instance for inlining,
+there may be situations where a fully typed program is faster than
+a program with fewer types.
+Since the checks need to be compiled themselves, they also influence such heuristics.
+This means it is possible that
+partially typed programs may show worse performance than fully typed ones.
+
 \subsection{Threats to Validity}
 
 %\kjx{this is a first draft, people should fix / check it!}
@@ -118,7 +172,7 @@ or performance of the gradual typing checks, affecting construct
 validity --- we may not have implemented what we think we have. Given
 that, our benchmarking harness run on the same implementation is
 subject to the same risks, thus also affecting internal validity ---
-we may not be measuring that implementation correctly.  Moth is built
+we may not be measuring the implementation correctly.  Moth is built
 on the Truffle and Graal toolchain, so we expect external validity
 there at least --- we expect the results would transfer to other Graal
 VMs doing similar AST-based optimizations.  We have less external
@@ -127,9 +181,11 @@ particular languages, or VMs built via meta-tracing rather than partial evaluati
 Nevertheless, we expect our results should be transferable
 as we rely on common techniques.
 
+
+\subparagraph{Generalizability}
 Finally, because we are working in Grace, it is less obvious that our
 results generalize to other gradually typed-languages. We have worked
-to ensure e.g.\ our benchmarks do not depend on any features of Grace
+to ensure \eg our benchmarks do not depend on any features of Grace
 that are not common in other gradually-typed object-oriented
 languages, but as Grace lacks a large corpus of programs the
 benchmarks are necessarily artificial, and it is not clear how the
@@ -140,3 +196,16 @@ implementation that features competitive performance with significantly less
 effort than would be required for larger and more complex languages.
 On the other hand, more effort on optimisations could well lead to
 even better performance.
+
+Another aspect which limits generalizability is the specific semantics of Grace.
+Reticulated Python, Typed Racket, and Gradualtalk have semantics that need
+additional runtime support, and thus, we cannot draw any conclusions without
+further research.
+
+For languages such as Newspeak, Strongtalk, or TypeScript,
+where types do not have run-time semantics,
+one could add termination based on type errors to these languages,
+or simply avoid termination and report the errors after program completion
+as a debugging aid.
+For either option, our approach should apply and we would expect similar results.
+

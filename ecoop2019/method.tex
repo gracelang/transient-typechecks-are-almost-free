@@ -33,7 +33,7 @@ Despite these changes Moth
 preserves the peak performance of \SOMns,
 which reaches that of V8,
 Google's JavaScript implementation
-(cf. \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
+(cf.\ \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
 
 \subsection{Adding Gradual Type Checking} 
 \label{ssec:implementation} 
@@ -65,7 +65,7 @@ existing method, variable read, and variable write nodes.
 %
 
 The check node uses the internal representation of a Grace type
-(cf. \cref{ex:type}, \cref{ex:type:check}) to test whether an observed
+(cf.\ \cref{ex:type}, \cref{ex:type:check}) to test whether an observed
 object conforms to that type. 
 % These \code{Type} objects are created by
 % Grace \code{interface} expressions, and also help
@@ -73,8 +73,15 @@ object conforms to that type.
 An object satisfies a type if all members required by the type are provided
 by that object (\cref{ex:type:satisfied}).
 
+Note, we use a pseudo code syntax similar to Python for all code examples
+that represent the implementation of Moth.
+We chose this syntax to avoid any confusion with our Grace examples
+(even though Moth is implemented in Java).
 
-\begin{lstlisting}[label={ex:type},escapechar=|,caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},float,floatplacement=htb,columns=flexible,float,floatplacement=H]
+
+\begin{lstlisting}[label={ex:type},escapechar=|,%
+  caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},%
+  float,floatplacement=htb,columns=flexible,float,floatplacement=H,morekeywords={not}]
 class Type:
   def init(members):
     self._members = members
@@ -86,7 +93,7 @@ class Type:
     return True
 
   def check(obj: Object):
-    t = get_type(obj)
+    t = obj.get_type()
     return self.is_satisfied_by(t) |\label{ex:type:check}|
 \end{lstlisting}
 
@@ -104,41 +111,44 @@ There are two aspects to our implementation that are critical for a minimal-over
  
 %Here we discuss each of the aspects in more detail.
 
-\begin{lstlisting}[label={ex:typenode},escapechar=|,caption={An illustration of the type checking node that support type checking},float,floatplacement=htbp,columns=flexible,morekeywords={global}]
+\begin{lstlisting}[label={ex:typenode},escapechar=|,%
+  caption={A sketch of the specializations in \code{TypeCheckNode} to minimize the run-time overhead of type checking.
+    A specialization is a minimal set of operations for one specific situation, \eg,
+    that the value to be checked is some type of number.},%
+  float,floatplacement=htb,%
+  columns=flexible,morekeywords={global,raise,pass,unknown,not}]
 global record: Matrix
 
 class TypeCheckNode(Node):
 
   expected: Type
 
-  @Spec(static_guard=expected.check(obj))
+  @Spec(static_guard=`expected.check(obj)`)
   def check(obj: Number): |\label{ex:typenode:number}|
     pass
 
-  @Spec(static_guard=expected.check(obj))
+  @Spec(static_guard=`expected.check(obj)`)
   def check(obj: String): |\label{ex:typenode:string}|
     pass
 
   ...
 
-  @Spec(
-      guard=obj.shape==cached_shape,
-      static_guard=expected.check(obj))
+  @Spec(guard=`obj.shape==cached_shape`, static_guard=`expected.check(obj)`)
   def check(obj: Object, @Cached(obj.shape) cached_shape: Shape): |\label{ex:typenode:object}|
     pass
   
   @Fallback
-  def check_generic(obj: Any): |\label{ex:typenode:generic}|
-    T = get_type(obj)
+  def check(obj: Any): |\label{ex:typenode:generic}|
+    T = obj.get_type()
     
     if record[T, expected] is unknown: |\label{ex:typenode:matrix}|
-      record[T, expected] =
-          T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
+      record[T, expected] = T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
 
     if not record[T, expected]:
-      raise TypeError(
-          "{obj} doesn't implement {expected}")
+      raise TypeError("{obj} doesn't implement {expected}")
 \end{lstlisting}
+
+\subparagraph{Optimized Type Check Node}
 
 The first performance-critical aspect to our implementation
 is the optimization of the type checking node.
@@ -166,7 +176,7 @@ which may raise a type error.
 
 For generic objects, we rely on the specialization on \cref{ex:typenode:object},
 which checks that the object satisfies the expected type.
-If that is the case, it reads the shape of the object (cf. \cref{ssec:moth}) at specialization time,
+If that is the case, it reads the shape of the object (cf.\ \cref{ssec:moth}) at specialization time,
 and caches it for later comparisons.
 Thus, during normal execution,
 we only need to read the shape of the object and then compare it to the cached shape
@@ -176,6 +186,51 @@ Note that shapes are not equivalent to types,
 however, shapes imply the set of members of an object, and thus,
 do imply whether an object fulfills one of our structural types.
 
+\begin{lstlisting}[label={lst:variable-read},escapechar=|,%
+  caption={Sketch of a \code{VariableReadNode} using the \code{TypeCheckNode} to ensure Grace's transient semantics.},%
+  float,floatplacement=htb,%
+  columns=flexible,morekeywords={global,raise,pass,unknown,not}]
+class VariableReadNode(Node):
+  slot: FrameSlot
+  type_check: TypeCheckNode
+
+  @Spec
+  def do_read(frame: VirtualFrame):
+    value = frame.read(slot)
+    if type_check:              |\label{lst:var-read:if}|
+      type_check.check(value)   |\label{lst:var-read:check}|
+    return value
+\end{lstlisting}
+
+The \code{TypeCheckNode} is used in Moth in all places that need to check
+types, which includes  reading and writing variables as well as method
+requests and returns.
+\Cref{lst:variable-read} shows a sketch of an AST node that implements reading
+from a local variable, which is stored in a frame object.
+A frame corresponds to a stack frame,  sometimes also called an environment.
+
+\Cref{lst:var-read:if} first checks whether a type check needs to be performed.
+Since type annotations are optional, it may not be necessary to check for a type.
+Note that \code{type\_check} is a constant
+for just-in-time compilation (cf.\ \cref{sec:background-graal-pe}),
+which enables subsequent optimizations.
+\Cref{lst:var-read:check} then calls the \code{check()} method on the
+\code{TypeCheckNode}, which may result in a type error.
+For a variable that only contains numbers, the \code{type\_check} object
+would activate the number specialization in its state machine.
+For just-in-time compilation, this means only the code for
+checking numbers needs to be compiled, but none of the other specializations.
+
+In many cases, the specialization for objects would be activated in a \code{TypeCheckNode},
+which checks the shape of an object against a cache.
+This check is identical to the check performed by a polymorphic inline cache (PIC, cf.\ \cref{sec:background-pics}).
+Since PICs are used for all method calls,
+they are very common in most programs,
+and these additional checks can often be removed
+easily via common subexpression elimination.
+
+
+\subparagraph{Subtype Cache Matrix}
 The other performance-critical aspect to our implementation
 is the use of a matrix to cache sub-typing relationships.
 The matrix compares types against types,
@@ -187,7 +242,7 @@ All cells in the matrix begin as unknown and, as
 encountered in checks during execution, we populate the table.
 If a particular relationship has been computed before
 we can skip the check and instead recall the previously-computed value
-(\cref{ex:typenode:reuse}).
+(\cref{ex:typenode:reuse} in \cref{ex:typenode}).
 Using this table we are able to eliminate the redundancy of evaluating
 the same type to type relationships across different checks in the program. To reduce redundancy further we also unify types in a similar way to Java's string interning; 
 during the construction of a type we first check to see if the same
@@ -198,23 +253,3 @@ we avoid creating the new instance and provide the existing one instead.
 Together the self-specializing type check node and the cache matrix 
 ensure that our implementation eliminates redundancy, and
 consequently, we are able to minimize the run-time overhead of our system. 
-
-%%let's nor worry about that now.  another whole paper at least
-%% \smtodo{Yeah, then the insight here is that we can’t communicate
-%%   “purity”. And generally, I think the insight with many kinds of
-%%   language implementations is that these methods we may want to be
-%%   “visibly pure”/idempotent rarely are provably so.
-%%   \ldots Instead, the problem is avoided by being explicit about when
-%%   values are valid.} 
-
-
-% The Graal compiler 
-% Moth needs to query the shape of arguments to evaluate them.
-% Moth then needs to query the shape again to run the specializations' guards.
-% Once profiled Graal can remove this redundancy by eliminating
-% reusing the first query.
-% During this compilation Graal also employs other optimizations 
-% -- sub-expression elimination, inlining, propagation and folding --\tabularnewline
-% and, as we demonstrate next in \cref{sec:evaluation},
-% produces a compiled version of the method with minimal overhead incurred from
-% the type check.

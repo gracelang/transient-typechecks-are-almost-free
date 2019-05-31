@@ -7,6 +7,7 @@
 
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{upquote} % for normal quotes (non-fancy) in verbatim/listings
 
 \usepackage[numbers]{natbib}
 
@@ -61,7 +62,7 @@
 \input{../generated/optimizations.tex}
 \input{../generated/type-cost.tex}
 
-\usepackage[hideall]{collab}
+\usepackage{collab} % [hideall]
 \collabAuthor{rr}{green!60!black}{Richard}
 \collabAuthor{sm}{red}{Stefan}
 \collabAuthor{kjx}{orange}{James}
@@ -72,26 +73,17 @@
 \title{Transient Typechecks are (Almost) Free}
 %\titlerunning{LipiCS dummy short title}
 
-%\title{Shallow Types for Insightful Programs}
-%\subtitle{Grace is Optional, Performance is Not}
+\author{Richard Roberts}{School of Design, Victoria University of Wellington}{rykardo.r@gmail.com}{https://orcid.org/0000-0002-3462-8539}{}
 
+\author{Stefan Marr}{School of Computing, University of Kent}{s.marr@kent.ac.uk}{https://orcid.org/0000-0001-9059-5180}{}
 
+\author{Michael Homer}{School of Engineering and Computer Science, Victoria University of Wellington}{mwh@ecs.vuw.ac.nz}{https://orcid.org/0000-0003-0280-6748}{}
 
-\author{Anonymous Person}{University of Earth}{anonymous.person@research.com}{}{}
+\author{James Noble}{School of Engineering and Computer Science, Victoria University of Wellington}{kjx@ecs.vuw.ac.nz}{https://orcid.org/0000-0001-9036-5692}{}
 
-% \author{Richard Roberts}{School of Design, Victoria University of Wellington}{rykardo.r@gmail.com}{https://orcid.org/0000-0002-3462-8539}{}
+\authorrunning{Roberts, Marr, Homer, Noble}
 
-% \author{Stefan Marr}{School of Computing, University of Kent}{s.marr@kent.ac.uk}{https://orcid.org/0000-0001-9059-5180}{}
-
-% \author{Michael Homer}{School of Engineering and Computer Science, Victoria University of Wellington}{mwh@ecs.vuw.ac.nz}{https://orcid.org/0000-0003-0280-6748}{}
-
-% \author{James Noble}{School of Engineering and Computer Science, Victoria University of Wellington}{kjx@ecs.vuw.ac.nz}{https://orcid.org/0000-0001-9036-5692}{}
-
-% \authorrunning{Roberts, Marr, Homer, Noble}
-\authorrunning{Person}
-
-% \Copyright{Richard Roberts and Stefan Marr and Michael Homer and James Noble}
-\Copyright{Anonymous Person}
+\Copyright{Richard Roberts, Stefan Marr, Michael Homer, James Noble}
 
 \ccsdesc[500]{Software and its engineering~Just-in-time compilers}
 \ccsdesc[300]{Software and its engineering~Object oriented languages}
@@ -106,24 +98,23 @@ Moth, object-oriented programming}
 
 %\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
 
-% \funding{This work is supported by the Royal Society of New Zealand
-%   Marsden Fund}
-\funding{This work is supported by the anonymous research fund}
-
 %\acknowledgements{I want to thank \dots}%optional
+\funding{This work is supported by the Royal Society of New Zealand
+  Marsden Fund}
+
 
 %Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\EventEditors{John Q. Open and Joan R. Access}
-\EventNoEds{2}
-\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
-\EventShortTitle{CVIT 2016}
-\EventAcronym{CVIT}
-\EventYear{2016}
-\EventDate{December 24--27, 2016}
-\EventLocation{Little Whinging, United Kingdom}
+\EventEditors{Alastair F. Donaldson}
+\EventNoEds{1}
+\EventLongTitle{33rd European Conference on Object-Oriented Programming (ECOOP 2019)}
+\EventShortTitle{ECOOP 2019}
+\EventAcronym{ECOOP}
+\EventYear{2019}
+\EventDate{July 15--19, 2019}
+\EventLocation{London, United Kingdom}
 \EventLogo{}
-\SeriesVolume{42}
-\ArticleNo{23}
+\SeriesVolume{134}
+\ArticleNo{15}
 %\nolinenumbers %uncomment to disable line numbering
 %\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

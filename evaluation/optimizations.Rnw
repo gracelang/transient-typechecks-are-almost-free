@@ -10,7 +10,7 @@ source("scripts/libraries.R", chdir=TRUE)
 source("scripts/paper.R", chdir=TRUE)
 
 
-data <- select(load_data_file("023-a3e099e1-full-run.data.bz2"),
+data <- select(load_data_file("036-c658c2a2-30-in.data.bz2"),
                c("Value", "Unit", "Benchmark", "VM", "Iteration"))
 
 
@@ -82,6 +82,15 @@ vm_stats_both <- stats_both %>%
 
 \def\OptimizationOverview{%
 <<opt-overview, fig.height=2.5, fig.width=4.5>>=
+fixed_geomean <- function (x) {
+  # just shift values temporarily away from 0,
+  # transformation doesn't change results when using a sufficiently large constant
+  # normally, one would use simply 1, but in this case, it may change the results
+  # fixed_geomean should really only be used in the context of stat_summary
+  m <- geometric.mean(x + 10000000)
+  m - 10000000
+}
+
 baseline <- droplevels(stats_untyped)
 
 # reorder the factor
@@ -95,6 +104,7 @@ p <- p +
   geom_hline(aes(yintercept=8), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=30), colour="#cccccc", linetype="dashed") +
   geom_boxplot(outlier.size = 0.5) +
+  stat_summary(fun.y = "fixed_geomean", size = 1, colour = "#ce8080", geom = "point") +
   scale_y_log10(breaks = c(0.85, 1, 2, 8, 30, 50, 100, 150)) +
   coord_flip(ylim = c(0.5, 150))  # 
 p <- p + theme_bw() + theme_simple(font_size = 8) +
