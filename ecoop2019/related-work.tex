@@ -29,8 +29,8 @@ Revived practical adoption of dynamic languages generated revived
 research interest, leading to the formulation of the \textit{gradual
   guarantee} to characterize sound gradual type systems: informally
 ``removing type annotations always produces a program that is still
-well typed'' and also ``evaluates to an equivalent value'' \citep{XXXSiek2015}
-, drawing on Boyland's critical insight
+well typed'' and also ``evaluates to an equivalent value'' \citep{XXXSiek2015},
+drawing on Boyland's critical insight
 that such a guarantee must by its nature exclude code that
 reflects on the presence or absence of type declarations\citep{Boyland2014}.
 %%%WRONG KJX
@@ -41,7 +41,7 @@ reflects on the presence or absence of type declarations\citep{Boyland2014}.
 %
 %
 Moth ensures that the values passing through type annotations cannot
-be incompatible with those annotations, that type annotations cannot change
+be incompatible with those annotations and that type annotations cannot change
 program values, and Moth's type tests consider only method names (not any
 further type annotations).  This means that removing type annotations
 cannot cause a program to fail or change its behaviour, satisfying
