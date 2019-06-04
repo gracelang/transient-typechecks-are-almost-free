@@ -42,8 +42,8 @@ reflects on the presence or absence of type declarations\citep{Boyland2014}.
 %
 Moth ensures that the values passing through type annotations cannot
 be incompatible with those annotations and that type annotations cannot change
-program values, and Moth's type tests consider only method names (not any
-further type annotations).  This means that removing type annotations
+program values; notably, the type tests consider only method names and not any
+further type annotations. This means that removing type annotations
 cannot cause a program to fail or change its behaviour, satisfying
 the informal statement of the gradual guarantee.
 %
@@ -65,11 +65,10 @@ barbarian dynamically typed code \emph{trans vallum}.
 Blame tracking\citep{blame2009,blameThreesomes2010,blameForAll2011} localizes these
 faults by identifying 
 the point in the program where the system makes an 
-assumption about dynamically typed objects, so can identify the root
+assumption about dynamically typed objects, so it can identify the root
 cause should the assumption fail.  Different semantics for blame
-detect these faults slightly differently, and impose more or less
-implementation
-overhead\citep{reticPython2014,monotonic2015,Vitousek2017}.
+detect these faults slightly differently and incur differing
+implementation overheads\citep{reticPython2014,monotonic2015,Vitousek2017}.
 
 %\kjx{check following paragraph}
 The diversity of semantics and language designs incorporating
@@ -106,15 +105,16 @@ this to a logical extreme using a rule base to guide program
 specialisation at compile time based on abstract interpretation.
 
 On the other hand, systems such as Reticulated Python\citep{reticPython2014}, SafeTypeScript\citep{Richards2017}, and our
-work here, take the opposite approach.
+work here take the opposite approach.
 %%KJX might be correct, but next sentence says same thing much better.a
 %They add run-time type checks that do not rely on static
 %type declarations.
 These systems do not use information from type
-declarations to optimize execution speed, rather the necessity to
-perform (potentially repeated) dynamic type checks tends to slow
-programs down, so here code with no type annotations generally
-performs better than statically typed code, or rather, code with many
+declarations to optimize execution speed. 
+Rather, the necessity to perform potentially
+repeated dynamic type checks tends to slow
+programs down; instead, here, code with no type annotations generally
+performs better than statically typed code or code with many
 type annotations. In the limit, these kinds of systems may only ever
 check types dynamically and may not involve a static type checker at
 all. 
@@ -174,7 +174,7 @@ performance for code without type annotations.
 
 \label{reticRW}
 Perhaps the closest to our approach are
-Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl. \citep{Vitousek2017,Greenman2018})
+Vitousek~\textit{et~al.}~\cite{reticPython2014} (incl.~\citep{Vitousek2017,Greenman2018})
 and Richards~\textit{et~al.}~\cite{Richards2017}.
 Vitousek~\textit{et~al.}~describe dynamically checking transient types
 % ``tag-type'' soundness

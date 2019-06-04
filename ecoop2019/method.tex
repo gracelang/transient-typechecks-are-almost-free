@@ -31,8 +31,7 @@ adapting a few of the self-optimizing abstract-syntax-tree nodes
 to conform to Grace's semantics.
 Despite these changes Moth
 preserves the peak performance of \SOMns,
-which reaches that of V8,
-Google's JavaScript implementation
+which reaches that of Google's V8 JavaScript implementation
 (cf.\ \cref{sec:baseline-perf} and Marr~\textit{et~al.}~\cite{Marr2016}).
 
 \subsection{Adding Gradual Type Checking} 
@@ -54,7 +53,8 @@ and return values can be included with the node for requesting a
 method, and the expected type for a variable can be attached to the
 nodes for reading from and writing to that variable.  In practice, we
 encapsulate the logic of the check within a new class of AST
-nodes, specially to support gradual type checking.  Moth's front end was adapted to parse and record type
+nodes that are specially design to support gradual type checking.
+Moth's front end was adapted to parse and record type
 annotations and attach instances of this checking node as children of the
 existing method, variable read, and variable write nodes.
 
@@ -72,12 +72,9 @@ object conforms to that type.
 % to support Grace's pattern matching facilities \cite{gracePatternsDLS12}.
 An object satisfies a type if all members required by the type are provided
 by that object (\cref{ex:type:satisfied}).
-
-Note, we use a pseudo code syntax similar to Python for all code examples
-that represent the implementation of Moth.
-We chose this syntax to avoid any confusion with our Grace examples
-(even though Moth is implemented in Java).
-
+\emph{Note that here we use a pseudo code syntax similar to Python for all code examples
+that represent the implementation of Moth, even though Moth is implemented in Java.
+We chose this syntax to avoid any confusion with our Grace examples.}
 
 \begin{lstlisting}[label={ex:type},escapechar=|,%
   caption={Sketch of a \code{Type} in our system and its \code{check()} semantics.},%
@@ -145,7 +142,7 @@ class TypeCheckNode(Node):
       record[T, expected] = T.is_subtype_of(expected) |\label{ex:typenode:reuse}|
 
     if not record[T, expected]:
-      raise TypeError("{obj} doesn't implement {expected}")
+      raise TypeError(f"{obj} doesn't implement {expected}")
 \end{lstlisting}
 
 \subparagraph{Optimized Type Check Node}
@@ -166,17 +163,17 @@ TruffleDSL.
 Thus, if a check node observes a number or a string,
 it will check on the first execution only that the expected type,
 \ie, the one defined by some type annotation,
-is satisfied by the object by using a \code{static\_guard}.
+is satisfied by the object using a \code{static\_guard}.
 If this is the case, the DSL will activate this state.
 For just-in-time compilation, only the activated states and their normal guards are considered.
 A \code{static\_guard} is not included in the optimized code.
-If a check fails, or no specialization matches, the fallback,
-\ie, \code{check\_generic} is selected (\cref{ex:typenode:generic}),
-which may raise a type error.
+If a check fails, or no specialization matches,
+a fallback (\ie, \code{check\_generic} in \cref{ex:typenode:generic})
+will be selected. This fallback will raise a type error when appropiate.
 
-For generic objects, we rely on the specialization on \cref{ex:typenode:object},
+For generic objects we rely on the specialization of \cref{ex:typenode:object},
 which checks that the object satisfies the expected type.
-If that is the case, it reads the shape of the object (cf.\ \cref{ssec:moth}) at specialization time,
+If that is the case, it reads the shape of the object (cf.\ \cref{ssec:moth}) at specialization time
 and caches it for later comparisons.
 Thus, during normal execution,
 we only need to read the shape of the object and then compare it to the cached shape
