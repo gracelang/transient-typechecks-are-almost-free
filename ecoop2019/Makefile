@@ -4,10 +4,10 @@ KNITR_TEX=$(KNITR:.Rnw=.tex)
 KNITR_TEX=$(patsubst ../evaluation/%.Rnw,../generated/%.tex,$(KNITR))
 
 all:
-	pdflatex paper
+	lualatex paper
 	bibtex paper
-	pdflatex paper
-	pdflatex paper
+	lualatex paper
+	lualatex paper
 
 ../generated:
 	mkdir ../generated
