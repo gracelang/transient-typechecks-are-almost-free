@@ -365,17 +365,16 @@ For simplicity, partial evaluation can be thought of a highly aggressive inlinin
 It starts with the root node of a specific Grace method
 and inlines all code reachable from it, while considering the execution tree
 to be constant.
+
 To enable further optimizations ---% 
 constant folding, common subexpression elimination, loop-invariant code motion, and more ---%
 Graal does further inlining on the level of the Grace program,
 which is important to expose the same optimization opportunities that
 classic just-in-time compilers use.
-
-% Especially loop-invariant code motion and common subexpression elimination are important
-% to generate efficient native code for dynamic languages.
-% Since we rely on techniques such as self-optimizing nodes, PICs and object shapes,
-% which all introduce various checks,
-% a compiler needs to move these out of loops, and remove redundant checks.
+In particular,
+loop-invariant code motion and common subexpression elimination are two optimizations that
+are important for generating efficient native code for dynamic languages:
+they help to remove redundant checks introduced by self-optimizing nodes, PICs, and object shapes.
 
 By combining all the techniques sketched in this section,
 Graal and Truffle are able to execute dynamic languages as efficiently
