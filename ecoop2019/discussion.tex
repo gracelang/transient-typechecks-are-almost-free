@@ -116,8 +116,8 @@ and incompleteness would result in missing type checks.
 
 By checking reads and writes in a few well defined locations,
 we get errors as soon as user code accesses fields and variables.
-Moreover, only a small set of locations required changes to the code,
-which simplified the implementation.
+Moreover, only a small set of locations required changes to Moth's code,
+which reduces implementation overhead.
 Given the good
 results (cf. \cref{sec:eval-opt-perf,sec:eval-changes}), we decided to keep read checks, because it is a more uniform and maintainable
 approach for an academic project.
@@ -170,8 +170,8 @@ evaluations of experimental language implementations.  Our underlying
 implementation may contain undetected bugs that affect the semantics
 or performance of the gradual typing checks, affecting construct
 validity --- we may not have implemented what we think we have. Given
-that, our benchmarking harness run on the same implementation is
-subject to the same risks, thus also affecting internal validity ---
+that our benchmarking harness runs on the same implementation, it is also
+subject to the same risks and thus affecting internal validity ---
 we may not be measuring the implementation correctly.  Moth is built
 on the Truffle and Graal toolchain, so we expect external validity
 there at least --- we expect the results would transfer to other Graal
@@ -185,7 +185,7 @@ as we rely on common techniques.
 \subparagraph{Generalizability}
 Finally, because we are working in Grace, it is less obvious that our
 results generalize to other gradually typed-languages. We have worked
-to ensure \eg our benchmarks do not depend on any features of Grace
+to ensure that \eg our benchmarks do not depend on any features of Grace
 that are not common in other gradually-typed object-oriented
 languages, but as Grace lacks a large corpus of programs the
 benchmarks are necessarily artificial, and it is not clear how the
@@ -194,7 +194,7 @@ practice. The advantage of Grace (and Moth) for this research is
 that their relative simplicity means we have been able to build an
 implementation that features competitive performance with significantly less
 effort than would be required for larger and more complex languages.
-On the other hand, more effort on optimisations could well lead to
+On the other hand, more effort on optimisations could lead to
 even better performance.
 
 Another aspect which limits generalizability is the specific semantics of Grace.
