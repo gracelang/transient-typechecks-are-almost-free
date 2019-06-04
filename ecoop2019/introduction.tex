@@ -31,7 +31,7 @@ Just-in-time compilers have, for example, turned JavaScript from a
 na{\"\i}vely interpreted language barely suitable for browser scripting, 
 into a highly efficient ecosystem, eagerly adopted
 %in industry and academia.
-by professional programmers for a very wide range of tasks \cite{Pang2018}.
+by professional programmers for a wide range of tasks \cite{Pang2018}.
 
 % Types  %%KJX later says: doesn't matter.
 % - useful for programmer productivity on large systems
@@ -178,13 +178,9 @@ is typically linear.}'' \cite{Greenman2018}.
 
 
 In contrast, we demonstrate that
-transient type checks can be ``almost
-free'' via a just-in-time compiler to an
-optimizing virtual machine.
-We insert 
-gradual checks
-na\"ively, for each gradual type 
-annotation.
+transient type checks can be ``almost free''.
+In our demonstration,
+we insert gradual checks na\"ively for each gradual type annotation.
 % We check types eagerly when control flow reaches them.
 Whenever an annotated method is called or
 returns, or
@@ -193,7 +189,7 @@ we check types dynamically, and
 terminate the program with a type error if the check fails.
 Despite this simplistic approach, a just-in-time compiler can
 eliminate redundant checks---%
-removing almost all of the checking overhead,
+removing almost all of the checking overhead---%
 resulting in a performance profile aligned with untyped code.
 
 We evaluate our approach by adding transient type checks to Moth,

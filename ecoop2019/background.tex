@@ -9,28 +9,27 @@ motivates supporting transient gradual typing in the language.
 \subsection{The Grace Programming Language}
 \label{ssec:grace}
 
-Grace is an object-oriented, imperative, educational programming
-language, with a focus on introductory programming
-courses, but also intended for more advanced study and research\citep{graceOnward12,graceSigcse13}.
+Grace is an object-oriented, imperative, educational programming language,
+with a focus on introductory programming courses,
+but is also intended for more advanced study and research\citep{graceOnward12,graceSigcse13}.
 %
 While Grace's syntax draws
 from the so-called ``curly bracket'' tradition of C, Java, and
 JavaScript, the structure of the language
 is in many ways closer to Smalltalk:
-all computation is via dynamically dispatched  ``method requests''
-where the object receiving the request decides which code to run,
-and
-%
-returns within lambdas that are ``non-local'', returning to the method
-activation in which the block is instantiated\citep{bluebook}.  In
-other ways, Grace is closer to JavaScript than Smalltalk: Grace
+all computation is performed via dynamically dispatched
+``method requests'' where the object receiving the request
+decides which code to run;
+returns within lambdas are ``non-local'', returning to the method
+activation in which the block is instantiated\citep{bluebook}. 
+In other ways, Grace is closer to JavaScript than Smalltalk: Grace
 objects can be created from object literals, rather than by
-instantiating classes\citep{Black2007-emeraldHOPL,JonesECOOP2016} and
-objects and classes can be deeply nested within each 
+instantiating classes\citep{Black2007-emeraldHOPL,JonesECOOP2016}
+and objects and classes can be deeply nested within each 
 other\citep{betabook}.
 
 Critically, Grace's declarations and methods' arguments
-and results can be annotated with types, and those types can be  checked
+and results can be annotated with types, and those types can be checked
 either statically or dynamically. This means the type system is
 intrinsically gradual:%
 %
@@ -62,8 +61,8 @@ Grace then checks the types of values at run time:
 \item the value returned by a method is checked after its body is executed; and
 \item the values of variables are checked
       whenever written or read by user code.\footnote{
-        Checking on read in addition to writes may seem unnecessary.
-        For the rational, see \cref{sec:discussion-read-write}.}
+        Our rational for checking reads in addition to writes
+        is described in \cref{sec:discussion-read-write}.}
 \end{itemize}
 %
 %
@@ -95,14 +94,13 @@ to check consistency between an execution of a program
 and its type annotations.
 %% KJX removed cos performance is in the second list below
 %% without significantly impacting run-time performance.
- A key part of the design philosophy of Grace is that the language should not force
- students to annotate programs with types until they are ready, so that
- teachers can choose whether to introduce types, early, late, or even
- not at all. 
+A key part of the design philosophy of Grace is that the language should not force
+students to annotate programs with types until they are ready, so that
+teachers can choose whether to introduce types early, late, or even
+not at all. 
 
 A secondary goal is to have a design that can be implemented with
 only a small set of changes to facilitate integration in existing systems.
-
 
 Both of these goals are shared with
 much of the other work on gradual type systems,
@@ -130,7 +128,7 @@ compatibility of a program's type
 annotations.
 
 
-Unfortunately, existing gradual type
+Existing gradual type
 implementations do not meet these goals, particularly regarding
 performance; hence the ongoing debate about whether gradual typing is
 alive, dead, or some state
@@ -208,7 +206,8 @@ var personalCar : Vehicle := |\label{ex:personal-car}|
   object {
     var registration is public := "DLS018"
     method registerTo(p: Person) {|\label{ex:personal-car:registerTo}|
-      print "{p.name} registers {self}"
+      ...
+      print "{self} is now registered to {p.name}"
     } 
   }
 
@@ -216,7 +215,7 @@ var governmentCar : Vehicle := |\label{ex:government-car}|
   object {
     var registration is public := "FKD218"
     method registerTo(d: Department) { |\label{ex:government-car:registerTo}|
-      print "some department {self}"
+      print "{self} is now registered to {d.code}"
     }
   }
 
@@ -233,16 +232,16 @@ declares a different type for its parameter
 (\cref{ex:personal-car:registerTo,ex:government-car:registerTo}).
 %
 When the programmer executes this program,
-both \code{personal\-Car} and \code{governmentCar} can be assigned to
-a variable declared as \code{Vehicle} because checking that assignment considers only that the vehicle has
-a \code{registerTo} method, but not the required argument type of that
-method.
+both \code{personal\-Car} and \code{governmentCar} pass the 
+type check for \code{Vehicle}. Both objects respond to
+\code{registeration} and \code{registerTo}. Notably,
+the type of the argument for \code{registerTo} is ignored.
 %
 At \cref{ex:invoke-register-to} the developer
-attempts to register a government car to a person:%
+attempts to register the government car to an object representing a person:%
 ~only when the method (\cref{ex:government-car:registerTo}) is \emph{invoked}
 will the gradual type test on the argument fail
-(the object that is passed in is not a \code{Department} because it lacks a
+(the object passed in is not a \code{Department} because it lacks a
 \code{code} method).
 
 \section{Graal, Truffle, Self-Optimization and Dynamic Adaptive Compilation}
@@ -284,15 +283,14 @@ we do not have to cover the cases for doubles, strings, and other kinds of objec
 which results in much simpler code that can be more easily optimized.
 All other cases are supported by rewriting the \code{add} node to more general
 versions.
-This happens for instance, when the values are not integers, 
-however, programs are often very monomorphic in practice, and
-so the speculation is highly beneficial.
+This happens, for instance, when the values are not integers. 
+However, in practice, programs tend be monomorphic and
+so such speculation is highly beneficial.
 
-As a consequence of the rewriting,
-what often starts out as something close to a traditional AST,
-in the end incorporates additional knowledge about the execution.
-Thus, such trees should be referred to more correctly as
-\emph{execution trees} rather than ASTs.
+What starts out as something close to a traditional AST,
+in the end, incorporates additional knowledge about execution.
+As a consequence of this rewriting, such trees should be referred
+to more correctly as \emph{execution trees} rather than ASTs.
 
 
 \subsection{Polymorphic Inline Caches for Optimizing Dynamic Behavior}
@@ -306,11 +304,11 @@ caching the looked-up method for a specific type.
 %
 For dynamic languages,
 PICs can be generalized to not only consider the receiver type,
-but instead for instance the object shape (cf. \cref{sec:background-obj-shape}),
+but instead the object shape (cf. \cref{sec:background-obj-shape}),
 which enables the optimizations we are aiming for.
 
 In a language such as JavaScript,
-a PIC would be used for instance for the following expression:
+a PIC could be used for the following expression:
 \code{obj.toString()}.
 The dot can be thought of as the lexical representation of the method lookup.
 An implementation would keep a small cache for each such dot in the code.
@@ -327,7 +325,7 @@ and can avoid a costly lookup.
 
 Object shapes\citep{woss2014object},
 which are also know as maps\citep{Self} or hidden classes,
-are in the most general case a type and usage profile for groups of objects.
+are in the most general case a type of usage profile for groups of objects.
 In languages such as Self, JavaScript, and Grace,
 we do not have traditional classes that define the set of fields for an object.
 The set of fields might even change over time.
@@ -359,21 +357,19 @@ The Graal compiler is a just-in-time compiler for Java.
 For languages built on the Truffle framework,
 Graal comes with  additional support for partial evaluation,
 which enables efficient native code generation for
-Truffle interpreters\citep{Wurthinger:2017:PPE}.
-
-As such, Graal is a metacompiler.
+Truffle interpreters\citep{Wurthinger:2017:PPE}. As such, Graal is a metacompiler.
 This means that instead of compiling a specific program, in our case a Grace program,
 Graal compiles our Grace interpreter Moth for the execution of a specific Grace method.
+
 For simplicity, partial evaluation can be thought of a highly aggressive inlining strategy.
 It starts with the root node of a specific Grace method
 and inlines all code reachable from it, while considering the execution tree
 to be constant.
-To enable further optimizations,
+To enable further optimizations ---% 
+constant folding, common subexpression elimination, loop-invariant code motion, and more ---%
 Graal does further inlining on the level of the Grace program,
-which is important to expose the same optimization opportunities
-classic just-in-time compilers have.
-The applied optimizations include for instance
-constant folding, common subexpression elimination, and loop-invariant code motion.
+which is important to expose the same optimization opportunities that
+classic just-in-time compilers use.
 
 % Especially loop-invariant code motion and common subexpression elimination are important
 % to generate efficient native code for dynamic languages.
