@@ -346,8 +346,8 @@ generate highly efficient code.
 Object shapes can be conflated with additional information,
 for instance to represent knowledge about types\citep{Bauman2017,Richards2017}.
 Object shapes are useful for indexing PICs,
-since they give objects a form of identification that groups them.
-Similar to classes, shapes tend to monomorphic in practice.
+since they group together objects with common structures.
+Similar to classes, shapes tend to be monomorphic in practice.
 
 
 \subsection{Just-in-Time Compilation with Graal and Truffle}
@@ -366,15 +366,25 @@ It starts with the root node of a specific Grace method
 and inlines all code reachable from it, while considering the execution tree
 to be constant.
 
-To enable further optimizations ---% 
-constant folding, common subexpression elimination, loop-invariant code motion, and more ---%
-Graal does further inlining on the level of the Grace program,
-which is important to expose the same optimization opportunities that
-classic just-in-time compilers use.
-In particular,
-loop-invariant code motion and common subexpression elimination are two optimizations that
-are important for generating efficient native code for dynamic languages:
-they help to remove redundant checks introduced by self-optimizing nodes, PICs, and object shapes.
+To enable further optimizations,
+Graal aggressively inlines the resulting code.
+This is important as it enables the same
+optimization opportunities enjoyed by
+classic just-in-time compilers, such as  
+constant folding,
+common subexpression elimination,
+and loop-invariant code motion.
+
+Loop-invariant code motion and
+common subexpression elimination
+are especially important
+because Moth relies on techniques
+such as self-optimizing nodes, PICs, and object shapes.
+These techniques all introduce various checks;
+to generate efficient native code,
+a compiler must be able to
+move checks out of loops,
+and remove redundant checks altogether.
 
 By combining all the techniques sketched in this section,
 Graal and Truffle are able to execute dynamic languages as efficiently
