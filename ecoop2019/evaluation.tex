@@ -23,6 +23,8 @@ For the Higgs VM, we only use \NumIterationsHiggs iterations,
 because of its lower performance.
 This is sufficient since Higgs's compilation approach induces less variation
 and leads to more stable measurements.}
+To improve the confidence in the results further,
+we run all experiments with 30 invocations.
 Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
@@ -253,8 +255,7 @@ the instruction cache of the processor.
 
 \paragraph*{Warmup Performance}
 
-To more precisely measure warmup, all relevant experiments were executed 30 times,
-with each running for 100 iterations.
+To more precisely measure warmup, all experiments were executed 30 times.
 The resulting \cref{fig:typing-warmup} shows the first 100 iterations for each benchmark.
 For each iteration $n$, we normalized the measurements to the mean of iteration $n$
 of the untyped Moth implementation.
