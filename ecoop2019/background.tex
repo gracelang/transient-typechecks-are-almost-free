@@ -325,9 +325,9 @@ and can avoid a costly lookup.
 
 Object shapes\citep{woss2014object},
 which are also know as maps\citep{Self} or hidden classes,
-are in the most general case a type of usage profile for groups of objects.
+are in the most general case a usage profile for groups of objects.
 In languages such as Self, JavaScript, and Grace,
-we do not have traditional classes that define the set of fields for an object.
+we do not have classes that define the set of fields for an object.
 The set of fields might even change over time.
 Furthermore, fields can theoretically store any possible value.
 However, in practice, the behavior of programs is again relatively monomorphic
@@ -345,9 +345,10 @@ represent objects in memory similarly to C structs, and then to
 generate highly efficient code.
 Object shapes can be conflated with additional information,
 for instance to represent knowledge about types\citep{Bauman2017,Richards2017}.
-Object shapes are useful for indexing PICs,
-since they group together objects with common structures.
-Similar to classes, shapes tend to be monomorphic in practice.
+PICs identify groups of objects with the same structure based on the shape.
+Consequently, objects with the same shape use the same entry in the PIC.
+Similar to classes, shapes tend to be monomorphic in practice
+for a specific lexical location.
 
 
 \subsection{Just-in-Time Compilation with Graal and Truffle}
