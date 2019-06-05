@@ -356,7 +356,7 @@ for a specific lexical location.
 
 The Graal compiler is a just-in-time compiler for Java.
 For languages built on the Truffle framework,
-Graal comes with  additional support for partial evaluation,
+Graal applies partial evaluation,
 which enables efficient native code generation for
 Truffle interpreters\citep{Wurthinger:2017:PPE}. As such, Graal is a metacompiler.
 This means that instead of compiling a specific program, in our case a Grace program,
@@ -364,27 +364,25 @@ Graal compiles our Grace interpreter Moth for the execution of a specific Grace 
 
 For simplicity, partial evaluation can be thought of a highly aggressive inlining strategy.
 It starts with the root node of a specific Grace method
-and inlines all code reachable from it, while considering the execution tree
-to be constant.
+and inlines all interpreter code reachable from it.
+This is possible, because it speculates that the execution tree is constant.
 
 To enable further optimizations,
-Graal aggressively inlines the resulting code.
-This is important as it enables the same
-optimization opportunities enjoyed by
-classic just-in-time compilers, such as  
-constant folding,
+Graal also inlines on the level of the Grace code, \ie, across Grace methods.
+This is important as it exposes more opportunities to apply optimization.
+Consequently, Graal is able to optimize Grace code
+similar to how a custom Grace just-in-time compiler would work,
+and it applies, \eg, constant folding,
 common subexpression elimination,
 and loop-invariant code motion.
 
 Loop-invariant code motion and
 common subexpression elimination
 are especially important
-because Moth relies on techniques
-such as self-optimizing nodes, PICs, and object shapes.
-These techniques all introduce various checks;
-to generate efficient native code,
-a compiler must be able to
-move checks out of loops,
+because Moth relies on self-optimizing nodes, PICs, and object shapes.
+These techniques introduce various optimistic checks, \ie, guards.
+To generate efficient native code,
+a compiler must move such checks out of loops
 and remove redundant checks altogether.
 
 By combining all the techniques sketched in this section,
