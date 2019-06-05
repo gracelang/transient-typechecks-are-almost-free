@@ -28,8 +28,8 @@ we run all experiments with 30 invocations.
 Afterwards, we inspected the run-time plots over the iterations
 and manually determined a cutoff of \WarmupCutOff iterations for warmup,
 \ie, we discard iterations with signs of compilation.
-As a result, we use a large number of data points to compute the average,
-but outliers, caused by \eg garbage collection, remain visible in the plots.
+% As a result, we use a large number of data points to compute the average,
+% but outliers, caused by \eg garbage collection, remain visible in the plots.
 % In this work, we do not consider startup performance,
 % because we want to assess the impact of gradual type checks
 % on the best possible performance.
@@ -204,8 +204,8 @@ is on average
   the untyped performance. On average, transient type checking introduces
   an overhead of \OverheadTypingGMeanP (min. \OverheadTypingMinP, max. \OverheadTypingMaxP).
   The average is indicated as a line with long dashes.
-  The visible outliers correspond to various complex aspects of the overall
-  system, \eg, including garbage collection and cache effects.
+  % The visible outliers correspond to various complex aspects of the overall
+%   system, \eg, including garbage collection and cache effects.
   Note that the axis is logarithmic to avoid distorting the proportions
   of relative speedups and slowdowns.
   }

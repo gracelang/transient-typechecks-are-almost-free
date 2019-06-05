@@ -107,7 +107,8 @@ p <- p +
   geom_hline(aes(yintercept=1.1), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=1.5), colour="#cccccc", linetype="dashed") +
   geom_hline(aes(yintercept=typing_mean_overhead), colour="#ce8080", linetype="longdash") +
-  geom_boxplot(outlier.size = 0.2,  outlier.alpha = 0.2) +
+  #geom_boxplot(outlier.size = 0.2,  outlier.alpha = 0.2) +
+  geom_boxplot(outlier.shape = NA) +
   scale_y_log10(breaks = c(0.8, 0.9, 1, 1.1, 1.5, 2)) +
   coord_flip(ylim = c(0.80, 2))  # 
 p <- p + theme_simple(font_size = 8) +
