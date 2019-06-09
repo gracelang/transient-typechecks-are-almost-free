@@ -36,6 +36,12 @@ arxiv: all
 	latexpand --empty-comments paper.tex --output arxiv/paper.tex
 	zip --junk-paths arxiv.zip arxiv/*
 
+ecoop19-dagstuhl: all
+	mkdir ecoop19-dagstuhl
+	cp references.bib collab.sty paper.bbl lipics-v2019.cls orcid.pdf cc-by.pdf lipics-logo-bw.pdf ecoop19-dagstuhl/
+	latexpand --empty-comments paper.tex --output ecoop19-dagstuhl/paper.tex
+	zip --junk-paths ecoop19-dagstuhl.zip ecoop19-dagstuhl/*
+
 author-pdf : AUTHOR_PDF_NAME=ecoop19-roberts-et-al-transient-typechecks-are-almost-free.pdf
 author-pdf: paper.pdf
 	mv paper.pdf $(AUTHOR_PDF_NAME)
